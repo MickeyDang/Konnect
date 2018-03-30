@@ -69,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (aBoolean) {
                         goToLobby();
                     } else {
-                        Toast.makeText(LoginActivity.this, "Failed to sign in", Toast.LENGTH_SHORT)
+                        Toast.makeText(LoginActivity.this, getString(R.string.toast_failed_login), Toast.LENGTH_SHORT)
                                 .show();
                     }
                 }

@@ -10,5 +10,5 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context="mmd.meetup.Fragments.MeetingFragment"
+    tools:context="mmd.meetup.Fragments.MeetingListFragment"
     tools:listitem="@layout/item_meeting"/>

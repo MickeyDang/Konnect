@@ -1,14 +1,16 @@
 package mmd.meetup;
 
+import java.io.Serializable;
+
 /**
  * Created by mickeydang on 2018-03-29.
  */
 
-public class Meeting {
+public class Meeting implements Serializable{
 
     private String title;
     private String description;
-    private String id;
+    private String inviteID;
 
     public Meeting() {
 
@@ -30,12 +32,12 @@ public class Meeting {
         this.description = description;
     }
 
-    public String getId() {
-        return id;
+    public String getInviteID() {
+        return inviteID;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setInviteID(String inviteID) {
+        this.inviteID = inviteID;
     }
 
     //todo google calendar time, and google maps place
