@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -33,6 +34,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.web_client_key))
                 .requestEmail()
                 .build();
 
@@ -61,8 +63,18 @@ public class LoginActivity extends AppCompatActivity {
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            FirebaseClient.getInstance().initUser(account);
-            goToLobby();
+            FirebaseClient.getInstance().initUser(account, new FirebaseClient.Callback<Boolean>() {
+                @Override
+                public void onResult(Boolean aBoolean) {
+                    if (aBoolean) {
+                        goToLobby();
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Failed to sign in", Toast.LENGTH_SHORT)
+                                .show();
+                    }
+                }
+            });
+
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.

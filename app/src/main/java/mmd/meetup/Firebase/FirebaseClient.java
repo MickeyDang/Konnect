@@ -24,7 +24,6 @@ import mmd.meetup.R;
  */
 
 public class FirebaseClient {
-    private final String REQUEST_ID = "425565786475-a48j6imfr19ko96iapsbvr9o0hbcn7tc";
     private final String LOG_TAG = this.getClass().getSimpleName();
 
     private FirebaseAuth mAuth;
@@ -43,7 +42,7 @@ public class FirebaseClient {
         mAuth = FirebaseAuth.getInstance();
     }
 
-    public void initUser(GoogleSignInAccount acct) {
+    public void initUser(GoogleSignInAccount acct, final Callback<Boolean> callback) {
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
 
         mAuth.signInWithCredential(credential)
@@ -52,10 +51,17 @@ public class FirebaseClient {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             mUser = mAuth.getCurrentUser();
+                            callback.onResult(true);
                         } else {
                             Log.w(LOG_TAG, "signInWithCredential:failure", task.getException());
+                            callback.onResult(false);
                         }
                     }
                 });
     }
+
+    public interface Callback<T> {
+        void onResult(T t);
+    }
+
 }

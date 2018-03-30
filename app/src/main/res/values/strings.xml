@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">MeetUp</string>
 
+    <!--Credential Keys-->
+    <string name="web_client_key">425565786475-vsguqn06s9np5o1avsiqgoe81asn5qh2.apps.googleusercontent.com</string>
 
     <!--Button Text-->
     <string name="register_button">Register</string>
