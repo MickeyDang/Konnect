@@ -10,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,15 +18,21 @@ import android.widget.DatePicker;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.text.ParseException;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import mmd.meetup.Adapters.TimeOptionAdapter;
 import mmd.meetup.Models.Meeting;
 import mmd.meetup.Models.PendingMeeting;
+import mmd.meetup.Models.TimeOption;
 import mmd.meetup.R;
 
 public class MeetingTimeFragment extends Fragment {
 
+    private final String LOG_TAG = this.getClass().getSimpleName();
     private OnFragmentInteractionListener mListener;
     private Meeting mMeeting;
 
@@ -83,7 +90,20 @@ public class MeetingTimeFragment extends Fragment {
         DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                createTimePicker(c);
+                //use SimpleDateFormat and parse result
+                //add the date to tempObject
+                try {
+                    TimeOption to = new TimeOption();
+
+                    SimpleDateFormat sdf = new SimpleDateFormat("MM dd, yyyy");
+                    to.date = new SimpleDateFormat("MMMM dd, yyyy")
+                            .format(sdf.parse(i1 + " " + i2 + ", " + i));
+
+                    createTimePicker(c, to, false);
+
+                } catch (ParseException pe) {
+                    Log.e(LOG_TAG, pe.getMessage());
+                }
             }
         };
 
@@ -91,7 +111,7 @@ public class MeetingTimeFragment extends Fragment {
         dialog.show();
     }
 
-    private void createTimePicker(Calendar c) {
+    private void createTimePicker(final Calendar c, final TimeOption to, final boolean isEndTime) {
 
         int hour = c.get(Calendar.HOUR_OF_DAY);
         int minute = c.get(Calendar.MINUTE);
@@ -99,8 +119,22 @@ public class MeetingTimeFragment extends Fragment {
         TimePickerDialog.OnTimeSetListener listener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                Toast.makeText(getContext(), "details selected!", Toast.LENGTH_SHORT)
-                        .show();
+
+                try {
+                    SimpleDateFormat sdf = new SimpleDateFormat("H:mm");
+
+                    if (!isEndTime) {
+                        to.startTime = new SimpleDateFormat("h:mm").format(sdf.parse(i + ":" + i1));
+                        createTimePicker(c, to, true);
+                    } else {
+                        to.endTime = sdf.format(sdf.parse(i + ":" + i1));
+                        mAdapter.updateAdapter(to);
+                    }
+
+                } catch (ParseException pe) {
+                    Log.e(LOG_TAG, pe.getMessage());
+                }
+
             }
         };
 

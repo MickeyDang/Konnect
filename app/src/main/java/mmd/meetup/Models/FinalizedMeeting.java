@@ -7,8 +7,7 @@ package mmd.meetup.Models;
 
 public class FinalizedMeeting extends Meeting{
 
-    private long startTime;
-    private long endTime;
+    private TimeOption timeOption;
     private String locationName;
     private String locationAddress;
 
@@ -16,20 +15,12 @@ public class FinalizedMeeting extends Meeting{
         super();
     }
 
-    public long getStartTime() {
-        return startTime;
+    public TimeOption getTimeOption() {
+        return timeOption;
     }
 
-    public void setStartTime(long startTime) {
-        this.startTime = startTime;
-    }
-
-    public long getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(long endTime) {
-        this.endTime = endTime;
+    public void setTimeOption(TimeOption timeOption) {
+        this.timeOption = timeOption;
     }
 
     public String getLocationName() {

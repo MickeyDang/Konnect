@@ -8,8 +8,7 @@ import java.util.List;
 
 public class PendingMeeting extends Meeting{
 
-    private List<Long> startTimes;
-    private List<Long> endTimes;
+    private List<TimeOption> timeOptions;
     private List<String> locationNames;
     private List<String> locationAddresses;
 
@@ -17,20 +16,12 @@ public class PendingMeeting extends Meeting{
         super();
     }
 
-    public List<Long> getStartTimes() {
-        return startTimes;
+    public List<TimeOption> getTimeOptions() {
+        return timeOptions;
     }
 
-    public void setStartTimes(List<Long> startTime) {
-        this.startTimes = startTime;
-    }
-
-    public List<Long> getEndTimes() {
-        return endTimes;
-    }
-
-    public void setEndTimes(List<Long> endTime) {
-        this.endTimes = endTime;
+    public void setTimeOptions(List<TimeOption> timeOptions) {
+        this.timeOptions = timeOptions;
     }
 
     public List<String> getLocationNames() {
