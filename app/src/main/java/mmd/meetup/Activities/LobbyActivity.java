@@ -21,11 +21,14 @@ import java.util.List;
 import mmd.meetup.Constants;
 import mmd.meetup.Firebase.FirebaseClient;
 import mmd.meetup.Fragments.MeetingListFragment;
-import mmd.meetup.Meeting;
+import mmd.meetup.Fragments.VoteListFragment;
+import mmd.meetup.Models.Meeting;
 import mmd.meetup.R;
 
 public class LobbyActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MeetingListFragment.OnListFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        MeetingListFragment.OnListFragmentInteractionListener,
+        VoteListFragment.OnListFragmentInteractionListener {
 
     MeetingMaker mMaker = new MeetingMaker();
 
@@ -52,7 +55,8 @@ public class LobbyActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+        //default state
+        navigationView.getMenu().findItem(R.id.nav_meetings_confirmed).setChecked(true);
         goToFragment(MeetingListFragment.newInstance(1));
     }
 
@@ -69,22 +73,11 @@ public class LobbyActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.lobby, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -95,9 +88,9 @@ public class LobbyActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_meetings_confirmed) {
-
+            goToFragment(MeetingListFragment.newInstance(1));
         } else if (id == R.id.nav_meetings_unconfirmed) {
-
+            goToFragment(VoteListFragment.newInstance(1));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -142,6 +135,11 @@ public class LobbyActivity extends AppCompatActivity
             case Constants.MeetingNavigation.RC_DESCRIPTION :
                 if (resultCode == Constants.MeetingNavigation.resultSuccess) {
                     mMaker.meeting = (Meeting) data.getExtras().getSerializable(Constants.MeetingNavigation.MEETING_OBJ_KEY);
+                    startActivityForResult(navigate(Constants.MeetingNavigation.stepTime, mMaker.meeting), Constants.MeetingNavigation.RC_TIME);
+                }
+                break;
+            case Constants.MeetingNavigation.RC_TIME :
+                if (resultCode == Constants.MeetingNavigation.resultSuccess) {
                     startActivityForResult(navigate(Constants.MeetingNavigation.stepInvite, mMaker.meeting), Constants.MeetingNavigation.RC_INVITE);
                 }
                 break;

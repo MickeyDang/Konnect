@@ -6,9 +6,9 @@ package mmd.meetup.Firebase;
 
 public class FirebaseDB {
 
-    public static class Meetings {
+    public static class FinalizedMeetings {
 
-        public static String path = "meetings";
+        public static String path = "finalized_meetings";
 
         public static class Entries {
             public static String id = "id";
@@ -16,8 +16,28 @@ public class FirebaseDB {
             public static String title = "title";
             public static String description = "description";
             public static String members = "members";
+            //only one entry
+            public static String time = "time";
+            public static String location = "location";
         }
 
+    }
+
+    public static class PendingMeetings {
+        public static String path = "pending_meetings";
+
+        public static class Entries {
+            public static String id = "id";
+            public static String creatorID = "creator_id";
+            public static String title = "title";
+            public static String description = "description";
+            public static String members = "members";
+            public static String votes = "votes";
+
+            //multiple entries (options)
+            public static String timeOptions = "time_options";
+            public static String locationOptions = "location_options";
+        }
     }
 
     public static class Users {
@@ -27,7 +47,8 @@ public class FirebaseDB {
         public static class Entries {
             public static String name = "name";
             public static String id = "id";
-            public static String meetings = "meetings";
+            public static String pendingMeetings = "pending_meetings";
+            public static String finalizedMeetings = "finalized_meetings";
         }
 
     }

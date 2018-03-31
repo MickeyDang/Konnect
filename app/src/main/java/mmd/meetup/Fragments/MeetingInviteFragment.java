@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import mmd.meetup.Meeting;
+import mmd.meetup.Models.Meeting;
 import mmd.meetup.R;
 
 public class MeetingInviteFragment extends Fragment {

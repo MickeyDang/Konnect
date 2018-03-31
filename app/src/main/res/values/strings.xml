@@ -11,8 +11,8 @@
     <string name="title_activity_lobby">LobbyActivity</string>
 
     <!--NavBar-->
-    <string name="meeting_conf">Confirmed Meetings</string>
-    <string name="meeting_unconf">Unconfirmed Meetings</string>
+    <string name="meeting_conf">Finalized Meetings</string>
+    <string name="meeting_unconf">Pending Meetings</string>
     <string name="nav_button_next">Next</string>
     <string name="title_create_meeting">Create Meeting</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>

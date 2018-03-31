@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import mmd.meetup.Meeting;
+import mmd.meetup.Models.Meeting;
 import mmd.meetup.R;
 
 public class MeetingDetailsFragment extends Fragment {

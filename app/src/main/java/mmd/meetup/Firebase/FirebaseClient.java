@@ -1,14 +1,9 @@
 package mmd.meetup.Firebase;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -24,8 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
-import mmd.meetup.Meeting;
-import mmd.meetup.R;
+import mmd.meetup.Models.Meeting;
 
 /**
  * Created by mickeydang on 2018-03-29.
@@ -103,7 +97,7 @@ public class FirebaseClient {
 
         //make meeting
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference()
-                .child(FirebaseDB.Meetings.path)
+                .child(FirebaseDB.PendingMeetings.path)
                 .push();
 
         ref.setValue(meeting);
@@ -113,7 +107,7 @@ public class FirebaseClient {
             FirebaseDatabase.getInstance().getReference()
                     .child(FirebaseDB.Users.path)
                     .child(s)
-                    .child(FirebaseDB.Users.Entries.meetings)
+                    .child(FirebaseDB.Users.Entries.pendingMeetings)
                     .child(ref.getKey()).setValue("true");
         }
     }

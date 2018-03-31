@@ -4,23 +4,23 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import mmd.meetup.Constants;
 import mmd.meetup.Fragments.MeetingDetailsFragment;
 import mmd.meetup.Fragments.MeetingInviteFragment;
-import mmd.meetup.Meeting;
+import mmd.meetup.Fragments.MeetingTimeFragment;
+import mmd.meetup.Models.Meeting;
+import mmd.meetup.Models.PendingMeeting;
 import mmd.meetup.R;
 
 public class CreateMeetingActivity extends AppCompatActivity implements MeetingDetailsFragment.OnFragmentInteractionListener,
-    MeetingInviteFragment.OnFragmentInteractionListener{
+    MeetingInviteFragment.OnFragmentInteractionListener, MeetingTimeFragment.OnFragmentInteractionListener{
 
     private String currentStep;
 
@@ -37,11 +37,13 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
 
         if (currentStep.equals(Constants.MeetingNavigation.stepDescription)) {
             goToFragment(MeetingDetailsFragment.newInstance());
+        } else if (currentStep.equals(Constants.MeetingNavigation.stepTime)) {
+            Meeting meeting = (Meeting) getIntent().getExtras().getSerializable(Constants.MeetingNavigation.MEETING_OBJ_KEY);
+            goToFragment(MeetingTimeFragment.newInstance(meeting));
         } else if (currentStep.equals(Constants.MeetingNavigation.stepInvite)) {
             Meeting meeting = (Meeting) getIntent().getExtras().getSerializable(Constants.MeetingNavigation.MEETING_OBJ_KEY);
             goToFragment(MeetingInviteFragment.newInstance(meeting));
         }
-
     }
 
     private void goToFragment(Fragment fragment) {
@@ -70,13 +72,17 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
                         bundle.putSerializable(Constants.MeetingNavigation.MEETING_OBJ_KEY, getProtoMeeting());
                         intent.putExtras(bundle);
                         setResult(Constants.MeetingNavigation.resultSuccess, intent);
-                        finish();
+                        this.finish();
                     }
+                } else if (currentStep.equals(Constants.MeetingNavigation.stepTime)) {
+                    Intent intent = new Intent();
+                    setResult(Constants.MeetingNavigation.resultSuccess, intent);
+                    this.finish();
                 } else if (currentStep.equals(Constants.MeetingNavigation.stepInvite)) {
                     Intent intent = new Intent();
                     intent.putStringArrayListExtra(Constants.MeetingNavigation.INVITEE_KEY, getInvitees());
                     setResult(Constants.MeetingNavigation.resultSuccess, intent);
-                    finish();
+                    this.finish();
                     //handle appropriately
                 }
                 return true;

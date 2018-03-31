@@ -6,45 +6,43 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import mmd.meetup.Fragments.VoteListFragment.OnListFragmentInteractionListener;
+import mmd.meetup.Models.Meeting;
+import mmd.meetup.Models.PendingMeeting;
+import mmd.meetup.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import mmd.meetup.Fragments.MeetingListFragment.OnListFragmentInteractionListener;
-import mmd.meetup.Models.FinalizedMeeting;
-import mmd.meetup.Models.Meeting;
-import mmd.meetup.R;
-
-
-public class MeetingAdapter extends RecyclerView.Adapter<MeetingAdapter.ViewHolder> implements
-        FirebaseAdapter<FinalizedMeeting>{
+public class VoteAdapter extends RecyclerView.Adapter<VoteAdapter.ViewHolder> implements
+        FirebaseAdapter<PendingMeeting> {
 
     private final OnListFragmentInteractionListener mListener;
-    private List<FinalizedMeeting> meetings;
+    private List<PendingMeeting> meetings;
 
-    public MeetingAdapter(OnListFragmentInteractionListener listener) {
-        meetings = new ArrayList<>();
+    public VoteAdapter(OnListFragmentInteractionListener listener) {
         mListener = listener;
+        meetings = new ArrayList<>();
     }
 
-
     @Override
-    public void onInsert(FinalizedMeeting meeting) {
+    public void onInsert(PendingMeeting meeting) {
         meetings.add(meeting);
         notifyItemInserted(meetings.size() - 1);
     }
 
     @Override
-    public void onUpdate(FinalizedMeeting meeting) {
+    public void onUpdate(PendingMeeting meeting) {
 
     }
 
     @Override
-    public void onFilter(FinalizedMeeting meeting) {
+    public void onFilter(PendingMeeting meeting) {
 
     }
 
     @Override
-    public List<FinalizedMeeting> getFullList() {
+    public List<PendingMeeting> getFullList() {
         return meetings;
     }
 
@@ -62,7 +60,7 @@ public class MeetingAdapter extends RecyclerView.Adapter<MeetingAdapter.ViewHold
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_meeting, parent, false);
+                .inflate(R.layout.item_vote, parent, false);
         return new ViewHolder(view);
     }
 
@@ -70,8 +68,9 @@ public class MeetingAdapter extends RecyclerView.Adapter<MeetingAdapter.ViewHold
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Meeting meeting = meetings.get(position);
 
-        holder.description.setText(meeting.getDescription());
         holder.title.setText(meeting.getTitle());
+        holder.description.setText(meeting.getDescription());
+
     }
 
     @Override
@@ -80,14 +79,14 @@ public class MeetingAdapter extends RecyclerView.Adapter<MeetingAdapter.ViewHold
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView description;
         public TextView title;
+        public TextView description;
 
         public ViewHolder(View view) {
             super(view);
 
-            description = view.findViewById(R.id.description);
             title = view.findViewById(R.id.title);
+            description = view.findViewById(R.id.description);
 
         }
 
