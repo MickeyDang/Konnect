@@ -30,6 +30,14 @@ public class TimeOptionAdapter extends RecyclerView.Adapter<TimeOptionAdapter.Vi
         notifyItemInserted(timeOptions.size() - 1);
     }
 
+    public List<TimeOption> getTimeOptions () {
+        //lazy loading
+        if (timeOptions == null) {
+            timeOptions = new ArrayList<>();
+        }
+        return timeOptions;
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())

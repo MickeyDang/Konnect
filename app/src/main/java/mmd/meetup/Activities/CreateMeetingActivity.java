@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import mmd.meetup.Constants;
 import mmd.meetup.Fragments.MeetingDetailsFragment;
@@ -17,6 +18,7 @@ import mmd.meetup.Fragments.MeetingInviteFragment;
 import mmd.meetup.Fragments.MeetingTimeFragment;
 import mmd.meetup.Models.Meeting;
 import mmd.meetup.Models.PendingMeeting;
+import mmd.meetup.Models.TimeOption;
 import mmd.meetup.R;
 
 public class CreateMeetingActivity extends AppCompatActivity implements MeetingDetailsFragment.OnFragmentInteractionListener,
@@ -76,6 +78,10 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
                     }
                 } else if (currentStep.equals(Constants.MeetingNavigation.stepTime)) {
                     Intent intent = new Intent();
+                    Bundle bundle = new Bundle();
+
+                    //make TimeOption parcelable
+
                     setResult(Constants.MeetingNavigation.resultSuccess, intent);
                     this.finish();
                 } else if (currentStep.equals(Constants.MeetingNavigation.stepInvite)) {
@@ -89,6 +95,11 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private List<TimeOption> getTimeOptions() {
+        MeetingTimeFragment fragment = (MeetingTimeFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        return fragment.getTimeOptions();
     }
 
     private Meeting getProtoMeeting() {

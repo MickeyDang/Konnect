@@ -23,6 +23,7 @@ import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import mmd.meetup.Adapters.TimeOptionAdapter;
 import mmd.meetup.Models.Meeting;
@@ -96,10 +97,11 @@ public class MeetingTimeFragment extends Fragment {
                     TimeOption to = new TimeOption();
 
                     SimpleDateFormat sdf = new SimpleDateFormat("MM dd, yyyy");
+                    Date dateObject = sdf.parse(i1 + " " + i2 + ", " + i);
                     to.date = new SimpleDateFormat("MMMM dd, yyyy")
-                            .format(sdf.parse(i1 + " " + i2 + ", " + i));
+                            .format(dateObject);
 
-                    createTimePicker(c, to, false);
+                    createTimePicker(c, to, dateObject, false);
 
                 } catch (ParseException pe) {
                     Log.e(LOG_TAG, pe.getMessage());
@@ -111,7 +113,7 @@ public class MeetingTimeFragment extends Fragment {
         dialog.show();
     }
 
-    private void createTimePicker(final Calendar c, final TimeOption to, final boolean isEndTime) {
+    private void createTimePicker(final Calendar c, final TimeOption to, final Date dateObj, final boolean isEndTime) {
 
         int hour = c.get(Calendar.HOUR_OF_DAY);
         int minute = c.get(Calendar.MINUTE);
@@ -122,11 +124,15 @@ public class MeetingTimeFragment extends Fragment {
 
                 try {
                     SimpleDateFormat sdf = new SimpleDateFormat("H:mm");
+                    dateObj.setHours(i);
+                    dateObj.setMinutes(i1);
 
                     if (!isEndTime) {
+                        to.dataStart = new Date(dateObj.getTime());
                         to.startTime = new SimpleDateFormat("h:mm").format(sdf.parse(i + ":" + i1));
-                        createTimePicker(c, to, true);
+                        createTimePicker(c, to, dateObj, true);
                     } else {
+                        to.dataEnd = new Date(dateObj.getTime());
                         to.endTime = sdf.format(sdf.parse(i + ":" + i1));
                         mAdapter.updateAdapter(to);
                     }
@@ -140,6 +146,13 @@ public class MeetingTimeFragment extends Fragment {
 
         TimePickerDialog dialog = new TimePickerDialog(getContext(), listener, hour, minute, false);
         dialog.show();
+    }
+
+    public List<TimeOption> getTimeOptions() {
+        if (mAdapter == null) {
+            mAdapter = new TimeOptionAdapter();
+        }
+        return mAdapter.getTimeOptions();
     }
 
     @Override

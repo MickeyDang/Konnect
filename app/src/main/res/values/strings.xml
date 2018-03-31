@@ -9,6 +9,7 @@
     <string name="sign_in_button">Already A User</string>
     <string name="sign_in_button_google">Sign In With Google</string>
     <string name="title_activity_lobby">LobbyActivity</string>
+    <string name="vote_button">Vote</string>
 
     <!--NavBar-->
     <string name="meeting_conf">Finalized Meetings</string>
