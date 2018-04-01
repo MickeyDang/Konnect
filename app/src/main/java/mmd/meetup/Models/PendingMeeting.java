@@ -11,8 +11,7 @@ import java.util.List;
 public class PendingMeeting extends Meeting implements Serializable {
 
     private List<TimeOption> timeOptions;
-    private List<String> locationNames;
-    private List<String> locationAddresses;
+    private List<MeetingPlace> meetingPlaces;
 
     public PendingMeeting() {
         super();
@@ -26,19 +25,11 @@ public class PendingMeeting extends Meeting implements Serializable {
         this.timeOptions = timeOptions;
     }
 
-    public List<String> getLocationNames() {
-        return locationNames;
+    public List<MeetingPlace> getMeetingPlaces() {
+        return meetingPlaces;
     }
 
-    public void setLocationNames(List<String> locationNames) {
-        this.locationNames = locationNames;
-    }
-
-    public List<String> getLocationAddresses() {
-        return locationAddresses;
-    }
-
-    public void setLocationAddresses(List<String> locationAddresses) {
-        this.locationAddresses = locationAddresses;
+    public void setMeetingPlaces(List<MeetingPlace> meetingPlaces) {
+        this.meetingPlaces = meetingPlaces;
     }
 }

@@ -1,7 +1,12 @@
 package mmd.meetup.Activities;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,8 +17,11 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.GoogleApi;
 import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceDetectionClient;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLngBounds;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +31,7 @@ import mmd.meetup.Fragments.MeetingDetailsFragment;
 import mmd.meetup.Fragments.MeetingInviteFragment;
 import mmd.meetup.Fragments.MeetingPlaceFragment;
 import mmd.meetup.Fragments.MeetingTimeFragment;
+import mmd.meetup.Manifest;
 import mmd.meetup.Models.Meeting;
 import mmd.meetup.Models.PendingMeeting;
 import mmd.meetup.Models.TimeOption;
@@ -34,6 +43,7 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
 
     private final String LOG_TAG = this.getClass().getSimpleName();
     private final int PICKER_RC = 99;
+    private final int PERMISSION_RC = 98;
 
     private String currentStep;
 
@@ -170,9 +180,42 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
 
     @Override
     public void makePlacePicker() {
+        //request permissions
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_RC);
+
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        switch (requestCode) {
+            case PERMISSION_RC:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //zoom place picker to appropriate place before selection
+                } else {
+                    startPlacePickerWidget(null);
+                }
+        }
+
+    }
+
+    private void getUserLatLngBounds() {
+
+    }
+
+    private void startPlacePickerWidget(@Nullable LatLngBounds bounds) {
         try {
             PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+
+            if (bounds != null) builder.setLatLngBounds(bounds);
+
             startActivityForResult(builder.build(this), PICKER_RC);
+
         } catch (GooglePlayServicesRepairableException re) {
             Log.e(LOG_TAG, re.getMessage());
         } catch (GooglePlayServicesNotAvailableException nae) {
@@ -180,11 +223,16 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
         }
     }
 
+
     @Override
     public void handlePlaceOption(Place place) {
 
-        String toastMsg = String.format("Place: %s", place.getName());
-        Toast.makeText(this, toastMsg, Toast.LENGTH_SHORT).show();
+        if (place != null) {
+            MeetingPlaceFragment fragment = (MeetingPlaceFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+            fragment.addPickedPlace(place);
+        }
+//        String toastMsg = String.format("Place: %s", place.getName());
+//        Toast.makeText(this, toastMsg, Toast.LENGTH_SHORT).show();
 
     }
 }

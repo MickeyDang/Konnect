@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +20,9 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 
 import mmd.meetup.Activities.MapActivity;
+import mmd.meetup.Adapters.PlaceAdapter;
 import mmd.meetup.Models.Meeting;
+import mmd.meetup.Models.MeetingPlace;
 import mmd.meetup.R;
 
 
@@ -29,6 +33,8 @@ public class MeetingPlaceFragment extends Fragment {
 
     private Meeting meeting;
     private FloatingActionButton addPlaceButton;
+    private RecyclerView mRecyclerView;
+    private PlaceAdapter mAdapter;
 
     public MeetingPlaceFragment() {
         // Required empty public constructor
@@ -67,6 +73,12 @@ public class MeetingPlaceFragment extends Fragment {
 //                startActivity(intent);
             }
         });
+
+        mRecyclerView = view.findViewById(R.id.list);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mAdapter = new PlaceAdapter();
+        mRecyclerView.setAdapter(mAdapter);
+
     }
 
     @Override
@@ -84,6 +96,17 @@ public class MeetingPlaceFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public void addPickedPlace(Place place) {
+        MeetingPlace meetingPlace = new MeetingPlace();
+
+        meetingPlace.setName(place.getName().toString());
+        meetingPlace.setAddress(place.getAddress().toString());
+        meetingPlace.setLatitude(place.getLatLng().latitude);
+        meetingPlace.setLongitude(place.getLatLng().longitude);
+
+        mAdapter.insertMeetingPlace(meetingPlace);
     }
 
     public interface PlacePickerHandler {
