@@ -147,6 +147,13 @@ public class LobbyActivity extends AppCompatActivity
                     ArrayList<TimeOption> options = data.getExtras().getParcelableArrayList(Constants.MeetingNavigation.TIME_OPTION_KEY);
                     mMaker.meeting.setTimeOptions(options);
 
+                    startActivityForResult(navigate(Constants.MeetingNavigation.stepLocation, mMaker.meeting), Constants.MeetingNavigation.RC_LOCATION);
+                }
+                break;
+            case Constants.MeetingNavigation.RC_LOCATION:
+                if (resultCode == Constants.MeetingNavigation.resultSuccess) {
+                    //deal with data
+
                     startActivityForResult(navigate(Constants.MeetingNavigation.stepInvite, mMaker.meeting), Constants.MeetingNavigation.RC_INVITE);
                 }
                 break;

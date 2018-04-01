@@ -81,6 +81,7 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
                         setResult(Constants.MeetingNavigation.resultSuccess, intent);
                         this.finish();
                     }
+
                 } else if (currentStep.equals(Constants.MeetingNavigation.stepTime)) {
                     Intent intent = new Intent();
                     Bundle bundle = new Bundle();
@@ -88,7 +89,15 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
                     intent.putExtras(bundle);
                     setResult(Constants.MeetingNavigation.resultSuccess, intent);
                     this.finish();
+
+                } else if (currentStep.equals(Constants.MeetingNavigation.stepLocation)) {
+                    Intent intent = new Intent();
+                    //put data in intent
+                    setResult(Constants.MeetingNavigation.resultSuccess, intent);
+                    this.finish();
+
                 } else if (currentStep.equals(Constants.MeetingNavigation.stepInvite)) {
+
                     Intent intent = new Intent();
                     intent.putStringArrayListExtra(Constants.MeetingNavigation.INVITEE_KEY, getInvitees());
                     setResult(Constants.MeetingNavigation.resultSuccess, intent);
