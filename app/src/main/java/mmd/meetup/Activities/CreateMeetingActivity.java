@@ -15,6 +15,7 @@ import java.util.List;
 import mmd.meetup.Constants;
 import mmd.meetup.Fragments.MeetingDetailsFragment;
 import mmd.meetup.Fragments.MeetingInviteFragment;
+import mmd.meetup.Fragments.MeetingPlaceFragment;
 import mmd.meetup.Fragments.MeetingTimeFragment;
 import mmd.meetup.Models.Meeting;
 import mmd.meetup.Models.PendingMeeting;
@@ -22,7 +23,8 @@ import mmd.meetup.Models.TimeOption;
 import mmd.meetup.R;
 
 public class CreateMeetingActivity extends AppCompatActivity implements MeetingDetailsFragment.OnFragmentInteractionListener,
-    MeetingInviteFragment.OnFragmentInteractionListener, MeetingTimeFragment.OnFragmentInteractionListener{
+    MeetingInviteFragment.OnFragmentInteractionListener, MeetingTimeFragment.OnFragmentInteractionListener,
+        MeetingPlaceFragment.OnFragmentInteractionListener{
 
     private String currentStep;
 
@@ -42,6 +44,9 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
         } else if (currentStep.equals(Constants.MeetingNavigation.stepTime)) {
             Meeting meeting = (Meeting) getIntent().getExtras().getSerializable(Constants.MeetingNavigation.MEETING_OBJ_KEY);
             goToFragment(MeetingTimeFragment.newInstance(meeting));
+        } else if (currentStep.equals(Constants.MeetingNavigation.stepLocation)) {
+            Meeting meeting = (Meeting) getIntent().getExtras().getSerializable(Constants.MeetingNavigation.MEETING_OBJ_KEY);
+            goToFragment(MeetingPlaceFragment.newInstance(meeting));
         } else if (currentStep.equals(Constants.MeetingNavigation.stepInvite)) {
             Meeting meeting = (Meeting) getIntent().getExtras().getSerializable(Constants.MeetingNavigation.MEETING_OBJ_KEY);
             goToFragment(MeetingInviteFragment.newInstance(meeting));
@@ -79,9 +84,8 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
                 } else if (currentStep.equals(Constants.MeetingNavigation.stepTime)) {
                     Intent intent = new Intent();
                     Bundle bundle = new Bundle();
-
-                    //make TimeOption parcelable
-
+                    bundle.putParcelableArrayList(Constants.MeetingNavigation.TIME_OPTION_KEY, getTimeOptions());
+                    intent.putExtras(bundle);
                     setResult(Constants.MeetingNavigation.resultSuccess, intent);
                     this.finish();
                 } else if (currentStep.equals(Constants.MeetingNavigation.stepInvite)) {
@@ -97,12 +101,12 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
         }
     }
 
-    private List<TimeOption> getTimeOptions() {
+    private ArrayList<TimeOption> getTimeOptions() {
         MeetingTimeFragment fragment = (MeetingTimeFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         return fragment.getTimeOptions();
     }
 
-    private Meeting getProtoMeeting() {
+    private PendingMeeting getProtoMeeting() {
         MeetingDetailsFragment detailsFragment = (MeetingDetailsFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         return detailsFragment.getProtoMeeting();
     }

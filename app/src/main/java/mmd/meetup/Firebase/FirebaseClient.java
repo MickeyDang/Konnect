@@ -20,6 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.List;
 
 import mmd.meetup.Models.Meeting;
+import mmd.meetup.Models.PendingMeeting;
 
 /**
  * Created by mickeydang on 2018-03-29.
@@ -93,7 +94,7 @@ public class FirebaseClient {
                 });
     }
 
-    public void makeMeeting(Meeting meeting, List<String> invitees) {
+    public void makeMeeting(PendingMeeting meeting, List<String> invitees) {
 
         //make meeting
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference()

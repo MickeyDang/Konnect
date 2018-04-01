@@ -1,12 +1,14 @@
 package mmd.meetup.Models;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by mickeydang on 2018-03-31.
  */
 
-public class PendingMeeting extends Meeting{
+public class PendingMeeting extends Meeting implements Serializable {
 
     private List<TimeOption> timeOptions;
     private List<String> locationNames;
@@ -20,7 +22,7 @@ public class PendingMeeting extends Meeting{
         return timeOptions;
     }
 
-    public void setTimeOptions(List<TimeOption> timeOptions) {
+    public void setTimeOptions(ArrayList<TimeOption> timeOptions) {
         this.timeOptions = timeOptions;
     }
 

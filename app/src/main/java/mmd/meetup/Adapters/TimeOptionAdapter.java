@@ -30,12 +30,12 @@ public class TimeOptionAdapter extends RecyclerView.Adapter<TimeOptionAdapter.Vi
         notifyItemInserted(timeOptions.size() - 1);
     }
 
-    public List<TimeOption> getTimeOptions () {
+    public ArrayList<TimeOption> getTimeOptions () {
         //lazy loading
         if (timeOptions == null) {
             timeOptions = new ArrayList<>();
         }
-        return timeOptions;
+        return (ArrayList<TimeOption>) timeOptions;
     }
 
     @Override
@@ -50,8 +50,8 @@ public class TimeOptionAdapter extends RecyclerView.Adapter<TimeOptionAdapter.Vi
 
         TimeOption to = timeOptions.get(position);
 
-        holder.date.setText(to.date);
-        holder.time.setText(to.startTime);
+        holder.date.setText(to.getDate());
+        holder.time.setText(to.getStartTime());
 
     }
 

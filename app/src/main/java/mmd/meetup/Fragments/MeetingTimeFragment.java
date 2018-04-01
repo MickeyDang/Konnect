@@ -21,6 +21,7 @@ import android.widget.Toast;
 import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -91,15 +92,16 @@ public class MeetingTimeFragment extends Fragment {
         DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                //use SimpleDateFormat and parse result
-                //add the date to tempObject
+
                 try {
                     TimeOption to = new TimeOption();
 
                     SimpleDateFormat sdf = new SimpleDateFormat("MM dd, yyyy");
-                    Date dateObject = sdf.parse(i1 + " " + i2 + ", " + i);
-                    to.date = new SimpleDateFormat("MMMM dd, yyyy")
-                            .format(dateObject);
+
+                    //TODO find out why the month is one behind?
+                    Date dateObject = sdf.parse((++i1) + " " + i2 + ", " + i);
+
+                    to.setDate(new SimpleDateFormat("MMMM dd, yyyy").format(dateObject));
 
                     createTimePicker(c, to, dateObject, false);
 
@@ -124,15 +126,14 @@ public class MeetingTimeFragment extends Fragment {
 
                 try {
                     SimpleDateFormat sdf = new SimpleDateFormat("H:mm");
-                    dateObj.setHours(i);
-                    dateObj.setMinutes(i1);
 
                     if (!isEndTime) {
-                        to.dataStart = new Date(dateObj.getTime());
-                        to.startTime = new SimpleDateFormat("h:mm").format(sdf.parse(i + ":" + i1));
+                        dateObj.setHours(i);
+                        dateObj.setMinutes(i1);
+
+                        to.setStartTime(new SimpleDateFormat("h:mm").format(sdf.parse(i + ":" + i1)));
                         createTimePicker(c, to, dateObj, true);
                     } else {
-                        to.dataEnd = new Date(dateObj.getTime());
                         to.endTime = sdf.format(sdf.parse(i + ":" + i1));
                         mAdapter.updateAdapter(to);
                     }
@@ -148,7 +149,7 @@ public class MeetingTimeFragment extends Fragment {
         dialog.show();
     }
 
-    public List<TimeOption> getTimeOptions() {
+    public ArrayList<TimeOption> getTimeOptions() {
         if (mAdapter == null) {
             mAdapter = new TimeOptionAdapter();
         }

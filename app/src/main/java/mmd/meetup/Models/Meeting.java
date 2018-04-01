@@ -15,7 +15,7 @@ public class Meeting implements Serializable{
     private String id;
 
     public Meeting() {
-
+        //required empty constructor
     }
 
     public String getId() {
@@ -58,6 +58,5 @@ public class Meeting implements Serializable{
         this.inviteID = inviteID;
     }
 
-    //todo google calendar time, and google maps place
 
 }

@@ -23,6 +23,8 @@ import mmd.meetup.Firebase.FirebaseClient;
 import mmd.meetup.Fragments.MeetingListFragment;
 import mmd.meetup.Fragments.VoteListFragment;
 import mmd.meetup.Models.Meeting;
+import mmd.meetup.Models.PendingMeeting;
+import mmd.meetup.Models.TimeOption;
 import mmd.meetup.R;
 
 public class LobbyActivity extends AppCompatActivity
@@ -134,12 +136,17 @@ public class LobbyActivity extends AppCompatActivity
 
             case Constants.MeetingNavigation.RC_DESCRIPTION :
                 if (resultCode == Constants.MeetingNavigation.resultSuccess) {
-                    mMaker.meeting = (Meeting) data.getExtras().getSerializable(Constants.MeetingNavigation.MEETING_OBJ_KEY);
+
+                    mMaker.meeting = (PendingMeeting) data.getExtras().getSerializable(Constants.MeetingNavigation.MEETING_OBJ_KEY);
                     startActivityForResult(navigate(Constants.MeetingNavigation.stepTime, mMaker.meeting), Constants.MeetingNavigation.RC_TIME);
                 }
                 break;
             case Constants.MeetingNavigation.RC_TIME :
                 if (resultCode == Constants.MeetingNavigation.resultSuccess) {
+
+                    ArrayList<TimeOption> options = data.getExtras().getParcelableArrayList(Constants.MeetingNavigation.TIME_OPTION_KEY);
+                    mMaker.meeting.setTimeOptions(options);
+
                     startActivityForResult(navigate(Constants.MeetingNavigation.stepInvite, mMaker.meeting), Constants.MeetingNavigation.RC_INVITE);
                 }
                 break;
@@ -160,7 +167,7 @@ public class LobbyActivity extends AppCompatActivity
 
     class MeetingMaker {
 
-        Meeting meeting;
+        PendingMeeting meeting;
         List<String> invites = new ArrayList<>();
 
         public void addInvites(List<String> list) {
