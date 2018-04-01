@@ -1,21 +1,35 @@
 package mmd.meetup.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
+
+import mmd.meetup.Activities.MapActivity;
 import mmd.meetup.Models.Meeting;
 import mmd.meetup.R;
 
 
 public class MeetingPlaceFragment extends Fragment {
-    private OnFragmentInteractionListener mListener;
+    private final String LOG_TAG = this.getClass().getSimpleName();
+
+    private PlacePickerHandler mListener;
 
     private Meeting meeting;
+    private FloatingActionButton addPlaceButton;
+
     public MeetingPlaceFragment() {
         // Required empty public constructor
     }
@@ -40,10 +54,26 @@ public class MeetingPlaceFragment extends Fragment {
     }
 
     @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        addPlaceButton = view.findViewById(R.id.addPlace);
+
+        addPlaceButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.makePlacePicker();
+//                Intent intent = new Intent(getContext(), MapActivity.class);
+//                startActivity(intent);
+            }
+        });
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof PlacePickerHandler) {
+            mListener = (PlacePickerHandler) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -56,7 +86,8 @@ public class MeetingPlaceFragment extends Fragment {
         mListener = null;
     }
 
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction();
+    public interface PlacePickerHandler {
+        void makePlacePicker();
+        void handlePlaceOption(Place place);
     }
 }

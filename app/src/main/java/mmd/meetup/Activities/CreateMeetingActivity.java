@@ -4,10 +4,16 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +30,10 @@ import mmd.meetup.R;
 
 public class CreateMeetingActivity extends AppCompatActivity implements MeetingDetailsFragment.OnFragmentInteractionListener,
     MeetingInviteFragment.OnFragmentInteractionListener, MeetingTimeFragment.OnFragmentInteractionListener,
-        MeetingPlaceFragment.OnFragmentInteractionListener{
+        MeetingPlaceFragment.PlacePickerHandler{
+
+    private final String LOG_TAG = this.getClass().getSimpleName();
+    private final int PICKER_RC = 99;
 
     private String currentStep;
 
@@ -138,6 +147,44 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
 
     @Override
     public void onFragmentInteraction() {
+
+    }
+
+    //handle map selection
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case PICKER_RC :
+                //default ok result constant
+                if (resultCode == RESULT_OK) {
+                    handlePlaceOption(PlacePicker.getPlace(this, data));
+                }
+
+        }
+
+    }
+
+    @Override
+    public void makePlacePicker() {
+        try {
+            PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+            startActivityForResult(builder.build(this), PICKER_RC);
+        } catch (GooglePlayServicesRepairableException re) {
+            Log.e(LOG_TAG, re.getMessage());
+        } catch (GooglePlayServicesNotAvailableException nae) {
+            Log.e(LOG_TAG, nae.getMessage());
+        }
+    }
+
+    @Override
+    public void handlePlaceOption(Place place) {
+
+        String toastMsg = String.format("Place: %s", place.getName());
+        Toast.makeText(this, toastMsg, Toast.LENGTH_SHORT).show();
 
     }
 }
