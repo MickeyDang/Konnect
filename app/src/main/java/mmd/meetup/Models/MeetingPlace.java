@@ -6,6 +6,7 @@ import java.io.Serializable;
  * Created by mickeydang on 2018-04-01.
  */
 
+//TODO make implement parcelable
 public class MeetingPlace implements Serializable{
 
     private String name;

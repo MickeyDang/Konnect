@@ -19,6 +19,8 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 
+import java.util.ArrayList;
+
 import mmd.meetup.Activities.MapActivity;
 import mmd.meetup.Adapters.PlaceAdapter;
 import mmd.meetup.Models.Meeting;
@@ -96,6 +98,10 @@ public class MeetingPlaceFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public ArrayList<MeetingPlace> getMeetingPlaceList(){
+        return (ArrayList<MeetingPlace>) mAdapter.getDataSet();
     }
 
     public void addPickedPlace(Place place) {

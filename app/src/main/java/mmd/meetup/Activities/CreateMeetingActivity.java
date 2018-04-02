@@ -33,6 +33,7 @@ import mmd.meetup.Fragments.MeetingPlaceFragment;
 import mmd.meetup.Fragments.MeetingTimeFragment;
 import mmd.meetup.Manifest;
 import mmd.meetup.Models.Meeting;
+import mmd.meetup.Models.MeetingPlace;
 import mmd.meetup.Models.PendingMeeting;
 import mmd.meetup.Models.TimeOption;
 import mmd.meetup.R;
@@ -111,7 +112,9 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
 
                 } else if (currentStep.equals(Constants.MeetingNavigation.stepLocation)) {
                     Intent intent = new Intent();
-                    //put data in intent
+                    Bundle bundle = new Bundle();
+//                    bundle.putParcelableArrayList(Constants.MeetingNavigation.PLACE_OPTION_KEY, getMeetingPlaceList());
+                    intent.putExtras(bundle);
                     setResult(Constants.MeetingNavigation.resultSuccess, intent);
                     this.finish();
 
@@ -181,13 +184,14 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
     @Override
     public void makePlacePicker() {
         //request permissions
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(this,
-                    new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_RC);
-
-        }
+        startPlacePickerWidget(null);
+//        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+//                != PackageManager.PERMISSION_GRANTED) {
+//
+//            ActivityCompat.requestPermissions(this,
+//                    new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_RC);
+//
+//        }
     }
 
     @Override
@@ -196,7 +200,7 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
         switch (requestCode) {
             case PERMISSION_RC:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //zoom place picker to appropriate place before selection
+                    //handle
                 } else {
                     startPlacePickerWidget(null);
                 }
@@ -221,6 +225,11 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
         } catch (GooglePlayServicesNotAvailableException nae) {
             Log.e(LOG_TAG, nae.getMessage());
         }
+    }
+
+    private ArrayList<MeetingPlace> getMeetingPlaceList() {
+        MeetingPlaceFragment fragment = (MeetingPlaceFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        return fragment.getMeetingPlaceList();
     }
 
 

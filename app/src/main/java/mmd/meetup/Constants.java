@@ -10,6 +10,7 @@ public class Constants {
         public static String INVITEE_KEY = "invitees_key";
         public static String MEETING_OBJ_KEY = "meeting_key";
         public static String TIME_OPTION_KEY = "timeoption_key";
+        public static String PLACE_OPTION_KEY = "placeoption_key";
 
         public static String STEP_KEY = "step_key";
         public static String stepDescription = "step_description";
