@@ -23,6 +23,7 @@ import mmd.meetup.Firebase.FirebaseClient;
 import mmd.meetup.Fragments.MeetingListFragment;
 import mmd.meetup.Fragments.VoteListFragment;
 import mmd.meetup.Models.Meeting;
+import mmd.meetup.Models.MeetingPlace;
 import mmd.meetup.Models.PendingMeeting;
 import mmd.meetup.Models.TimeOption;
 import mmd.meetup.R;
@@ -152,7 +153,9 @@ public class LobbyActivity extends AppCompatActivity
                 break;
             case Constants.MeetingNavigation.RC_LOCATION:
                 if (resultCode == Constants.MeetingNavigation.resultSuccess) {
-                    //deal with data
+                    
+                    ArrayList<MeetingPlace> places = data.getExtras().getParcelableArrayList(Constants.MeetingNavigation.PLACE_OPTION_KEY);
+                    mMaker.meeting.setMeetingPlaces(places);
 
                     startActivityForResult(navigate(Constants.MeetingNavigation.stepInvite, mMaker.meeting), Constants.MeetingNavigation.RC_INVITE);
                 }

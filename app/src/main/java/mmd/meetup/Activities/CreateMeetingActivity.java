@@ -113,7 +113,7 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
                 } else if (currentStep.equals(Constants.MeetingNavigation.stepLocation)) {
                     Intent intent = new Intent();
                     Bundle bundle = new Bundle();
-//                    bundle.putParcelableArrayList(Constants.MeetingNavigation.PLACE_OPTION_KEY, getMeetingPlaceList());
+                    bundle.putParcelableArrayList(Constants.MeetingNavigation.PLACE_OPTION_KEY, getMeetingPlaceList());
                     intent.putExtras(bundle);
                     setResult(Constants.MeetingNavigation.resultSuccess, intent);
                     this.finish();
@@ -163,8 +163,6 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
 
     }
 
-    //handle map selection
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -183,33 +181,7 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
 
     @Override
     public void makePlacePicker() {
-        //request permissions
         startPlacePickerWidget(null);
-//        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-//                != PackageManager.PERMISSION_GRANTED) {
-//
-//            ActivityCompat.requestPermissions(this,
-//                    new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_RC);
-//
-//        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-        switch (requestCode) {
-            case PERMISSION_RC:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //handle
-                } else {
-                    startPlacePickerWidget(null);
-                }
-        }
-
-    }
-
-    private void getUserLatLngBounds() {
-
     }
 
     private void startPlacePickerWidget(@Nullable LatLngBounds bounds) {

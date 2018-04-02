@@ -1,13 +1,16 @@
 package mmd.meetup.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 
 /**
  * Created by mickeydang on 2018-04-01.
  */
 
-//TODO make implement parcelable
-public class MeetingPlace implements Serializable{
+
+public class MeetingPlace implements Parcelable, Serializable{
 
     private String name;
     private String address;
@@ -17,6 +20,15 @@ public class MeetingPlace implements Serializable{
     public MeetingPlace() {
 
     }
+
+    //read in same order as write
+    private MeetingPlace(Parcel parcel) {
+        name = parcel.readString();
+        address = parcel.readString();
+        latitude = parcel.readDouble();
+        longitude = parcel.readDouble();
+    }
+
 
     public String getName() {
         return name;
@@ -48,5 +60,33 @@ public class MeetingPlace implements Serializable{
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    static final Parcelable.Creator<MeetingPlace> CREATOR =  new Parcelable.Creator<MeetingPlace>() {
+        @Override
+        public MeetingPlace createFromParcel(Parcel parcel) {
+            return new MeetingPlace(parcel);
+        }
+
+        @Override
+        public MeetingPlace[] newArray(int i) {
+            return new MeetingPlace[i];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    //write in same order as read
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+
+        parcel.writeString(name);
+        parcel.writeString(address);
+        parcel.writeDouble(latitude);
+        parcel.writeDouble(longitude);
+
     }
 }
