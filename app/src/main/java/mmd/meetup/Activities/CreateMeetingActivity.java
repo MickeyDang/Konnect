@@ -31,7 +31,6 @@ import mmd.meetup.Fragments.MeetingDetailsFragment;
 import mmd.meetup.Fragments.MeetingInviteFragment;
 import mmd.meetup.Fragments.MeetingPlaceFragment;
 import mmd.meetup.Fragments.MeetingTimeFragment;
-import mmd.meetup.Manifest;
 import mmd.meetup.Models.Meeting;
 import mmd.meetup.Models.MeetingPlace;
 import mmd.meetup.Models.PendingMeeting;

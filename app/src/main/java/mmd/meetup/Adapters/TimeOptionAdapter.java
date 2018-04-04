@@ -5,13 +5,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.github.ivbaranov.mli.MaterialLetterIcon;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import mmd.meetup.Models.TimeOption;
 import mmd.meetup.R;
+import mmd.meetup.Utils;
 
 /**
  * Created by mickeydang on 2018-03-31.
@@ -53,6 +57,9 @@ public class TimeOptionAdapter extends RecyclerView.Adapter<TimeOptionAdapter.Vi
         holder.date.setText(to.getDate());
         holder.time.setText(to.getStartTime());
 
+        holder.icon.setLetter(String.valueOf(position));
+        holder.icon.setShapeColor(Utils.getRandomMaterialColors(String.valueOf(to.getDate())));
+
     }
 
     @Override
@@ -62,16 +69,18 @@ public class TimeOptionAdapter extends RecyclerView.Adapter<TimeOptionAdapter.Vi
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
+        MaterialLetterIcon icon;
         TextView date;
         TextView time;
-        Button vote;
+        ImageButton deleteButton;
 
         public ViewHolder(View v) {
             super(v);
 
+            icon = v.findViewById(R.id.letter_icon);
             date = v.findViewById(R.id.dateView);
             time = v.findViewById(R.id.timeView);
-            vote = v.findViewById(R.id.voteButton);
+            deleteButton = v.findViewById(R.id.deleteButton);
         }
 
     }

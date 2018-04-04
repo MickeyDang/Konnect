@@ -98,7 +98,6 @@ public class MeetingTimeFragment extends Fragment {
 
                     SimpleDateFormat sdf = new SimpleDateFormat("MM dd, yyyy");
 
-                    //TODO find out why the month is one behind?
                     Date dateObject = sdf.parse((++i1) + " " + i2 + ", " + i);
 
                     to.setDate(new SimpleDateFormat("MMMM dd, yyyy").format(dateObject));

@@ -6,33 +6,52 @@
     android:layout_width="match_parent"
     android:layout_height="72dp">
 
+    <com.github.ivbaranov.mli.MaterialLetterIcon
+        android:id="@+id/letter_icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="16dp"/>
+
     <TextView
         android:id="@+id/dateView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="72dp"
+        android:layout_marginEnd="36dp"
         android:layout_marginTop="8dp"
+        android:fontFamily="sans-serif"
         android:text="TextView"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@color/primary_text"
+        android:textSize="16dp"
+        app:layout_constraintStart_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/deleteButton"
         app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/timeView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="72dp"
+        android:layout_marginEnd="36dp"
         android:layout_marginTop="8dp"
         android:text="TextView"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@color/secondary_text"
+        android:textSize="14dp"
+        app:layout_constraintStart_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/deleteButton"
         app:layout_constraintTop_toBottomOf="@+id/dateView"/>
 
-    <Button
-        android:id="@+id/voteButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/vote_button"
+    <ImageButton
+        android:id="@+id/deleteButton"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:background="@color/transparent"
+        app:srcCompat="@drawable/ic_delete"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="16dp"/>
 </android.support.constraint.ConstraintLayout>

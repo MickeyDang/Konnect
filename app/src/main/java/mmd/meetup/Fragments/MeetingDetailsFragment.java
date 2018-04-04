@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import mmd.meetup.Firebase.FirebaseClient;
 import mmd.meetup.Models.Meeting;
 import mmd.meetup.Models.PendingMeeting;
 import mmd.meetup.R;
@@ -77,6 +78,7 @@ public class MeetingDetailsFragment extends Fragment {
         meeting.setTitle(title);
         meeting.setDescription(description);
         meeting.setInviteID(Integer.toHexString(meeting.getTitle().hashCode()));
+        meeting.setOrganizerID(FirebaseClient.getInstance().getUserID());
         return meeting;
     }
 

@@ -4,13 +4,17 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.github.ivbaranov.mli.MaterialLetterIcon;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import mmd.meetup.Models.MeetingPlace;
 import mmd.meetup.R;
+import mmd.meetup.Utils;
 
 /**
  * Created by mickeydang on 2018-04-01.
@@ -57,19 +61,28 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder> 
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
+        MaterialLetterIcon icon;
         TextView name;
         TextView address;
+        ImageButton deleteButton;
 
         ViewHolder(View view) {
             super(view);
 
+            icon = view.findViewById(R.id.letter_icon);
             name = view.findViewById(R.id.nameView);
             address = view.findViewById(R.id.addressView);
+            deleteButton = view.findViewById(R.id.deleteButton);
         }
 
         void onBind(MeetingPlace place) {
             name.setText(place.getName());
             address.setText(place.getAddress());
+
+            if (place.getName() != null) {
+                this.icon.setLetter(String.valueOf(place.getName().charAt(0)));
+                this.icon.setShapeColor(Utils.getRandomMaterialColors(place.getName()));
+            }
         }
     }
 }

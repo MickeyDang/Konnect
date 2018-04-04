@@ -153,7 +153,7 @@ public class LobbyActivity extends AppCompatActivity
                 break;
             case Constants.MeetingNavigation.RC_LOCATION:
                 if (resultCode == Constants.MeetingNavigation.resultSuccess) {
-                    
+
                     ArrayList<MeetingPlace> places = data.getExtras().getParcelableArrayList(Constants.MeetingNavigation.PLACE_OPTION_KEY);
                     mMaker.meeting.setMeetingPlaces(places);
 

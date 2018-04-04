@@ -1,5 +1,6 @@
 package mmd.meetup.Fragments;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -29,7 +30,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import mmd.meetup.Firebase.FirebaseClient;
-import mmd.meetup.Manifest;
 import mmd.meetup.R;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback{
