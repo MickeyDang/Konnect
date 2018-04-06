@@ -7,8 +7,9 @@
     android:name="mmd.meetup.Fragments.VoteListFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    app:layoutManager="LinearLayoutManager"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    app:layoutManager="android.support.v7.widget.LinearLayoutManager"
     tools:context="mmd.meetup.Fragments.VoteListFragment"
-    tools:listitem="@layout/item_vote"/>
+    tools:listitem="@layout/item_vote"
+    android:paddingTop="6dp"/>
