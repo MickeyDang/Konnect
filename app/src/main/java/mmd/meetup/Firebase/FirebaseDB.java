@@ -28,7 +28,8 @@ public class FirebaseDB {
 
         public static class Entries {
             public static String id = "id";
-            public static String creatorID = "creator_id";
+            public static String inviteID = "inviteID";
+            public static String organizerID = "organizerID";
             public static String title = "title";
             public static String description = "description";
             public static String members = "members";

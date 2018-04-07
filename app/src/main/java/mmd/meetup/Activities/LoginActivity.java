@@ -11,13 +11,21 @@ import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInApi;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.GoogleApi;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.OptionalPendingResult;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 
+import mmd.meetup.Constants;
 import mmd.meetup.Firebase.FirebaseClient;
 import mmd.meetup.R;
 
@@ -39,6 +47,10 @@ public class LoginActivity extends AppCompatActivity {
                 .build();
 
         gsc = GoogleSignIn.getClient(this, gso);
+
+        if (getIntent() != null && getIntent().getBooleanExtra(Constants.KEYS.SIGN_OUT_KEY, false)) {
+            gsc.signOut();
+        }
 
         signInButton = findViewById(R.id.signIn);
         signInButton.setOnClickListener(new View.OnClickListener() {

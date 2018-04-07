@@ -19,11 +19,17 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Settings</string>
+    <string name="find_meeting">Find a Meeting</string>
+    <string name="sign_out">Sign Out</string>
 
+    <!--Titles-->
+    <string name="title_search">Search</string>
 
     <!--Toasts-->
     <string name="toast_failed_login">Failed to login!</string>
     <string name="toast_empty_field">Cannot continue! Fields are empty!</string>
+    <string name="toast_add_success">Added Successfully</string>
+    <string name="toast_add_fail">Failed To Find Meeting</string>
 
 
     <string name="hello_blank_fragment">Hello blank fragment</string>

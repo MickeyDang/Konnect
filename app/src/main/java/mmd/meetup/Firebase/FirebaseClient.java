@@ -15,6 +15,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
@@ -49,6 +50,10 @@ public class FirebaseClient {
         return mUser.getUid();
     }
 
+    public void signOutUser() {
+        mAuth.signOut();
+    }
+
     public void initUser(final GoogleSignInAccount acct, final Callback<Boolean> callback) {
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
 
@@ -59,9 +64,6 @@ public class FirebaseClient {
                         if (task.isSuccessful()) {
                             mUser = mAuth.getCurrentUser();
                             createUserInDB(acct.getDisplayName());
-
-                            Log.d("test", acct.getDisplayName() + " : "
-                            + acct.getFamilyName() + " : " + acct.getGivenName());
 
                             callback.onResult(true);
                         } else {
@@ -94,6 +96,45 @@ public class FirebaseClient {
                 });
     }
 
+    public void addUserToMeeting(String meetingCode, final Callback<String> callback) {
+
+        //query for meeting with inviteCode equal to meetingCode
+        Query query = FirebaseDatabase.getInstance().getReference()
+                .child(FirebaseDB.PendingMeetings.path)
+                .orderByChild(FirebaseDB.PendingMeetings.Entries.inviteID)
+                .equalTo(meetingCode);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //condition returns true is search unsuccessful
+                if (dataSnapshot == null) {
+                    //handle appropriately in view
+                    callback.onResult(Callback.NULL);
+                } else {
+                    for (DataSnapshot snap : dataSnapshot.getChildren()) {
+                        //handle appropriately in view
+                        callback.onResult(dataSnapshot.getKey());
+                        //add the meeting under user field
+                        FirebaseDatabase.getInstance().getReference()
+                                .child(FirebaseDB.Users.path)
+                                .child(getUserID())
+                                .child(FirebaseDB.Users.Entries.pendingMeetings)
+                                .child(snap.getKey())
+                                .setValue("true");
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
     public void makeMeeting(PendingMeeting meeting, List<String> invitees) {
 
         //make meeting
@@ -114,6 +155,8 @@ public class FirebaseClient {
     }
 
     public interface Callback<T> {
+        String NULL = "request_nothing";
+
         void onResult(T t);
     }
 

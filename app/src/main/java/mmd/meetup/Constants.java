@@ -29,4 +29,8 @@ public class Constants {
     }
 
 
+    public static class KEYS {
+        public static String SIGN_OUT_KEY = "isSignOut";
+    }
+
 }
