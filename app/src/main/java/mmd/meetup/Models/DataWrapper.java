@@ -17,8 +17,9 @@ public class DataWrapper<T> {
     public static <T> List<DataWrapper> wrapObjects(List<T> list) {
         List<DataWrapper> wrappers = new ArrayList<>();
 
-        for (T item : list) {
-            wrappers.add(new DataWrapper<>(item));
+        //cannot be for each in case of null list
+        for (int i = 0; i < list.size(); i++) {
+            wrappers.add(new DataWrapper<T>(list.get(i)));
         }
 
         return wrappers;

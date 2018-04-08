@@ -65,6 +65,14 @@ public class TimeOption implements Parcelable, Serializable {
         this.startTime = startTime;
     }
 
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
     public static final Parcelable.Creator<TimeOption> CREATOR
             = new Parcelable.Creator<TimeOption>() {
         @Override

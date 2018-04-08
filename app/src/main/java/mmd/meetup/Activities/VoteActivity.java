@@ -26,6 +26,8 @@ public class VoteActivity extends AppCompatActivity implements VoteListFragment.
         pm = (PendingMeeting) getIntent().getExtras().getSerializable(Constants.MeetingNavigation.MEETING_OBJ_KEY);
 
         this.getSupportActionBar().setTitle(pm.getTitle());
+
+        goToFragment(VoteListFragment.newInstance(pm));
     }
 
     private void goToFragment(Fragment fragment) {

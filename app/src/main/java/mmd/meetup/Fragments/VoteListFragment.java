@@ -26,6 +26,7 @@ public class VoteListFragment extends Fragment {
     VoteAdapter mAdapter;
 
     public VoteListFragment() {
+        //mandatory empty constructor.
     }
 
     public static VoteListFragment newInstance(PendingMeeting pm) {
