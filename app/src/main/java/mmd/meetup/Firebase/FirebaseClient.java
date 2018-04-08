@@ -154,6 +154,49 @@ public class FirebaseClient {
         }
     }
 
+    public void isOwnerOfVote(String voteID, final Callback<Boolean> callback) {
+        FirebaseDatabase.getInstance().getReference()
+                .child(FirebaseDB.PendingMeetings.path)
+                .child(voteID)
+                .child(FirebaseDB.PendingMeetings.Entries.organizerID)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String s = (String) dataSnapshot.getValue();
+                        s = (s == null ? "false" : s);
+                        callback.onResult(s.equals(getUserID()));
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+    }
+
+    public void getVoteStatus(String voteID, final Callback<Boolean> callback) {
+        FirebaseDatabase.getInstance().getReference()
+                .child(FirebaseDB.Users.path)
+                .child(getUserID())
+                .child(FirebaseDB.Users.Entries.pendingMeetings)
+                .child(voteID)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        String s = (String) dataSnapshot.getValue();
+                        s = (s == null ? "false" : s);
+                        //returns true indicates that the user's vote is not submitted and active
+                        callback.onResult(s.equalsIgnoreCase("true"));
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+    }
+
     public interface Callback<T> {
         String NULL = "request_nothing";
 

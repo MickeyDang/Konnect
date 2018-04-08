@@ -24,8 +24,8 @@ import java.util.List;
 
 import mmd.meetup.Constants;
 import mmd.meetup.Firebase.FirebaseClient;
-import mmd.meetup.Fragments.MeetingListFragment;
-import mmd.meetup.Fragments.VoteListFragment;
+import mmd.meetup.Fragments.FinalizedMeetingListFragment;
+import mmd.meetup.Fragments.PendingMeetingListFragment;
 import mmd.meetup.Models.Meeting;
 import mmd.meetup.Models.MeetingPlace;
 import mmd.meetup.Models.PendingMeeting;
@@ -34,8 +34,8 @@ import mmd.meetup.R;
 
 public class LobbyActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        MeetingListFragment.OnListFragmentInteractionListener,
-        VoteListFragment.OnListFragmentInteractionListener {
+        FinalizedMeetingListFragment.OnListFragmentInteractionListener,
+        PendingMeetingListFragment.OnListFragmentInteractionListener {
 
     MeetingMaker mMaker = new MeetingMaker();
 
@@ -64,7 +64,7 @@ public class LobbyActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         //default state
         navigationView.getMenu().findItem(R.id.nav_meetings_confirmed).setChecked(true);
-        goToFragment(MeetingListFragment.newInstance(1));
+        goToFragment(FinalizedMeetingListFragment.newInstance(1));
     }
 
     @Override
@@ -95,9 +95,9 @@ public class LobbyActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_meetings_confirmed) {
-            goToFragment(MeetingListFragment.newInstance(1));
+            goToFragment(FinalizedMeetingListFragment.newInstance(1));
         } else if (id == R.id.nav_meetings_unconfirmed) {
-            goToFragment(VoteListFragment.newInstance(1));
+            goToFragment(PendingMeetingListFragment.newInstance(1));
         } else if (id == R.id.nav_find_meeting) {
             makeSearchMeetingDialog();
         } else if (id == R.id.nav_sign_out) {
@@ -220,6 +220,15 @@ public class LobbyActivity extends AppCompatActivity
     @Override
     public void onListFragmentInteraction() {
 
+    }
+
+    @Override
+    public void onCastVoteIntent(PendingMeeting pm) {
+        Intent intent = new Intent(this, VoteActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Constants.MeetingNavigation.MEETING_OBJ_KEY, pm);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     class MeetingMaker {

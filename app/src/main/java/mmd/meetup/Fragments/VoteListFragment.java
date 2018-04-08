@@ -9,77 +9,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import mmd.meetup.Adapters.VoteAdapter;
-import mmd.meetup.Firebase.FirebaseClient;
-import mmd.meetup.Firebase.FirebaseDB;
-import mmd.meetup.Models.FinalizedMeeting;
-import mmd.meetup.Models.Meeting;
+import mmd.meetup.Models.DataWrapper;
 import mmd.meetup.Models.PendingMeeting;
 import mmd.meetup.R;
 
 
-public class VoteListFragment extends Fragment implements FirebaseListFragment{
+public class VoteListFragment extends Fragment {
 
     OnListFragmentInteractionListener mListener;
-
-    private RecyclerView mRecyclerView;
-    private VoteAdapter mAdapter;
-    private ChildEventListener mChildEventListener = new ChildEventListener() {
-        @Override
-        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-            if (!mAdapter.containsItem(dataSnapshot.getKey()))
-            FirebaseDatabase.getInstance().getReference()
-                    .child(FirebaseDB.PendingMeetings.path)
-                    .child(dataSnapshot.getKey())
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            PendingMeeting meeting = dataSnapshot.getValue(PendingMeeting.class);
-                            meeting.setId(dataSnapshot.getKey());
-                            mAdapter.onInsert(meeting);
-
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-        }
-
-        @Override
-        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-        }
-
-        @Override
-        public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-        }
-
-        @Override
-        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-        }
-
-        @Override
-        public void onCancelled(DatabaseError databaseError) {
-
-        }
-    };
+    RecyclerView mRecyclerView;
+    PendingMeeting mPendingMeeting;
+    VoteAdapter mAdapter;
 
     public VoteListFragment() {
     }
 
-    public static VoteListFragment newInstance(int columnCount) {
+    public static VoteListFragment newInstance(PendingMeeting pm) {
         VoteListFragment fragment = new VoteListFragment();
+        fragment.mPendingMeeting = pm;
         return fragment;
     }
 
@@ -94,12 +45,23 @@ public class VoteListFragment extends Fragment implements FirebaseListFragment{
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_vote_list, container, false);
 
-        // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             mRecyclerView = (RecyclerView) view;
-            mAdapter = new VoteAdapter(mListener);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+
+            List<DataWrapper> wrapperList = new ArrayList<>();
+
+            //compile list of data wrappers
+            //index of first divider always 0
+            wrapperList.add(new DataWrapper<String>("List of Possible Places"));
+            wrapperList.addAll(DataWrapper.wrapObjects(mPendingMeeting.getMeetingPlaces()));
+            //assigns index of middle divider (indexing starts at 0)
+            int index = wrapperList.size();
+            wrapperList.add(new DataWrapper<String>("List of Possible Times"));
+            wrapperList.addAll(DataWrapper.wrapObjects(mPendingMeeting.getTimeOptions()));
+
+            mAdapter = new VoteAdapter(wrapperList, mListener, index);
             mRecyclerView.setAdapter(mAdapter);
         }
         return view;
@@ -123,37 +85,6 @@ public class VoteListFragment extends Fragment implements FirebaseListFragment{
         mListener = null;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        startListening();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        stopListening();
-    }
-
-    @Override
-    public void startListening() {
-        FirebaseDatabase.getInstance().getReference()
-                .child(FirebaseDB.Users.path)
-                .child(FirebaseClient.getInstance().getUserID())
-                .child(FirebaseDB.Users.Entries.pendingMeetings)
-                .addChildEventListener(mChildEventListener);
-    }
-
-    @Override
-    public void stopListening() {
-        FirebaseDatabase.getInstance().getReference()
-                .child(FirebaseDB.Users.path)
-                .child(FirebaseClient.getInstance().getUserID())
-                .child(FirebaseDB.Users.Entries.pendingMeetings)
-                .removeEventListener(mChildEventListener);
-    }
-
     public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction();
     }
 }

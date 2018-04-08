@@ -9,7 +9,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import mmd.meetup.Fragments.MeetingListFragment.OnListFragmentInteractionListener;
+import mmd.meetup.Fragments.FinalizedMeetingListFragment.OnListFragmentInteractionListener;
 import mmd.meetup.Models.FinalizedMeeting;
 import mmd.meetup.Models.Meeting;
 import mmd.meetup.R;

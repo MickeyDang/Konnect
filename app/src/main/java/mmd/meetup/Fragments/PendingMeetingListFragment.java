@@ -3,7 +3,6 @@ package mmd.meetup.Fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,38 +15,31 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import mmd.meetup.Adapters.MeetingAdapter;
+import mmd.meetup.Adapters.PendingMeetingAdapter;
 import mmd.meetup.Firebase.FirebaseClient;
 import mmd.meetup.Firebase.FirebaseDB;
-import mmd.meetup.Models.FinalizedMeeting;
-import mmd.meetup.Models.Meeting;
+import mmd.meetup.Models.PendingMeeting;
 import mmd.meetup.R;
 
 
-public class MeetingListFragment extends Fragment implements FirebaseListFragment{
+public class PendingMeetingListFragment extends Fragment implements FirebaseListFragment{
 
-    private int mColumnCount = 1;
-    private OnListFragmentInteractionListener mListener;
+    OnListFragmentInteractionListener mListener;
 
     private RecyclerView mRecyclerView;
-    private MeetingAdapter mAdapter;
-
+    private PendingMeetingAdapter mAdapter;
     private ChildEventListener mChildEventListener = new ChildEventListener() {
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
             if (!mAdapter.containsItem(dataSnapshot.getKey()))
             FirebaseDatabase.getInstance().getReference()
-                    .child(FirebaseDB.FinalizedMeetings.path)
+                    .child(FirebaseDB.PendingMeetings.path)
                     .child(dataSnapshot.getKey())
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-
-                            FinalizedMeeting meeting = dataSnapshot.getValue(FinalizedMeeting.class);
+                            PendingMeeting meeting = dataSnapshot.getValue(PendingMeeting.class);
                             meeting.setId(dataSnapshot.getKey());
                             mAdapter.onInsert(meeting);
 
@@ -81,11 +73,12 @@ public class MeetingListFragment extends Fragment implements FirebaseListFragmen
         }
     };
 
-    public MeetingListFragment() {
+    public PendingMeetingListFragment() {
+
     }
 
-    public static MeetingListFragment newInstance(int columnCount) {
-        MeetingListFragment fragment = new MeetingListFragment();
+    public static PendingMeetingListFragment newInstance(int columnCount) {
+        PendingMeetingListFragment fragment = new PendingMeetingListFragment();
         return fragment;
     }
 
@@ -93,40 +86,24 @@ public class MeetingListFragment extends Fragment implements FirebaseListFragmen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_meeting_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_pendingmeeting_list, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            mRecyclerView = view.findViewById(R.id.list);
-            if (mColumnCount <= 1) {
-                mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            mAdapter = new MeetingAdapter(mListener);
+            mRecyclerView = (RecyclerView) view;
+            mAdapter = new PendingMeetingAdapter(mListener);
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
             mRecyclerView.setAdapter(mAdapter);
         }
         return view;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        startListening();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        stopListening();
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -146,11 +123,23 @@ public class MeetingListFragment extends Fragment implements FirebaseListFragmen
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        startListening();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        stopListening();
+    }
+
+    @Override
     public void startListening() {
         FirebaseDatabase.getInstance().getReference()
                 .child(FirebaseDB.Users.path)
                 .child(FirebaseClient.getInstance().getUserID())
-                .child(FirebaseDB.Users.Entries.finalizedMeetings)
+                .child(FirebaseDB.Users.Entries.pendingMeetings)
                 .addChildEventListener(mChildEventListener);
     }
 
@@ -159,12 +148,11 @@ public class MeetingListFragment extends Fragment implements FirebaseListFragmen
         FirebaseDatabase.getInstance().getReference()
                 .child(FirebaseDB.Users.path)
                 .child(FirebaseClient.getInstance().getUserID())
-                .child(FirebaseDB.Users.Entries.finalizedMeetings)
+                .child(FirebaseDB.Users.Entries.pendingMeetings)
                 .removeEventListener(mChildEventListener);
     }
 
     public interface OnListFragmentInteractionListener {
-
-        void onListFragmentInteraction();
+        void onCastVoteIntent(PendingMeeting pm);
     }
 }

@@ -24,7 +24,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            android:textSize="16dp"
+            android:textSize="16sp"
             android:textColor="@color/primary_text"
             android:text="TextView"/>
 
@@ -37,7 +37,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginTop="34dp"
-            android:textSize="14dp"
+            android:textSize="14sp"
             android:textColor="@color/secondary_text"
             android:text="TextView"/>
 
@@ -53,7 +53,22 @@
             android:textColor="@color/colorAccent"
             android:outlineProvider="none"
             android:textSize="16sp"
-            android:text="Vote"/>
+            android:text="@string/vote_button"/>
+
+        <Button
+            android:id="@+id/resolveVoteButton"
+            android:layout_width="100dp"
+            android:layout_height="24dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="140dp"
+            android:layout_marginBottom="16dp"
+            android:background="@android:drawable/list_selector_background"
+            android:textColor="@color/colorAccent"
+            android:outlineProvider="none"
+            android:textSize="16sp"
+            android:visibility="invisible"
+            android:text="@string/resolve_button"/>
 
     </android.widget.RelativeLayout>
 
