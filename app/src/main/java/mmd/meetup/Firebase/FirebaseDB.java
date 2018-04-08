@@ -38,8 +38,8 @@ public class FirebaseDB {
             public static String members = "members";
 
             //multiple entries (options)
-            public static String timeOptions = "time_options";
-            public static String locationOptions = "location_options";
+            public static String timeOptions = "timeOptions";
+            public static String locationOptions = "meetingPlaces";
         }
     }
 

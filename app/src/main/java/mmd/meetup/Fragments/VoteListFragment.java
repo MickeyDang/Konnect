@@ -91,9 +91,9 @@ public class VoteListFragment extends Fragment {
 
     //todo use these functions in adapter to trigger call back in activity and modify hash maps
     public interface OnVoteSelectedListener {
-        void onPlaceRemoved(MeetingPlace mp);
-        void onPlaceAdded(MeetingPlace mp);
-        void onTimeRemoved(TimeOption to);
-        void onTimeAdded(TimeOption to);
+        void onPlaceRemoved(MeetingPlace mp, int position);
+        void onPlaceAdded(MeetingPlace mp, int position);
+        void onTimeRemoved(TimeOption to, int position);
+        void onTimeAdded(TimeOption to, int position);
     }
 }

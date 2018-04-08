@@ -1,11 +1,16 @@
 package mmd.meetup.Adapters;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.github.ivbaranov.mli.MaterialLetterIcon;
 
@@ -14,6 +19,7 @@ import mmd.meetup.Models.DataWrapper;
 import mmd.meetup.Models.MeetingPlace;
 import mmd.meetup.Models.TimeOption;
 import mmd.meetup.R;
+import mmd.meetup.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,10 +91,13 @@ public class VoteAdapter extends RecyclerView.Adapter<VoteAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.onBind(mOptions.get(position));
 
-        //TODO handle item selection and register correct call back
-        //TODO make view show selection and unselection toggle (material icon?, highlight?)
+        if (holder instanceof SelectableViewHolder) {
+            ((SelectableViewHolder) holder).onBind(mOptions.get(position), position);
+        } else if (holder instanceof Divider) {
+            ((Divider) holder).onBind(mOptions.get(position), position);
+        }
+
     }
 
     @Override
@@ -101,24 +110,51 @@ public class VoteAdapter extends RecyclerView.Adapter<VoteAdapter.ViewHolder> {
             super(view);
         }
 
-        abstract public void onBind(DataWrapper wrap);
+        abstract public void onBind(DataWrapper wrap, int pos);
     }
 
     abstract class SelectableViewHolder extends ViewHolder {
-        //todo assign material icon and make view in layouts
-        MaterialLetterIcon icon;
+        ToggleButton mToggleButton;
+        View v;
+        DataWrapper wrap;
         boolean isSelected;
+        int position;
+
         SelectableViewHolder(View v) {
             super(v);
+            this.v = v;
+            mToggleButton = v.findViewById(R.id.toggleButton);
+            isSelected = false;
+        }
+
+        @Override
+        public void onBind(DataWrapper wrap, int position) {
+            this.position = position;
+            this.wrap = wrap;
 
             v.setOnClickListener(view -> {
                 isSelected = !isSelected;
+                mToggleButton.setChecked(!mToggleButton.isChecked());
                 toggleMode();
             });
+
         }
 
         protected void toggleMode() {
-            //todo make selectable toggle logic
+            if (this instanceof TimeViewHolder) {
+                //do necessary adjustment to convert list position to position in to or mp sub list
+                if (isSelected) {
+                    mListener.onTimeAdded((TimeOption) wrap.getValue(), position - indexMiddleDivider - 1);
+                } else {
+                    mListener.onTimeRemoved((TimeOption) wrap.getValue(), position - indexMiddleDivider - 1);
+                }
+            } else if (this instanceof PlaceViewHolder) {
+                if (isSelected) {
+                    mListener.onPlaceAdded((MeetingPlace) wrap.getValue(), position - 1);
+                } else {
+                    mListener.onPlaceRemoved((MeetingPlace) wrap.getValue(), position - 1);
+                }
+            }
         }
     }
 
@@ -135,7 +171,8 @@ public class VoteAdapter extends RecyclerView.Adapter<VoteAdapter.ViewHolder> {
         }
 
         @Override
-        public void onBind(DataWrapper wrap) {
+        public void onBind(DataWrapper wrap, int position) {
+            super.onBind(wrap, position);
 
             TimeOption to = (TimeOption) wrap.getValue();
             date.setText(to.getDate());
@@ -158,7 +195,8 @@ public class VoteAdapter extends RecyclerView.Adapter<VoteAdapter.ViewHolder> {
         }
 
         @Override
-        public void onBind(DataWrapper wrap) {
+        public void onBind(DataWrapper wrap, int position) {
+            super.onBind(wrap, position);
 
             MeetingPlace mp = (MeetingPlace) wrap.getValue();
 
@@ -175,6 +213,7 @@ public class VoteAdapter extends RecyclerView.Adapter<VoteAdapter.ViewHolder> {
 
     class Divider extends ViewHolder {
         TextView title;
+        int position;
 
         Divider(View v) {
             super(v);
@@ -182,7 +221,8 @@ public class VoteAdapter extends RecyclerView.Adapter<VoteAdapter.ViewHolder> {
         }
 
         @Override
-        public void onBind(DataWrapper wrap) {
+        public void onBind(DataWrapper wrap, int position) {
+            this.position = position;
             String s = (String) wrap.getValue();
             title.setText(s);
         }
