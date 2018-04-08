@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import mmd.meetup.Fragments.VoteListFragment.OnListFragmentInteractionListener;
+import mmd.meetup.Fragments.VoteListFragment;
 import mmd.meetup.Models.DataWrapper;
 import mmd.meetup.Models.MeetingPlace;
 import mmd.meetup.Models.TimeOption;
@@ -29,9 +29,9 @@ public class VoteAdapter extends RecyclerView.Adapter<VoteAdapter.ViewHolder> {
     private int indexMiddleDivider;
 
     private List<DataWrapper> mOptions;
-    private final OnListFragmentInteractionListener mListener;
+    private final VoteListFragment.OnVoteSelectedListener mListener;
 
-    public VoteAdapter(List<DataWrapper> list, OnListFragmentInteractionListener listener, int index) {
+    public VoteAdapter(List<DataWrapper> list, VoteListFragment.OnVoteSelectedListener listener, int index) {
         mListener = listener;
         mOptions = list;
         indexMiddleDivider = index;
@@ -142,7 +142,7 @@ public class VoteAdapter extends RecyclerView.Adapter<VoteAdapter.ViewHolder> {
             super.onBind(wrap);
 
             MeetingPlace mp = (MeetingPlace) wrap.getValue();
-g
+
             //ensures it fits on one line
             if (mp.getName().length() > 30) {
                 title.setText(mp.getName().substring(0, 30).concat("..."));

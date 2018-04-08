@@ -16,6 +16,7 @@ public class MeetingPlace implements Parcelable, Serializable{
     private String address;
     private double latitude;
     private double longitude;
+    private int voteCount;
 
     public MeetingPlace() {
 
@@ -27,6 +28,7 @@ public class MeetingPlace implements Parcelable, Serializable{
         address = parcel.readString();
         latitude = parcel.readDouble();
         longitude = parcel.readDouble();
+        voteCount = parcel.readInt();
     }
 
 
@@ -87,6 +89,7 @@ public class MeetingPlace implements Parcelable, Serializable{
         parcel.writeString(address);
         parcel.writeDouble(latitude);
         parcel.writeDouble(longitude);
+        parcel.writeInt(voteCount);
 
     }
 }

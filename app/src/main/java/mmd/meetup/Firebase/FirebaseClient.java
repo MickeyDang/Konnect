@@ -197,6 +197,41 @@ public class FirebaseClient {
                 });
     }
 
+    public void incrimentVoteCount(String meetingID, String optionTypePath, String indexPath) {
+
+        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference()
+                .child(FirebaseDB.PendingMeetings.path)
+                .child(meetingID)
+                .child(optionTypePath)
+                .child(indexPath);
+
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        int count = (dataSnapshot == null ? 0 : (int) dataSnapshot.getValue());
+                        ref.setValue(++count);
+                        //user can no longer vote after count incremented
+                        disableVotingStatus(meetingID);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+    }
+
+    //called after incrementing vote
+    private void disableVotingStatus(String meetingID) {
+        FirebaseDatabase.getInstance().getReference()
+                .child(FirebaseDB.Users.path)
+                .child(getUserID())
+                .child(FirebaseDB.Users.Entries.pendingMeetings)
+                .child(meetingID)
+                .setValue("false");
+    }
+
     public interface Callback<T> {
         String NULL = "request_nothing";
 

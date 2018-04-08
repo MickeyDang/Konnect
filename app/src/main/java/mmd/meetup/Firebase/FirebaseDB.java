@@ -6,6 +6,9 @@ package mmd.meetup.Firebase;
 
 public class FirebaseDB {
 
+    //property of time option and location option
+    public static String VOTE_COUNT = "vote_count";
+
     public static class FinalizedMeetings {
 
         public static String path = "finalized_meetings";
@@ -33,7 +36,6 @@ public class FirebaseDB {
             public static String title = "title";
             public static String description = "description";
             public static String members = "members";
-            public static String votes = "votes";
 
             //multiple entries (options)
             public static String timeOptions = "time_options";

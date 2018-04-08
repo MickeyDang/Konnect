@@ -20,6 +20,7 @@ public class TimeOption implements Parcelable, Serializable {
     private String startTime;
     public String endTime;
     private long startTimeMillis;
+    private int voteCount;
 
     public TimeOption() {
 
@@ -32,14 +33,23 @@ public class TimeOption implements Parcelable, Serializable {
         startTime = parcel.readString();
         endTime = parcel.readString();
         startTimeMillis = parcel.readLong();
+        voteCount = parcel.readInt();
     }
 
     public TimeOption (String date, String startTime, String endTime) {
         this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
+        voteCount = 0;
     }
 
+    public int getVoteCount() {
+        return voteCount;
+    }
+
+    public void setVoteCount(int voteCount) {
+        this.voteCount = voteCount;
+    }
 
     public long getStartTimeMillis() {
         return startTimeMillis;
@@ -99,6 +109,7 @@ public class TimeOption implements Parcelable, Serializable {
         parcel.writeString(startTime);
         parcel.writeString(endTime);
         parcel.writeLong(startTimeMillis);
+        parcel.writeInt(voteCount);
     }
 
 }

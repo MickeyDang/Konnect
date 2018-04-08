@@ -10,17 +10,20 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import mmd.meetup.Adapters.VoteAdapter;
 import mmd.meetup.Models.DataWrapper;
+import mmd.meetup.Models.MeetingPlace;
 import mmd.meetup.Models.PendingMeeting;
+import mmd.meetup.Models.TimeOption;
 import mmd.meetup.R;
 
 
 public class VoteListFragment extends Fragment {
 
-    OnListFragmentInteractionListener mListener;
+    OnVoteSelectedListener mListener;
     RecyclerView mRecyclerView;
     PendingMeeting mPendingMeeting;
     VoteAdapter mAdapter;
@@ -72,8 +75,8 @@ public class VoteListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
+        if (context instanceof OnVoteSelectedListener) {
+            mListener = (OnVoteSelectedListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
@@ -86,6 +89,10 @@ public class VoteListFragment extends Fragment {
         mListener = null;
     }
 
-    public interface OnListFragmentInteractionListener {
+    public interface OnVoteSelectedListener {
+        void onPlaceRemoved(MeetingPlace mp);
+        void onPlaceAdded(MeetingPlace mp);
+        void onTimeRemoved(TimeOption to);
+        void onTimeAdded(TimeOption to);
     }
 }

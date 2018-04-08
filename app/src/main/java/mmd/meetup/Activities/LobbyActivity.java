@@ -213,6 +213,10 @@ public class LobbyActivity extends AppCompatActivity
                     mMaker.createInDB();
                 }
                 break;
+            case Constants.RC_VOTE :
+                if (resultCode == Constants.resultSuccess) {
+                    //handle appropriately
+                }
 
         }
     }
@@ -228,7 +232,7 @@ public class LobbyActivity extends AppCompatActivity
         Bundle bundle = new Bundle();
         bundle.putSerializable(Constants.MeetingNavigation.MEETING_OBJ_KEY, pm);
         intent.putExtras(bundle);
-        startActivity(intent);
+        startActivityForResult(intent, Constants.RC_VOTE);
     }
 
     class MeetingMaker {

@@ -6,6 +6,9 @@ package mmd.meetup;
 
 public class Constants {
 
+    final public static int RC_VOTE = 22;
+    final public static int resultSuccess = 11;
+
     public static class MeetingNavigation{
         public static String INVITEE_KEY = "invitees_key";
         public static String MEETING_OBJ_KEY = "meeting_key";
@@ -27,7 +30,6 @@ public class Constants {
         final public static int RC_INVITE = 4;
 
     }
-
 
     public static class KEYS {
         public static String SIGN_OUT_KEY = "isSignOut";
