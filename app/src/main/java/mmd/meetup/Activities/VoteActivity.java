@@ -52,6 +52,8 @@ public class VoteActivity extends AppCompatActivity implements VoteListFragment.
         switch (item.getItemId()) {
             case R.id.save_button:
                 saveResults();
+                setResult(Constants.resultSuccess);
+                this.finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -59,7 +61,7 @@ public class VoteActivity extends AppCompatActivity implements VoteListFragment.
     }
 
     private void saveResults() {
-
+        //todo trigger firebase functions to increment vote count and prevent user from more voting
     }
 
 
@@ -70,6 +72,7 @@ public class VoteActivity extends AppCompatActivity implements VoteListFragment.
                 .commit();
     }
 
+    //todo implement functions (behaviour should modify hashmaps)
     @Override
     public void onPlaceRemoved(MeetingPlace mp) {
 

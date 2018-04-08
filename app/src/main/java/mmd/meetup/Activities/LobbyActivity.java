@@ -215,7 +215,7 @@ public class LobbyActivity extends AppCompatActivity
                 break;
             case Constants.RC_VOTE :
                 if (resultCode == Constants.resultSuccess) {
-                    //handle appropriately
+                    //todo refresh fragment to update the user voting for something already
                 }
 
         }
