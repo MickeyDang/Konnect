@@ -20,8 +20,11 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
+import mmd.meetup.Models.FinalizedMeeting;
 import mmd.meetup.Models.Meeting;
+import mmd.meetup.Models.MeetingPlace;
 import mmd.meetup.Models.PendingMeeting;
+import mmd.meetup.Models.TimeOption;
 
 /**
  * Created by mickeydang on 2018-03-29.
@@ -215,6 +218,54 @@ public class FirebaseClient {
                                         0 : (int) dataSnapshot.getValue());
 
                         ref.setValue(++count);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+    }
+
+    public void resolveVote(String pendingMeetingID, Callback<FinalizedMeeting> callback) {
+
+        FirebaseDatabase.getInstance().getReference()
+                .child(FirebaseDB.PendingMeetings.path)
+                .child(pendingMeetingID)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        MeetingPlace bestPlace = new MeetingPlace();
+                        int highestVote = -1;
+
+                        for (DataSnapshot snap : dataSnapshot.child(FirebaseDB.PendingMeetings.Entries.locationOptions).getChildren()) {
+                            int count = (int) snap.child(FirebaseDB.VOTE_COUNT).getValue();
+                            if (count > highestVote) {
+                                highestVote = count;
+                                bestPlace = snap.getValue(MeetingPlace.class);
+                            }
+                        }
+
+                        TimeOption bestTime = new TimeOption();
+                        highestVote = -1;
+
+                        for (DataSnapshot snap : dataSnapshot.child(FirebaseDB.PendingMeetings.Entries.timeOptions).getChildren()) {
+                            int count = (int) snap.child(FirebaseDB.VOTE_COUNT).getValue();
+                            if (count > highestVote) {
+                                highestVote = count;
+                                bestTime = snap.getValue(TimeOption.class);
+                            }
+                        }
+
+                        PendingMeeting pm = dataSnapshot.getValue(PendingMeeting.class);
+
+                        if (pm != null) {
+                            FinalizedMeeting fm = FinalizedMeeting
+                                    .makeFinalizedMeeting(pm, bestTime, bestPlace);
+                            callback.onResult(fm);
+                        }
                     }
 
                     @Override

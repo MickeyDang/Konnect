@@ -38,4 +38,19 @@ public class FinalizedMeeting extends Meeting{
     public void setLocationAddress(String locationAddress) {
         this.locationAddress = locationAddress;
     }
+
+    public static FinalizedMeeting makeFinalizedMeeting(PendingMeeting pm, TimeOption to, MeetingPlace mp) {
+
+        FinalizedMeeting fm = new FinalizedMeeting();
+        fm.timeOption = to;
+        fm.locationName = mp.getName();
+        fm.locationAddress = mp.getAddress();
+        fm.setDescription(pm.getDescription());
+        fm.setId(pm.getId());
+        fm.setInviteID(pm.getInviteID());
+        fm.setOrganizerID(pm.getOrganizerID());
+        fm.setTitle(pm.getTitle());
+
+        return fm;
+    }
 }
