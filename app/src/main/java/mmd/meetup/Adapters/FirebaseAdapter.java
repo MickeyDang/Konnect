@@ -11,8 +11,8 @@ public interface FirebaseAdapter<T> {
     void onInsert(T t);
     void onUpdate(T t);
     void onFilter(T t);
-    void onDelete(T t);
+    void onDelete(int index);
     List<T> getFullList();
-    boolean containsItem(String s);
+    int containsItem(String s);
 
 }

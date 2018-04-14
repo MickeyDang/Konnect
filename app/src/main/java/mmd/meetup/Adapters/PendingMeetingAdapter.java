@@ -44,11 +44,7 @@ public class PendingMeetingAdapter extends RecyclerView.Adapter<PendingMeetingAd
     }
 
     @Override
-    public void onDelete(PendingMeeting meeting) {
-        int index = 0;
-        while (index < meetings.size() && !meeting.getId().equals(meetings.get(index).getId())) {
-            index++;
-        }
+    public void onDelete(int index) {
         //we assume that the meeting must exist in the list because it was checked in fragment before calling onDelete()
         meetings.remove(index);
         notifyItemRemoved(index);
@@ -60,14 +56,14 @@ public class PendingMeetingAdapter extends RecyclerView.Adapter<PendingMeetingAd
     }
 
     @Override
-    public boolean containsItem(String s) {
+    public int containsItem(String s) {
 
-        for (Meeting m : meetings) {
-            if (m.getId().equals(s)) return true;
+        for (int i = 0; i < meetings.size(); i++) {
+            if (meetings.get(i).getId().equals(s))
+                return i;
         }
 
-        return false;
-
+        return -1;
     }
 
     @Override

@@ -15,6 +15,7 @@ public class DataWrapper<T> {
     }
 
     public static <T> List<DataWrapper> wrapObjects(List<T> list) {
+        if (list == null) return null;
         List<DataWrapper> wrappers = new ArrayList<>();
 
         //cannot be for each in case of null list

@@ -32,7 +32,7 @@ public class PendingMeetingListFragment extends Fragment implements FirebaseList
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-            if (!mAdapter.containsItem(dataSnapshot.getKey()))
+            if (mAdapter.containsItem(dataSnapshot.getKey()) == -1)
             FirebaseDatabase.getInstance().getReference()
                     .child(FirebaseDB.PendingMeetings.path)
                     .child(dataSnapshot.getKey())
@@ -40,9 +40,7 @@ public class PendingMeetingListFragment extends Fragment implements FirebaseList
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             PendingMeeting meeting = dataSnapshot.getValue(PendingMeeting.class);
-                            meeting.setId(dataSnapshot.getKey());
                             mAdapter.onInsert(meeting);
-
                         }
 
                         @Override
@@ -59,8 +57,9 @@ public class PendingMeetingListFragment extends Fragment implements FirebaseList
 
         @Override
         public void onChildRemoved(DataSnapshot dataSnapshot) {
-            if (mAdapter.containsItem(dataSnapshot.getKey())) {
-                mAdapter.onDelete(dataSnapshot.getValue(PendingMeeting.class));
+            int deleteIndex = mAdapter.containsItem(dataSnapshot.getKey());
+            if (deleteIndex != -1) {
+                mAdapter.onDelete(deleteIndex);
             }
         }
 

@@ -44,7 +44,7 @@ public class MeetingAdapter extends RecyclerView.Adapter<MeetingAdapter.ViewHold
     }
 
     @Override
-    public void onDelete(FinalizedMeeting finalizedMeeting) {
+    public void onDelete(int index) {
 
     }
 
@@ -54,20 +54,21 @@ public class MeetingAdapter extends RecyclerView.Adapter<MeetingAdapter.ViewHold
     }
 
     @Override
-    public boolean containsItem(String s) {
+    public int containsItem(String s) {
 
-        for (Meeting m : meetings) {
-            if (m.getId().equals(s)) return true;
+        for (int i = 0; i < meetings.size(); i++) {
+            if (meetings.get(i).getId().equals(s))
+                return i;
         }
 
-        return false;
+        return -1;
 
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_meeting, parent, false);
+                .inflate(R.layout.item_finalziedmeeting, parent, false);
         return new ViewHolder(view);
     }
 

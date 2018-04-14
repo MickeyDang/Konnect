@@ -18,10 +18,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import mmd.meetup.Models.FinalizedMeeting;
-import mmd.meetup.Models.Meeting;
 import mmd.meetup.Models.MeetingPlace;
 import mmd.meetup.Models.PendingMeeting;
 import mmd.meetup.Models.TimeOption;
@@ -47,6 +50,10 @@ public class FirebaseClient {
 
     private FirebaseClient() {
         mAuth = FirebaseAuth.getInstance();
+    }
+
+    public FirebaseUser getUser() {
+        return mUser;
     }
 
     public String getUserID () {
@@ -110,7 +117,7 @@ public class FirebaseClient {
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                //condition returns true is search unsuccessful
+                //condition returns true if search unsuccessful
                 if (dataSnapshot == null) {
                     //handle appropriately in view
                     callback.onResult(Callback.NULL);
@@ -125,6 +132,14 @@ public class FirebaseClient {
                                 .child(FirebaseDB.Users.Entries.pendingMeetings)
                                 .child(snap.getKey())
                                 .setValue("true");
+
+                        //adds the user under meeting invited list field
+                        FirebaseDatabase.getInstance().getReference()
+                                .child(FirebaseDB.PendingMeetings.path)
+                                .child(snap.getKey())
+                                .child(FirebaseDB.PendingMeetings.Entries.invitedUsers)
+                                .child(getUserID())
+                                .setValue("true");
                     }
                 }
             }
@@ -138,8 +153,7 @@ public class FirebaseClient {
 
     }
 
-    public void makePendingMeeting(PendingMeeting meeting, List<String> invitees) {
-
+    public void makePendingMeeting(PendingMeeting meeting, HashMap<String, String> invitees) {
         meeting.setInvitedUsers(invitees);
 
         //make meeting
@@ -148,9 +162,10 @@ public class FirebaseClient {
                 .push();
 
         ref.setValue(meeting);
+        ref.child(FirebaseDB.PendingMeetings.Entries.id).setValue(ref.getKey());
 
         //add meeting id to all invites
-        for (String s : invitees) {
+        for (String s : invitees.keySet()) {
             FirebaseDatabase.getInstance().getReference()
                     .child(FirebaseDB.Users.path)
                     .child(s)
@@ -217,7 +232,7 @@ public class FirebaseClient {
 
                         int count =
                                 (dataSnapshot == null || dataSnapshot.getValue() == null ?
-                                        0 : (int) dataSnapshot.getValue());
+                                        0 : Integer.valueOf(String.valueOf(dataSnapshot.getValue())));
 
                         ref.setValue(++count);
                     }
@@ -231,11 +246,12 @@ public class FirebaseClient {
     }
 
     //called on button click to resolve a pending meeting
-    public void resolveVote(String pendingMeetingID, Callback<FinalizedMeeting> callback) {
+    public void resolveVote(final PendingMeeting pendingMeeting, Callback<FinalizedMeeting> callback) {
 
+        //fetches for most recent vote counts
         FirebaseDatabase.getInstance().getReference()
                 .child(FirebaseDB.PendingMeetings.path)
-                .child(pendingMeetingID)
+                .child(pendingMeeting.getId())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -244,7 +260,8 @@ public class FirebaseClient {
                         int highestVote = -1;
 
                         for (DataSnapshot snap : dataSnapshot.child(FirebaseDB.PendingMeetings.Entries.locationOptions).getChildren()) {
-                            int count = (int) snap.child(FirebaseDB.VOTE_COUNT).getValue();
+                            long holdingValue = snap.child(FirebaseDB.VOTE_COUNT).getValue() == null ? 0 : (long) snap.child(FirebaseDB.VOTE_COUNT).getValue();
+                            int count = Integer.valueOf(String.valueOf(holdingValue));
                             if (count > highestVote) {
                                 highestVote = count;
                                 bestPlace = snap.getValue(MeetingPlace.class);
@@ -255,20 +272,19 @@ public class FirebaseClient {
                         highestVote = -1;
 
                         for (DataSnapshot snap : dataSnapshot.child(FirebaseDB.PendingMeetings.Entries.timeOptions).getChildren()) {
-                            int count = (int) snap.child(FirebaseDB.VOTE_COUNT).getValue();
+                            long holdingValue = snap.child(FirebaseDB.VOTE_COUNT).getValue() == null ? 0 : (long) snap.child(FirebaseDB.VOTE_COUNT).getValue();
+                            int count = Integer.valueOf(String.valueOf(holdingValue));
                             if (count > highestVote) {
                                 highestVote = count;
                                 bestTime = snap.getValue(TimeOption.class);
                             }
                         }
 
-                        PendingMeeting pm = dataSnapshot.getValue(PendingMeeting.class);
+                        FinalizedMeeting fm = FinalizedMeeting
+                                .makeFinalizedMeeting(pendingMeeting, bestTime, bestPlace);
 
-                        if (pm != null) {
-                            FinalizedMeeting fm = FinalizedMeeting
-                                    .makeFinalizedMeeting(pm, bestTime, bestPlace);
-                            callback.onResult(fm);
-                        }
+                        callback.onResult(fm);
+
                     }
 
                     @Override
@@ -281,7 +297,10 @@ public class FirebaseClient {
 
     /*this method is called by passing in the created finalized meeting from a resolved pending meeting.
     We assume that finalized meeting will always have a list of invited users from pending meeting*/
-    public Task<Void> makeFinalizedMeeting(FinalizedMeeting finalizedMeeting) {
+    public void makeFinalizedMeeting(FinalizedMeeting
+                                             finalizedMeeting, Callback<Boolean> callback) {
+
+        Queue<Boolean> requestQueue = new LinkedList<>();
 
         //make meeting
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference()
@@ -289,15 +308,26 @@ public class FirebaseClient {
                 .child(finalizedMeeting.getId());
 
         //add meeting id to all invites
-        for (String s : finalizedMeeting.getInvitedUsers()) {
+        for (String s : finalizedMeeting.getInvitedUsers().keySet()) {
+            requestQueue.add(true);
             FirebaseDatabase.getInstance().getReference()
                     .child(FirebaseDB.Users.path)
                     .child(s)
                     .child(FirebaseDB.Users.Entries.finalizedMeetings)
-                    .child(finalizedMeeting.getId()).setValue("true");
+                    .child(finalizedMeeting.getId()).setValue("true").addOnCompleteListener(task -> {
+                        requestQueue.poll();
+                        if (requestQueue.isEmpty())
+                            callback.onResult(true);
+
+                    });
         }
 
-        return ref.setValue(finalizedMeeting);
+        requestQueue.add(true);
+        ref.setValue(finalizedMeeting).addOnCompleteListener(task -> {
+            requestQueue.poll();
+            if (requestQueue.isEmpty())
+                callback.onResult(true);
+        });
     }
 
 
@@ -309,7 +339,7 @@ public class FirebaseClient {
                 .child(meeting.getId())
                 .setValue(null);
 
-        for (String s : meeting.getInvitedUsers()) {
+        for (String s : meeting.getInvitedUsers().keySet()) {
             FirebaseDatabase.getInstance().getReference()
                     .child(FirebaseDB.Users.path)
                     .child(s)

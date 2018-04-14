@@ -11,4 +11,4 @@
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
     tools:context="mmd.meetup.Fragments.FinalizedMeetingListFragment"
-    tools:listitem="@layout/item_meeting"/>
+    tools:listitem="@layout/item_finalziedmeeting"/>

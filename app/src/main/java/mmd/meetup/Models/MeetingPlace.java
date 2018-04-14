@@ -3,6 +3,8 @@ package mmd.meetup.Models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.database.PropertyName;
+
 import java.io.Serializable;
 
 /**
@@ -16,6 +18,8 @@ public class MeetingPlace implements Parcelable, Serializable{
     private String address;
     private double latitude;
     private double longitude;
+
+    @PropertyName("vote_count")
     private int voteCount;
 
     public MeetingPlace() {

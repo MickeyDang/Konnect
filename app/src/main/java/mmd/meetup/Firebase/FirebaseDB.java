@@ -22,6 +22,7 @@ public class FirebaseDB {
             //only one entry
             public static String time = "time";
             public static String location = "location";
+            public static String invitedUsers = "invitedUsers";
         }
 
     }
@@ -40,6 +41,7 @@ public class FirebaseDB {
             //multiple entries (options)
             public static String timeOptions = "timeOptions";
             public static String locationOptions = "meetingPlaces";
+            public static String invitedUsers = "invitedUsers";
         }
     }
 

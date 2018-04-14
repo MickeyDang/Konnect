@@ -77,7 +77,12 @@ public class MeetingDetailsFragment extends Fragment {
         PendingMeeting meeting = new PendingMeeting();
         meeting.setTitle(title);
         meeting.setDescription(description);
-        meeting.setInviteID(Integer.toHexString(meeting.getTitle().hashCode()));
+
+        //pseudo-random inviteID generation
+        String inviteID = Integer.toHexString((meeting.getDescription().concat(meeting.getTitle())).hashCode());
+        inviteID = inviteID.length() > 5 ? inviteID.substring(0, 5) : inviteID;
+
+        meeting.setInviteID(inviteID);
         meeting.setOrganizerID(FirebaseClient.getInstance().getUserID());
         return meeting;
     }

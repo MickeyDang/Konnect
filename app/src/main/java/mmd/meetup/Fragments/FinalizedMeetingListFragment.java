@@ -36,7 +36,7 @@ public class FinalizedMeetingListFragment extends Fragment implements FirebaseLi
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-            if (!mAdapter.containsItem(dataSnapshot.getKey()))
+            if (mAdapter.containsItem(dataSnapshot.getKey()) == -1)
             FirebaseDatabase.getInstance().getReference()
                     .child(FirebaseDB.FinalizedMeetings.path)
                     .child(dataSnapshot.getKey())

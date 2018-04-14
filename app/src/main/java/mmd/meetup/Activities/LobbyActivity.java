@@ -18,12 +18,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import mmd.meetup.Constants;
@@ -68,6 +70,13 @@ public class LobbyActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         //default state
         navigationView.getMenu().findItem(R.id.nav_meetings_confirmed).setChecked(true);
+
+        //gets root header view (linear layout)
+        final View navHeader = navigationView.getHeaderView(0);
+
+        ((TextView) navHeader.findViewById(R.id.name)).setText(FirebaseClient.getInstance().getUser().getDisplayName());
+        ((TextView) navHeader.findViewById(R.id.email)).setText(FirebaseClient.getInstance().getUser().getEmail());
+
         goToFragment(FinalizedMeetingListFragment.newInstance(1));
     }
 
@@ -240,28 +249,30 @@ public class LobbyActivity extends AppCompatActivity
     }
 
     @Override
-    public void onResolveVote(PendingMeeting pm) {
+    public void onResolveVote(final PendingMeeting pm) {
 
-        FirebaseClient.getInstance().resolveVote(pm.getId(), finalizedMeeting -> {
-            FirebaseClient.getInstance().makeFinalizedMeeting(finalizedMeeting).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    FirebaseClient.getInstance().deletePendingMeetingTrace(pm);
-                    Toast.makeText(getApplicationContext(), getString(R.string.toast_resolve_vote_success), Toast.LENGTH_SHORT)
-                            .show();
-                }
+        FirebaseClient.getInstance().resolveVote(pm, finalizedMeeting ->  {
+            FirebaseClient.getInstance().makeFinalizedMeeting(finalizedMeeting, aBoolean -> {
+
+                FirebaseClient.getInstance().deletePendingMeetingTrace(pm);
+                Toast.makeText(getApplicationContext(), getString(R.string.toast_resolve_vote_success), Toast.LENGTH_SHORT)
+                        .show();
+
             });
         });
-
     }
 
     class MeetingMaker {
 
         PendingMeeting meeting;
-        List<String> invites = new ArrayList<>();
+        HashMap<String, String> invites = new HashMap<>();
 
         public void addInvites(List<String> list) {
-            invites.add(FirebaseClient.getInstance().getUserID());
-            invites.addAll(list);
+            invites.put(FirebaseClient.getInstance().getUserID(), "true");
+
+            for (String s : list) {
+                invites.put(s, "true");
+            }
         }
 
         public void createInDB() {

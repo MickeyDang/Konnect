@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.firebase.database.Exclude;
+import com.google.firebase.database.PropertyName;
 
 import java.io.Serializable;
 import java.sql.Time;
@@ -20,6 +21,8 @@ public class TimeOption implements Parcelable, Serializable {
     private String startTime;
     public String endTime;
     private long startTimeMillis;
+
+    @PropertyName("vote_count")
     private int voteCount;
 
     public TimeOption() {

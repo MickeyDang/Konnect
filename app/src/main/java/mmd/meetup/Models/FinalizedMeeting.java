@@ -8,8 +8,7 @@ package mmd.meetup.Models;
 public class FinalizedMeeting extends Meeting{
 
     private TimeOption timeOption;
-    private String locationName;
-    private String locationAddress;
+    private MeetingPlace meetingPlace;
 
     public FinalizedMeeting() {
         super();
@@ -23,30 +22,22 @@ public class FinalizedMeeting extends Meeting{
         this.timeOption = timeOption;
     }
 
-    public String getLocationName() {
-        return locationName;
+    public MeetingPlace getMeetingPlace() {
+        return meetingPlace;
     }
 
-    public void setLocationName(String locationName) {
-        this.locationName = locationName;
-    }
-
-    public String getLocationAddress() {
-        return locationAddress;
-    }
-
-    public void setLocationAddress(String locationAddress) {
-        this.locationAddress = locationAddress;
+    public void setMeetingPlace(MeetingPlace meetingPlace) {
+        this.meetingPlace = meetingPlace;
     }
 
     public static FinalizedMeeting makeFinalizedMeeting(PendingMeeting pm, TimeOption to, MeetingPlace mp) {
 
         FinalizedMeeting fm = new FinalizedMeeting();
         fm.timeOption = to;
-        fm.locationName = mp.getName();
-        fm.locationAddress = mp.getAddress();
+        fm.meetingPlace = mp;
         fm.setInvitedUsers(pm.getInvitedUsers());
         fm.setDescription(pm.getDescription());
+
         fm.setId(pm.getId());
         fm.setInviteID(pm.getInviteID());
         fm.setOrganizerID(pm.getOrganizerID());
