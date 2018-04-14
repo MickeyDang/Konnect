@@ -59,7 +59,9 @@ public class PendingMeetingListFragment extends Fragment implements FirebaseList
 
         @Override
         public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+            if (mAdapter.containsItem(dataSnapshot.getKey())) {
+                mAdapter.onDelete(dataSnapshot.getValue(PendingMeeting.class));
+            }
         }
 
         @Override
@@ -153,6 +155,7 @@ public class PendingMeetingListFragment extends Fragment implements FirebaseList
     }
 
     public interface OnListFragmentInteractionListener {
-        void onCastVoteIntent(PendingMeeting pm);
+        void onCastVote(PendingMeeting pm);
+        void onResolveVote(PendingMeeting pm);
     }
 }

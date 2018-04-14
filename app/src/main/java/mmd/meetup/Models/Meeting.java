@@ -1,6 +1,7 @@
 package mmd.meetup.Models;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by mickeydang on 2018-03-29.
@@ -13,9 +14,18 @@ public class Meeting implements Serializable{
     private String inviteID;
     private String organizerID;
     private String id;
+    private List<String> invitedUsers;
 
     public Meeting() {
         //required empty constructor
+    }
+
+    public List<String> getInvitedUsers() {
+        return invitedUsers;
+    }
+
+    public void setInvitedUsers(List<String> invitedUsers) {
+        this.invitedUsers = invitedUsers;
     }
 
     public String getId() {

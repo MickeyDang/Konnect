@@ -2,6 +2,7 @@ package mmd.meetup.Activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -18,6 +19,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -227,12 +231,27 @@ public class LobbyActivity extends AppCompatActivity
     }
 
     @Override
-    public void onCastVoteIntent(PendingMeeting pm) {
+    public void onCastVote(PendingMeeting pm) {
         Intent intent = new Intent(this, VoteActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable(Constants.MeetingNavigation.MEETING_OBJ_KEY, pm);
         intent.putExtras(bundle);
         startActivityForResult(intent, Constants.RC_VOTE);
+    }
+
+    @Override
+    public void onResolveVote(PendingMeeting pm) {
+
+        FirebaseClient.getInstance().resolveVote(pm.getId(), finalizedMeeting -> {
+            FirebaseClient.getInstance().makeFinalizedMeeting(finalizedMeeting).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    FirebaseClient.getInstance().deletePendingMeetingTrace(pm);
+                    Toast.makeText(getApplicationContext(), getString(R.string.toast_resolve_vote_success), Toast.LENGTH_SHORT)
+                            .show();
+                }
+            });
+        });
+
     }
 
     class MeetingMaker {
@@ -246,7 +265,7 @@ public class LobbyActivity extends AppCompatActivity
         }
 
         public void createInDB() {
-            FirebaseClient.getInstance().makeMeeting(meeting, invites);
+            FirebaseClient.getInstance().makePendingMeeting(meeting, invites);
         }
 
     }

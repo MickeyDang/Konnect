@@ -44,6 +44,11 @@ public class MeetingAdapter extends RecyclerView.Adapter<MeetingAdapter.ViewHold
     }
 
     @Override
+    public void onDelete(FinalizedMeeting finalizedMeeting) {
+
+    }
+
+    @Override
     public List<FinalizedMeeting> getFullList() {
         return meetings;
     }

@@ -138,7 +138,9 @@ public class FirebaseClient {
 
     }
 
-    public void makeMeeting(PendingMeeting meeting, List<String> invitees) {
+    public void makePendingMeeting(PendingMeeting meeting, List<String> invitees) {
+
+        meeting.setInvitedUsers(invitees);
 
         //make meeting
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference()
@@ -228,6 +230,7 @@ public class FirebaseClient {
 
     }
 
+    //called on button click to resolve a pending meeting
     public void resolveVote(String pendingMeetingID, Callback<FinalizedMeeting> callback) {
 
         FirebaseDatabase.getInstance().getReference()
@@ -274,6 +277,45 @@ public class FirebaseClient {
                     }
                 });
 
+    }
+
+    /*this method is called by passing in the created finalized meeting from a resolved pending meeting.
+    We assume that finalized meeting will always have a list of invited users from pending meeting*/
+    public Task<Void> makeFinalizedMeeting(FinalizedMeeting finalizedMeeting) {
+
+        //make meeting
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference()
+                .child(FirebaseDB.FinalizedMeetings.path)
+                .child(finalizedMeeting.getId());
+
+        //add meeting id to all invites
+        for (String s : finalizedMeeting.getInvitedUsers()) {
+            FirebaseDatabase.getInstance().getReference()
+                    .child(FirebaseDB.Users.path)
+                    .child(s)
+                    .child(FirebaseDB.Users.Entries.finalizedMeetings)
+                    .child(finalizedMeeting.getId()).setValue("true");
+        }
+
+        return ref.setValue(finalizedMeeting);
+    }
+
+
+    //called after finalized meeting created and added
+    public void deletePendingMeetingTrace(PendingMeeting meeting) {
+
+        FirebaseDatabase.getInstance().getReference()
+                .child(FirebaseDB.PendingMeetings.path)
+                .child(meeting.getId())
+                .setValue(null);
+
+        for (String s : meeting.getInvitedUsers()) {
+            FirebaseDatabase.getInstance().getReference()
+                    .child(FirebaseDB.Users.path)
+                    .child(s)
+                    .child(FirebaseDB.Users.Entries.pendingMeetings)
+                    .child(meeting.getId()).setValue(null);
+        }
     }
 
     //called after incrementing vote

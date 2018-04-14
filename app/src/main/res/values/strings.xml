@@ -32,6 +32,7 @@
     <string name="toast_empty_field">Cannot continue! Fields are empty!</string>
     <string name="toast_add_success">Added Successfully</string>
     <string name="toast_add_fail">Failed To Find Meeting</string>
+    <string name="toast_resolve_vote_success">Successfully Resolved! Find this in Finalized Meetings!</string>
 
 
     <string name="hello_blank_fragment">Hello blank fragment</string>

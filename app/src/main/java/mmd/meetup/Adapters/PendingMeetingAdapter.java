@@ -44,6 +44,17 @@ public class PendingMeetingAdapter extends RecyclerView.Adapter<PendingMeetingAd
     }
 
     @Override
+    public void onDelete(PendingMeeting meeting) {
+        int index = 0;
+        while (index < meetings.size() && !meeting.getId().equals(meetings.get(index).getId())) {
+            index++;
+        }
+        //we assume that the meeting must exist in the list because it was checked in fragment before calling onDelete()
+        meetings.remove(index);
+        notifyItemRemoved(index);
+    }
+
+    @Override
     public List<PendingMeeting> getFullList() {
         return meetings;
     }
@@ -81,9 +92,15 @@ public class PendingMeetingAdapter extends RecyclerView.Adapter<PendingMeetingAd
         FirebaseClient.getInstance().isOwnerOfVote(pendingMeeting.getId(),
                 aBoolean -> {
             int i = aBoolean ? View.VISIBLE : View.INVISIBLE;
-            holder.resolveButton.setVisibility(i); });
+            holder.resolveButton.setVisibility(i);
 
-        holder.voteButton.setOnClickListener(v -> mListener.onCastVoteIntent(pendingMeeting));
+            if (i == View.VISIBLE) {
+                holder.resolveButton.setOnClickListener(v -> mListener.onResolveVote(pendingMeeting));
+            }
+
+        });
+
+        holder.voteButton.setOnClickListener(v -> mListener.onCastVote(pendingMeeting));
 
     }
 

@@ -20,6 +20,7 @@ import mmd.meetup.Adapters.MeetingAdapter;
 import mmd.meetup.Firebase.FirebaseClient;
 import mmd.meetup.Firebase.FirebaseDB;
 import mmd.meetup.Models.FinalizedMeeting;
+import mmd.meetup.Models.PendingMeeting;
 import mmd.meetup.R;
 
 

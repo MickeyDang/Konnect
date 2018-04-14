@@ -45,6 +45,7 @@ public class FinalizedMeeting extends Meeting{
         fm.timeOption = to;
         fm.locationName = mp.getName();
         fm.locationAddress = mp.getAddress();
+        fm.setInvitedUsers(pm.getInvitedUsers());
         fm.setDescription(pm.getDescription());
         fm.setId(pm.getId());
         fm.setInviteID(pm.getInviteID());
