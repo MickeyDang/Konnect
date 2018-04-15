@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.ivbaranov.mli.MaterialLetterIcon;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
@@ -37,6 +38,7 @@ import mmd.meetup.Models.MeetingPlace;
 import mmd.meetup.Models.PendingMeeting;
 import mmd.meetup.Models.TimeOption;
 import mmd.meetup.R;
+import mmd.meetup.Utils;
 
 public class LobbyActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -73,9 +75,14 @@ public class LobbyActivity extends AppCompatActivity
 
         //gets root header view (linear layout)
         final View navHeader = navigationView.getHeaderView(0);
-
         ((TextView) navHeader.findViewById(R.id.name)).setText(FirebaseClient.getInstance().getUser().getDisplayName());
         ((TextView) navHeader.findViewById(R.id.email)).setText(FirebaseClient.getInstance().getUser().getEmail());
+        //get material icon view
+        MaterialLetterIcon materialLetterIcon = navHeader.findViewById(R.id.materialLetterIcon);
+        //init material icon view
+        materialLetterIcon.setLetter(FirebaseClient.getInstance().getUser().getDisplayName().substring(0, 1));
+        materialLetterIcon.setBorder(false);
+        materialLetterIcon.setShapeColor(Utils.getRandomMaterialColors(FirebaseClient.getInstance().getUserID()));
 
         goToFragment(FinalizedMeetingListFragment.newInstance(1));
     }

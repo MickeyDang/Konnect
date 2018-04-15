@@ -83,10 +83,10 @@ public class FinalizedMeetingAdapter extends RecyclerView.Adapter<FinalizedMeeti
 
         formattedText = finalizedMeeting.getMeetingPlace().getName();
 
-        if (formattedText.length() < 10) {
+        if (formattedText.length() < 15) {
             formattedText += ": " +
                     (finalizedMeeting.getMeetingPlace().getAddress().length() > 20
-                            ? finalizedMeeting.getMeetingPlace().getAddress().substring(0, 20)
+                            ? finalizedMeeting.getMeetingPlace().getAddress().substring(0, 20) + "..."
                             : finalizedMeeting.getMeetingPlace().getAddress());
         }
 
@@ -96,7 +96,7 @@ public class FinalizedMeetingAdapter extends RecyclerView.Adapter<FinalizedMeeti
         String[] texts = finalizedMeeting.getTimeOption().getDate().split(" ");
 
         if (texts.length == 3)
-            formattedText = "Start: " + texts[0] + texts[1] + " - " + finalizedMeeting.getTimeOption().getStartTime();
+            formattedText = "Start: " + texts[0] + " " + texts[1] + " - " + finalizedMeeting.getTimeOption().getStartTime();
         else
             formattedText = "Start: " + finalizedMeeting.getTimeOption().getDate() + " - " + finalizedMeeting.getTimeOption().getStartTime();
 

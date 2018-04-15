@@ -8,7 +8,8 @@
     <color name="light_background">#DFDFDF</color>
 
     <color name="primary_text">#000000</color>
-    <color name="secondary_text">#686868</color>
+    <color name="secondary_text">#868686</color>
+    <color name="divider_line">#ACACAC</color>
 
     <color name="material_red">#F44336</color>
     <color name="material_pink">#E91E63</color>

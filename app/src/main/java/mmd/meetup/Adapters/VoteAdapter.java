@@ -201,23 +201,25 @@ public class VoteAdapter extends RecyclerView.Adapter<VoteAdapter.ViewHolder> {
             MeetingPlace mp = (MeetingPlace) wrap.getValue();
 
             //ensures it fits on one line
-            if (mp.getName().length() > 30) {
-                title.setText(mp.getName().substring(0, 30).concat("..."));
-            } else {
-                title.setText(mp.getName());
-            }
+            String formattedText;
 
-            address.setText(mp.getAddress());
+            formattedText = mp.getName().length() > 30 ? mp.getName().substring(0, 30).concat("...") : mp.getName();
+            title.setText(formattedText);
+
+            formattedText = mp.getAddress().length() > 40 ? mp.getAddress().substring(0,40).concat("...") : mp.getAddress();
+            address.setText(formattedText);
         }
     }
 
     class Divider extends ViewHolder {
         TextView title;
+        View dividerLine;
         int position;
 
         Divider(View v) {
             super(v);
             title = v.findViewById(R.id.title);
+            dividerLine = v.findViewById(R.id.view);
         }
 
         @Override
@@ -225,6 +227,10 @@ public class VoteAdapter extends RecyclerView.Adapter<VoteAdapter.ViewHolder> {
             this.position = position;
             String s = (String) wrap.getValue();
             title.setText(s);
+
+            if (position == 0) {
+                dividerLine.setVisibility(View.INVISIBLE);
+            }
         }
     }
 }

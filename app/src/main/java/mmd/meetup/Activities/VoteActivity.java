@@ -10,6 +10,7 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.List;
@@ -57,9 +58,11 @@ public class VoteActivity extends AppCompatActivity implements VoteListFragment.
 
         switch (item.getItemId()) {
             case R.id.save_button:
-                saveResults();
-                setResult(Constants.resultSuccess);
-                this.finish();
+                if (assertNonNullSelection()) {
+                    saveResults();
+                    setResult(Constants.resultSuccess);
+                    this.finish();
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -68,6 +71,15 @@ public class VoteActivity extends AppCompatActivity implements VoteListFragment.
 
     private void reviewResults() {
         //show dialog of list of the chosen results
+    }
+
+    private boolean assertNonNullSelection() {
+        if (selectedPlaces.size() == 0 || selectedTimes.size() == 0) {
+            Toast.makeText(this, getString(R.string.toast_empty_selection), Toast.LENGTH_SHORT).show();
+            return false;
+        } else {
+            return true;
+        }
     }
 
     private void saveResults() {
