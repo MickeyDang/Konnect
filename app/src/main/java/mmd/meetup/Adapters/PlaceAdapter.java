@@ -49,9 +49,7 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-
-        holder.onBind(mMeetingPlaces.get(position));
-
+        holder.onBind(mMeetingPlaces.get(position), position);
     }
 
     @Override
@@ -65,6 +63,7 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder> 
         TextView name;
         TextView address;
         ImageButton deleteButton;
+        int position;
 
         ViewHolder(View view) {
             super(view);
@@ -75,7 +74,9 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder> 
             deleteButton = view.findViewById(R.id.deleteButton);
         }
 
-        void onBind(MeetingPlace place) {
+        void onBind(MeetingPlace place, int position) {
+            this.position = position;
+
             name.setText(place.getName());
             address.setText(place.getAddress());
 
@@ -83,6 +84,11 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder> 
                 this.icon.setLetter(String.valueOf(place.getName().charAt(0)));
                 this.icon.setShapeColor(Utils.getRandomMaterialColors(place.getName()));
             }
+
+            deleteButton.setOnClickListener(view -> {
+                mMeetingPlaces.remove(position);
+                notifyItemRemoved(position);
+            });
         }
     }
 }

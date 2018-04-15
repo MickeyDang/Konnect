@@ -24,9 +24,11 @@ import mmd.meetup.Utils;
 public class TimeOptionAdapter extends RecyclerView.Adapter<TimeOptionAdapter.ViewHolder> {
 
     private List<TimeOption> timeOptions;
+    private ViewHolderUpdater mViewHolderUpdater;
 
-    public TimeOptionAdapter() {
+    public TimeOptionAdapter(ViewHolderUpdater updater) {
         timeOptions = new ArrayList<>();
+        mViewHolderUpdater = updater;
     }
 
     public void updateAdapter(TimeOption to) {
@@ -51,15 +53,7 @@ public class TimeOptionAdapter extends RecyclerView.Adapter<TimeOptionAdapter.Vi
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-
-        TimeOption to = timeOptions.get(position);
-
-        holder.date.setText(to.getDate());
-        holder.time.setText(to.getStartTime());
-
-        holder.icon.setLetter(String.valueOf(position));
-        holder.icon.setShapeColor(Utils.getRandomMaterialColors(String.valueOf(to.getDate())));
-
+        holder.onBind(timeOptions.get(position), position);
     }
 
     @Override
@@ -73,6 +67,7 @@ public class TimeOptionAdapter extends RecyclerView.Adapter<TimeOptionAdapter.Vi
         TextView date;
         TextView time;
         ImageButton deleteButton;
+        int position;
 
         public ViewHolder(View v) {
             super(v);
@@ -83,6 +78,21 @@ public class TimeOptionAdapter extends RecyclerView.Adapter<TimeOptionAdapter.Vi
             deleteButton = v.findViewById(R.id.deleteButton);
         }
 
-    }
+        public void onBind(TimeOption to, int position) {
+            this.position = position;
+            date.setText(to.getDate());
+            time.setText(to.getStartTime());
 
+            icon.setLetter(String.valueOf(position));
+            icon.setShapeColor(Utils.getRandomMaterialColors(String.valueOf(to.getDate())));
+
+            deleteButton.setOnClickListener(view -> {
+                timeOptions.remove(position);
+                notifyItemRemoved(position);
+
+                //update position of other visible ViewHolders displayed in material icon
+                mViewHolderUpdater.updateIconPositionNumbers();
+            });
+        }
+    }
 }

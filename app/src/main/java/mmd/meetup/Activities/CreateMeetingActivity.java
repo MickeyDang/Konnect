@@ -1,12 +1,8 @@
 package mmd.meetup.Activities;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,14 +13,11 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.common.api.GoogleApi;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceDetectionClient;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLngBounds;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import mmd.meetup.Constants;
 import mmd.meetup.Fragments.MeetingDetailsFragment;
@@ -38,7 +31,7 @@ import mmd.meetup.Models.TimeOption;
 import mmd.meetup.R;
 
 public class CreateMeetingActivity extends AppCompatActivity implements MeetingDetailsFragment.OnFragmentInteractionListener,
-    MeetingInviteFragment.OnFragmentInteractionListener, MeetingTimeFragment.OnFragmentInteractionListener,
+    MeetingInviteFragment.OnFragmentInteractionListener, MeetingTimeFragment.OnTimeOptionInteractionListener,
         MeetingPlaceFragment.PlacePickerHandler{
 
     private final String LOG_TAG = this.getClass().getSimpleName();
@@ -158,12 +151,6 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
     }
 
     @Override
-    public void onFragmentInteraction() {
-
-    }
-
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -203,6 +190,15 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
         return fragment.getMeetingPlaceList();
     }
 
+    @Override
+    public void onFragmentInteraction() {
+
+    }
+
+    @Override
+    public void onTimeOptionDeleted(TimeOption timeOption) {
+
+    }
 
     @Override
     public void handlePlaceOption(Place place) {
@@ -211,8 +207,5 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
             MeetingPlaceFragment fragment = (MeetingPlaceFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
             fragment.addPickedPlace(place);
         }
-//        String toastMsg = String.format("Place: %s", place.getName());
-//        Toast.makeText(this, toastMsg, Toast.LENGTH_SHORT).show();
-
     }
 }

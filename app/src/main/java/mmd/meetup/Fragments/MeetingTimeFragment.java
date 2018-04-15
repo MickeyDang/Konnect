@@ -3,7 +3,6 @@ package mmd.meetup.Fragments;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -16,31 +15,45 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import java.text.ParseException;
-import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import mmd.meetup.Adapters.TimeOptionAdapter;
+import mmd.meetup.Adapters.ViewHolderUpdater;
 import mmd.meetup.Models.Meeting;
-import mmd.meetup.Models.PendingMeeting;
 import mmd.meetup.Models.TimeOption;
 import mmd.meetup.R;
 
 public class MeetingTimeFragment extends Fragment {
 
     private final String LOG_TAG = this.getClass().getSimpleName();
-    private OnFragmentInteractionListener mListener;
+    private OnTimeOptionInteractionListener mListener;
     private Meeting mMeeting;
 
     private RecyclerView mRecyclerView;
     private FloatingActionButton mAddTime;
     private TimeOptionAdapter mAdapter;
+
+    private ViewHolderUpdater mViewHolderUpdater = new ViewHolderUpdater() {
+        @Override
+        public void updateIconPositionNumbers() {
+            if (mRecyclerView == null) return;
+
+            LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
+
+            int startIndex = layoutManager.findFirstVisibleItemPosition();
+            int endIndex = layoutManager.findLastVisibleItemPosition();
+
+            for (int i = startIndex; i <= endIndex; i++) {
+                mAdapter.notifyItemChanged(i);
+            }
+
+        }
+    };
 
     public MeetingTimeFragment() {
         // Required empty public constructor
@@ -79,7 +92,7 @@ public class MeetingTimeFragment extends Fragment {
         });
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter = new TimeOptionAdapter();
+        mAdapter = new TimeOptionAdapter(mViewHolderUpdater);
         mRecyclerView.setAdapter(mAdapter);
 
     }
@@ -150,7 +163,7 @@ public class MeetingTimeFragment extends Fragment {
 
     public ArrayList<TimeOption> getTimeOptions() {
         if (mAdapter == null) {
-            mAdapter = new TimeOptionAdapter();
+            mAdapter = new TimeOptionAdapter(mViewHolderUpdater);
         }
         return mAdapter.getTimeOptions();
     }
@@ -158,8 +171,8 @@ public class MeetingTimeFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnTimeOptionInteractionListener) {
+            mListener = (OnTimeOptionInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -172,7 +185,7 @@ public class MeetingTimeFragment extends Fragment {
         mListener = null;
     }
 
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction();
+    public interface OnTimeOptionInteractionListener {
+        void onTimeOptionDeleted(TimeOption timeOption);
     }
 }
