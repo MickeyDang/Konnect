@@ -19,6 +19,8 @@
     <color name="material_indigo">#3F51B5</color>
     <color name="material_cyan">#00BCD4</color>
 
+    <color name="transparent_filter">#603f51b5</color>
+
     <color name="transparent">#00ffffff</color>
 
 </resources>

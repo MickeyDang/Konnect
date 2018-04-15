@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -34,12 +35,15 @@ public class LoginActivity extends AppCompatActivity {
     final String LOG_TAG = this.getClass().getSimpleName();
 
     Button signInButton;
+    ProgressBar loadingIcon;
     GoogleSignInClient gsc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        loadingIcon = findViewById(R.id.loadingIcon);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.web_client_key))
@@ -53,12 +57,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         signInButton = findViewById(R.id.signIn);
-        signInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptSignIn();
-            }
-        });
+        signInButton.setOnClickListener(view -> attemptSignIn());
 
     }
 
@@ -68,6 +67,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void attemptSignIn() {
+        loadingIcon.setVisibility(View.VISIBLE);
         Intent signInIntent = gsc.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -78,6 +78,7 @@ public class LoginActivity extends AppCompatActivity {
             FirebaseClient.getInstance().initUser(account, new FirebaseClient.Callback<Boolean>() {
                 @Override
                 public void onResult(Boolean aBoolean) {
+                    loadingIcon.setVisibility(View.INVISIBLE);
                     if (aBoolean) {
                         goToLobby();
                     } else {

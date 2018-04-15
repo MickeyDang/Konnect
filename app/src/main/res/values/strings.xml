@@ -26,6 +26,7 @@
 
     <!--Titles-->
     <string name="title_search">Search</string>
+    <string name="title_main">Meet Up</string>
 
     <!--Toasts-->
     <string name="toast_failed_login">Failed to login!</string>
