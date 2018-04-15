@@ -16,11 +16,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import mmd.meetup.Adapters.MeetingAdapter;
+import mmd.meetup.Adapters.FinalizedMeetingAdapter;
 import mmd.meetup.Firebase.FirebaseClient;
 import mmd.meetup.Firebase.FirebaseDB;
 import mmd.meetup.Models.FinalizedMeeting;
-import mmd.meetup.Models.PendingMeeting;
 import mmd.meetup.R;
 
 
@@ -30,7 +29,7 @@ public class FinalizedMeetingListFragment extends Fragment implements FirebaseLi
     private OnListFragmentInteractionListener mListener;
 
     private RecyclerView mRecyclerView;
-    private MeetingAdapter mAdapter;
+    private FinalizedMeetingAdapter mAdapter;
 
     private ChildEventListener mChildEventListener = new ChildEventListener() {
         @Override
@@ -107,7 +106,7 @@ public class FinalizedMeetingListFragment extends Fragment implements FirebaseLi
             } else {
                 mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            mAdapter = new MeetingAdapter(mListener);
+            mAdapter = new FinalizedMeetingAdapter(mListener);
             mRecyclerView.setAdapter(mAdapter);
         }
         return view;

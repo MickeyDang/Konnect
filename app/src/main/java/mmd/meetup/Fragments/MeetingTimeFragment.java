@@ -130,7 +130,7 @@ public class MeetingTimeFragment extends Fragment {
                         dateObj.setHours(i);
                         dateObj.setMinutes(i1);
 
-                        to.setStartTime(new SimpleDateFormat("h:mm").format(sdf.parse(i + ":" + i1)));
+                        to.setStartTime(new SimpleDateFormat("h:mm aa").format(sdf.parse(i + ":" + i1)));
                         createTimePicker(c, to, dateObj, true);
                     } else {
                         to.endTime = sdf.format(sdf.parse(i + ":" + i1));
