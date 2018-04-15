@@ -7,11 +7,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.github.ivbaranov.mli.MaterialLetterIcon;
+
 import mmd.meetup.Firebase.FirebaseClient;
 import mmd.meetup.Fragments.PendingMeetingListFragment.OnListFragmentInteractionListener;
 import mmd.meetup.Models.Meeting;
 import mmd.meetup.Models.PendingMeeting;
 import mmd.meetup.R;
+import mmd.meetup.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,6 +101,10 @@ public class PendingMeetingAdapter extends RecyclerView.Adapter<PendingMeetingAd
 
         holder.voteButton.setOnClickListener(v -> mListener.onCastVote(pendingMeeting));
 
+        String numVoter = String.valueOf(pendingMeeting.getInvitedUsers().size());
+        holder.materialIcon.setLetter(numVoter);
+        holder.materialIcon.setShapeColor(Utils.getRandomMaterialColors(pendingMeeting.getTitle()));
+
     }
 
     @Override
@@ -110,10 +117,12 @@ public class PendingMeetingAdapter extends RecyclerView.Adapter<PendingMeetingAd
         TextView description;
         Button voteButton;
         Button resolveButton;
+        MaterialLetterIcon materialIcon;
 
         ViewHolder(View view) {
             super(view);
 
+            materialIcon = view.findViewById(R.id.materialIcon);
             title = view.findViewById(R.id.title);
             description = view.findViewById(R.id.description);
             voteButton = view.findViewById(R.id.voteButton);
