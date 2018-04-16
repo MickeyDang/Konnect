@@ -153,11 +153,11 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
 
         if (fragment instanceof MeetingDetailsFragment) {
-            return evaluateIfNull((MeetingDetailsFragment) fragment);
+            return !evaluateIfNull((MeetingDetailsFragment) fragment);
         } else if (fragment instanceof MeetingTimeFragment) {
-            return evaluateIfNull((MeetingTimeFragment) fragment);
+            return !evaluateIfNull((MeetingTimeFragment) fragment);
         } else if (fragment instanceof MeetingPlaceFragment) {
-            return evaluateIfNull((MeetingPlaceFragment) fragment);
+            return !evaluateIfNull((MeetingPlaceFragment) fragment);
         } else {
             //this case should be impossible. unhandled
             return false;
