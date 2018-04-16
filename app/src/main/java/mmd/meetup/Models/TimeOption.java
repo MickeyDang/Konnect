@@ -39,10 +39,11 @@ public class TimeOption implements Parcelable, Serializable {
         voteCount = parcel.readInt();
     }
 
-    public TimeOption (String date, String startTime, String endTime) {
+    public TimeOption (String date, String startTime, String endTime, long startTimeMillis) {
         this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.startTimeMillis = startTimeMillis;
         voteCount = 0;
     }
 

@@ -1,6 +1,8 @@
 package mmd.meetup.Activities;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -60,7 +62,9 @@ public class VoteActivity extends AppCompatActivity implements VoteListFragment.
             case R.id.save_button:
                 if (assertNonNullSelection()) {
                     saveResults();
-                    setResult(Constants.resultSuccess);
+                    Intent intent = new Intent();
+                    intent.putExtra(Constants.KEYS.PENDING_MEETING_ID, pm.getId());
+                    setResult(Constants.resultSuccess, intent);
                     this.finish();
                 }
                 return true;
@@ -92,7 +96,6 @@ public class VoteActivity extends AppCompatActivity implements VoteListFragment.
             //i is the actual index of the array NOT the key (ie there could be key of 4 at index 0)
             int key = selectedPlaces.keyAt(i);
 
-            Log.d(LOG_TAG, "key found is " + key);
 
             fbClient.incrimentVoteCount(pm.getId(),
                     FirebaseDB.PendingMeetings.Entries.locationOptions, String.valueOf(key));
@@ -104,14 +107,12 @@ public class VoteActivity extends AppCompatActivity implements VoteListFragment.
         for (int i = 0; i < size; i++) {
             int key = selectedTimes.keyAt(i);
 
-            Log.d(LOG_TAG, "key found is " + key);
-
             fbClient.incrimentVoteCount(pm.getId(),
                     FirebaseDB.PendingMeetings.Entries.timeOptions, String.valueOf(key));
         }
 
+        //ensures user cannot vote twice
         fbClient.disableVotingStatus(pm.getId());
-
     }
 
 
@@ -125,25 +126,20 @@ public class VoteActivity extends AppCompatActivity implements VoteListFragment.
     @Override
     public void onPlaceRemoved(MeetingPlace mp, int position) {
        selectedPlaces.remove(position);
-       Log.d(LOG_TAG, "onPlaceRemoved");
-
     }
 
     @Override
     public void onPlaceAdded(MeetingPlace mp, int position) {
         selectedPlaces.append(position, mp);
-        Log.d(LOG_TAG, "onPlaceAdded: " + position);
     }
 
     @Override
     public void onTimeRemoved(TimeOption to, int position) {
         selectedTimes.remove(position);
-        Log.d(LOG_TAG, "onTimeRemoved");
     }
 
     @Override
     public void onTimeAdded(TimeOption to, int position) {
         selectedTimes.append(position, to);
-        Log.d(LOG_TAG, "onTimeAdded: " + position);
     }
 }

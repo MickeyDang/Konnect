@@ -116,8 +116,10 @@ public class LobbyActivity extends AppCompatActivity
 
         if (id == R.id.nav_meetings_confirmed) {
             goToFragment(FinalizedMeetingListFragment.newInstance(1));
+            changeToolbarText(getString(R.string.meeting_conf));
         } else if (id == R.id.nav_meetings_unconfirmed) {
             goToFragment(PendingMeetingListFragment.newInstance(1));
+            changeToolbarText(getString(R.string.meeting_unconf));
         } else if (id == R.id.nav_find_meeting) {
             makeSearchMeetingDialog();
         } else if (id == R.id.nav_sign_out) {
@@ -127,6 +129,10 @@ public class LobbyActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void changeToolbarText(String s) {
+        getSupportActionBar().setTitle(s);
     }
 
     private void makeSearchMeetingDialog() {
@@ -235,9 +241,17 @@ public class LobbyActivity extends AppCompatActivity
                 break;
             case Constants.RC_VOTE :
                 if (resultCode == Constants.resultSuccess) {
-                    //todo refresh fragment to update the user voting for something already
+                    String id = data.getStringExtra(Constants.KEYS.PENDING_MEETING_ID);
+                    onVoteCast(id);
                 }
+        }
+    }
 
+    private void onVoteCast(String id) {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (fragment instanceof PendingMeetingListFragment) {
+            PendingMeetingListFragment pmlFragment = (PendingMeetingListFragment) fragment;
+            pmlFragment.notifyAdapterVoteCast(id);
         }
     }
 

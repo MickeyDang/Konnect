@@ -28,6 +28,11 @@
     <string name="title_search">Search</string>
     <string name="title_main">Meet Up</string>
     <string name="title_default_user">Default User</string>
+    <string name="title_placepicker_activity">Select a Place</string>
+    <string name="title_description">Event Details</string>
+    <string name="title_time">Select Some Potential Times</string>
+    <string name="title_place">Select Some Potential Places</string>
+    <string name="title_invite">Invite People</string>
 
     <!--Toasts-->
     <string name="toast_failed_login">Failed to login!</string>
@@ -36,6 +41,7 @@
     <string name="toast_add_fail">Failed To Find Meeting</string>
     <string name="toast_resolve_vote_success">Successfully Resolved! Find this in Finalized Meetings!</string>
     <string name="toast_empty_selection">Cannot have empty selection!</string>
+    <string name="toast_invalid_time">Invalid time selection! Please try again!</string>
 
 
     <string name="hello_blank_fragment">Hello blank fragment</string>

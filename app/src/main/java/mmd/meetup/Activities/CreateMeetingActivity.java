@@ -53,17 +53,26 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
 
         if (currentStep.equals(Constants.MeetingNavigation.stepDescription)) {
             goToFragment(MeetingDetailsFragment.newInstance());
+            changeToolbarText(getString(R.string.title_description));
         } else if (currentStep.equals(Constants.MeetingNavigation.stepTime)) {
             Meeting meeting = (Meeting) getIntent().getExtras().getSerializable(Constants.MeetingNavigation.MEETING_OBJ_KEY);
             goToFragment(MeetingTimeFragment.newInstance(meeting));
+            changeToolbarText(getString(R.string.title_time));
         } else if (currentStep.equals(Constants.MeetingNavigation.stepLocation)) {
             Meeting meeting = (Meeting) getIntent().getExtras().getSerializable(Constants.MeetingNavigation.MEETING_OBJ_KEY);
             goToFragment(MeetingPlaceFragment.newInstance(meeting));
+            changeToolbarText(getString(R.string.title_place));
         } else if (currentStep.equals(Constants.MeetingNavigation.stepInvite)) {
             Meeting meeting = (Meeting) getIntent().getExtras().getSerializable(Constants.MeetingNavigation.MEETING_OBJ_KEY);
             goToFragment(MeetingInviteFragment.newInstance(meeting));
+            changeToolbarText(getString(R.string.title_invite));
         }
     }
+
+    private void changeToolbarText(String s) {
+        getSupportActionBar().setTitle(s);
+    }
+
 
     private void goToFragment(Fragment fragment) {
         getSupportFragmentManager()

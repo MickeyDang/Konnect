@@ -15,6 +15,8 @@ public class MapActivity extends AppCompatActivity implements MapFragment.OnFrag
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+        getSupportActionBar().setTitle(getString(R.string.title_placepicker_activity));
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, MapFragment.newInstance());

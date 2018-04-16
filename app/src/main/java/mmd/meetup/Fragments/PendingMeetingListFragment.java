@@ -15,6 +15,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.List;
+
 import mmd.meetup.Adapters.PendingMeetingAdapter;
 import mmd.meetup.Firebase.FirebaseClient;
 import mmd.meetup.Firebase.FirebaseDB;
@@ -133,6 +135,29 @@ public class PendingMeetingListFragment extends Fragment implements FirebaseList
     public void onStop() {
         super.onStop();
         stopListening();
+    }
+
+    public void notifyAdapterVoteCast(String id) {
+        if (id == null || id.isEmpty()) {
+            mAdapter.notifyDataSetChanged();
+        } else {
+            int index = findElementIndex(id, mAdapter.getFullList());
+            if (index != -1) {
+                mAdapter.notifyItemChanged(index);
+            } else {
+                mAdapter.notifyDataSetChanged();
+            }
+        }
+
+    }
+
+    private int findElementIndex(String id, List<PendingMeeting> pendingMeetings) {
+        for (int i = 0; i < pendingMeetings.size(); i++) {
+            if (id.equals(pendingMeetings.get(i).getId()))
+                return i;
+        }
+
+        return -1;
     }
 
     @Override

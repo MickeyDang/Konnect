@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -108,14 +109,16 @@ public class MeetingTimeFragment extends Fragment {
 
                 try {
                     TimeOption to = new TimeOption();
-
                     SimpleDateFormat sdf = new SimpleDateFormat("MM dd, yyyy");
-
                     Date dateObject = sdf.parse((++i1) + " " + i2 + ", " + i);
-
                     to.setDate(new SimpleDateFormat("MMMM dd, yyyy").format(dateObject));
+                    to.setStartTimeMillis(dateObject.getTime());
 
-                    createTimePicker(c, to, dateObject, false);
+                    if (assertTimeInFuture(to.getStartTimeMillis())) {
+                        createTimePicker(c, to, dateObject, false);
+                    } else {
+                        createCalendarPicker(c);
+                    }
 
                 } catch (ParseException pe) {
                     Log.e(LOG_TAG, pe.getMessage());
@@ -138,16 +141,28 @@ public class MeetingTimeFragment extends Fragment {
 
                 try {
                     SimpleDateFormat sdf = new SimpleDateFormat("H:mm");
-
+                    to.setStartTimeMillis(dateObj.getTime());
+                    
                     if (!isEndTime) {
                         dateObj.setHours(i);
                         dateObj.setMinutes(i1);
 
                         to.setStartTime(new SimpleDateFormat("h:mm aa").format(sdf.parse(i + ":" + i1)));
-                        createTimePicker(c, to, dateObj, true);
+
+                        if (assertTimeInFuture(to.getStartTimeMillis())) {
+                            createTimePicker(c, to, dateObj, true);
+                        } else {
+                            createTimePicker(c, to, dateObj, false);
+                        }
+
                     } else {
-                        to.setEndTime(new SimpleDateFormat("h:mm aa").format(sdf.parse(i + ":" + i1)));
-                        mAdapter.updateAdapter(to);
+
+                        if (assertTimeInFuture(to.getStartTimeMillis())) {
+                            to.setEndTime(new SimpleDateFormat("h:mm aa").format(sdf.parse(i + ":" + i1)));
+                            mAdapter.updateAdapter(to);
+                        } else {
+                            createTimePicker(c, to, dateObj, true);
+                        }
                     }
 
                 } catch (ParseException pe) {
@@ -159,6 +174,16 @@ public class MeetingTimeFragment extends Fragment {
 
         TimePickerDialog dialog = new TimePickerDialog(getContext(), listener, hour, minute, false);
         dialog.show();
+    }
+
+    private boolean assertTimeInFuture(long selectedTime) {
+        if (selectedTime > System.currentTimeMillis()) {
+            return true;
+        } else {
+            Toast.makeText(getContext(), getString(R.string.toast_invalid_time), Toast.LENGTH_SHORT)
+                    .show();
+            return false;
+        }
     }
 
     public ArrayList<TimeOption> getTimeOptions() {

@@ -11,6 +11,7 @@ import com.github.ivbaranov.mli.MaterialLetterIcon;
 
 import mmd.meetup.Firebase.FirebaseClient;
 import mmd.meetup.Fragments.PendingMeetingListFragment.OnListFragmentInteractionListener;
+import mmd.meetup.MeetUpApplication;
 import mmd.meetup.Models.Meeting;
 import mmd.meetup.Models.PendingMeeting;
 import mmd.meetup.R;
@@ -85,7 +86,13 @@ public class PendingMeetingAdapter extends RecyclerView.Adapter<PendingMeetingAd
 
         //vote button is clickable by default
         FirebaseClient.getInstance().getVoteStatus(pendingMeeting.getId(),
-                aBoolean -> holder.voteButton.setClickable(aBoolean));
+                aBoolean -> {
+                    holder.voteButton.setClickable(aBoolean);
+                    if (!aBoolean) {
+                        holder.voteButton.setTextColor(MeetUpApplication.getInstance().getResources().getColor(R.color.secondary_text));
+                        holder.voteButton.setBackgroundColor(MeetUpApplication.getInstance().getResources().getColor(R.color.light_background));
+                    }
+                });
 
         //resolve button visibility is invisible by default
         FirebaseClient.getInstance().isOwnerOfVote(pendingMeeting.getId(),
