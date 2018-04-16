@@ -28,7 +28,7 @@ import mmd.meetup.Models.MeetingPlace;
 import mmd.meetup.R;
 
 
-public class MeetingPlaceFragment extends Fragment {
+public class MeetingPlaceFragment extends Fragment implements NullFieldAsserter{
     private final String LOG_TAG = this.getClass().getSimpleName();
 
     private PlacePickerHandler mListener;
@@ -67,14 +67,7 @@ public class MeetingPlaceFragment extends Fragment {
 
         addPlaceButton = view.findViewById(R.id.addPlace);
 
-        addPlaceButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mListener.makePlacePicker();
-//                Intent intent = new Intent(getContext(), MapActivity.class);
-//                startActivity(intent);
-            }
-        });
+        addPlaceButton.setOnClickListener(v -> mListener.makePlacePicker());
 
         mRecyclerView = view.findViewById(R.id.list);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -113,6 +106,11 @@ public class MeetingPlaceFragment extends Fragment {
         meetingPlace.setLongitude(place.getLatLng().longitude);
 
         mAdapter.insertMeetingPlace(meetingPlace);
+    }
+
+    @Override
+    public boolean hasNullFields() {
+        return mAdapter.getItemCount() == 0;
     }
 
     public interface PlacePickerHandler {

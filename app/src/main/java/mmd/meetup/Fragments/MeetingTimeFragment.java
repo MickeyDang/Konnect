@@ -29,7 +29,7 @@ import mmd.meetup.Models.Meeting;
 import mmd.meetup.Models.TimeOption;
 import mmd.meetup.R;
 
-public class MeetingTimeFragment extends Fragment {
+public class MeetingTimeFragment extends Fragment implements NullFieldAsserter{
 
     private final String LOG_TAG = this.getClass().getSimpleName();
     private OnTimeOptionInteractionListener mListener;
@@ -142,7 +142,7 @@ public class MeetingTimeFragment extends Fragment {
                 try {
                     SimpleDateFormat sdf = new SimpleDateFormat("H:mm");
                     to.setStartTimeMillis(dateObj.getTime());
-                    
+
                     if (!isEndTime) {
                         dateObj.setHours(i);
                         dateObj.setMinutes(i1);
@@ -194,6 +194,11 @@ public class MeetingTimeFragment extends Fragment {
     }
 
     @Override
+    public boolean hasNullFields() {
+        return mAdapter.getItemCount() == 0;
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnTimeOptionInteractionListener) {
@@ -210,7 +215,5 @@ public class MeetingTimeFragment extends Fragment {
         mListener = null;
     }
 
-    public interface OnTimeOptionInteractionListener {
-        void onTimeOptionDeleted(TimeOption timeOption);
-    }
+    public interface OnTimeOptionInteractionListener {}
 }

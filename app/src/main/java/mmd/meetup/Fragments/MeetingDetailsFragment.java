@@ -14,7 +14,7 @@ import mmd.meetup.Models.Meeting;
 import mmd.meetup.Models.PendingMeeting;
 import mmd.meetup.R;
 
-public class MeetingDetailsFragment extends Fragment {
+public class MeetingDetailsFragment extends Fragment implements NullFieldAsserter{
 
     private OnFragmentInteractionListener mListener;
 
@@ -66,6 +66,7 @@ public class MeetingDetailsFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
     public boolean hasNullFields() {
         return (title.getText().toString().isEmpty() || descrption.getText().toString().isEmpty());
     }

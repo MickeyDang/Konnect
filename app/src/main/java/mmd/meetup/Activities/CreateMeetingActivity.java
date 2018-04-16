@@ -24,6 +24,7 @@ import mmd.meetup.Fragments.MeetingDetailsFragment;
 import mmd.meetup.Fragments.MeetingInviteFragment;
 import mmd.meetup.Fragments.MeetingPlaceFragment;
 import mmd.meetup.Fragments.MeetingTimeFragment;
+import mmd.meetup.Fragments.NullFieldAsserter;
 import mmd.meetup.Models.Meeting;
 import mmd.meetup.Models.MeetingPlace;
 import mmd.meetup.Models.PendingMeeting;
@@ -104,28 +105,28 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
                     }
 
                 } else if (currentStep.equals(Constants.MeetingNavigation.stepTime)) {
-                    Intent intent = new Intent();
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelableArrayList(Constants.MeetingNavigation.TIME_OPTION_KEY, getTimeOptions());
-                    intent.putExtras(bundle);
-                    setResult(Constants.MeetingNavigation.resultSuccess, intent);
-                    this.finish();
-
+                    if (assertFieldsNotNull()) {
+                        Intent intent = new Intent();
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelableArrayList(Constants.MeetingNavigation.TIME_OPTION_KEY, getTimeOptions());
+                        intent.putExtras(bundle);
+                        setResult(Constants.MeetingNavigation.resultSuccess, intent);
+                        this.finish();
+                    }
                 } else if (currentStep.equals(Constants.MeetingNavigation.stepLocation)) {
-                    Intent intent = new Intent();
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelableArrayList(Constants.MeetingNavigation.PLACE_OPTION_KEY, getMeetingPlaceList());
-                    intent.putExtras(bundle);
-                    setResult(Constants.MeetingNavigation.resultSuccess, intent);
-                    this.finish();
-
+                    if (assertFieldsNotNull()) {
+                        Intent intent = new Intent();
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelableArrayList(Constants.MeetingNavigation.PLACE_OPTION_KEY, getMeetingPlaceList());
+                        intent.putExtras(bundle);
+                        setResult(Constants.MeetingNavigation.resultSuccess, intent);
+                        this.finish();
+                    }
                 } else if (currentStep.equals(Constants.MeetingNavigation.stepInvite)) {
-
                     Intent intent = new Intent();
                     intent.putStringArrayListExtra(Constants.MeetingNavigation.INVITEE_KEY, getInvitees());
                     setResult(Constants.MeetingNavigation.resultSuccess, intent);
                     this.finish();
-                    //handle appropriately
                 }
                 return true;
             default:
@@ -149,29 +150,39 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
     }
 
     private boolean assertFieldsNotNull() {
-        MeetingDetailsFragment detailsFragment = (MeetingDetailsFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
 
-        if (detailsFragment.hasNullFields()) {
+        if (fragment instanceof MeetingDetailsFragment) {
+            return evaluateIfNull((MeetingDetailsFragment) fragment);
+        } else if (fragment instanceof MeetingTimeFragment) {
+            return evaluateIfNull((MeetingTimeFragment) fragment);
+        } else if (fragment instanceof MeetingPlaceFragment) {
+            return evaluateIfNull((MeetingPlaceFragment) fragment);
+        } else {
+            //this case should be impossible. unhandled
+            return false;
+        }
+    }
+
+    private boolean evaluateIfNull(NullFieldAsserter nfa) {
+        boolean hasNullFields = nfa.hasNullFields();
+        if (hasNullFields) {
             Toast.makeText(getApplicationContext(), getString(R.string.toast_empty_field), Toast.LENGTH_SHORT)
                     .show();
         }
-
-        return !detailsFragment.hasNullFields();
+        return hasNullFields;
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         switch (requestCode) {
             case PICKER_RC :
                 //default ok result constant
                 if (resultCode == RESULT_OK) {
                     handlePlaceOption(PlacePicker.getPlace(this, data));
                 }
-
         }
-
     }
 
     @Override
@@ -201,11 +212,6 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
 
     @Override
     public void onFragmentInteraction() {
-
-    }
-
-    @Override
-    public void onTimeOptionDeleted(TimeOption timeOption) {
 
     }
 
