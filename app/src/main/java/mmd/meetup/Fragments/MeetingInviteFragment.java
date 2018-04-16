@@ -3,6 +3,7 @@ package mmd.meetup.Fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,10 +16,11 @@ import mmd.meetup.Models.Meeting;
 import mmd.meetup.R;
 
 public class MeetingInviteFragment extends Fragment {
-    private OnFragmentInteractionListener mListener;
+    private ShareIntentHandler mListener;
 
     private TextView ucv;
     private Meeting meeting;
+    private FloatingActionButton shareButton;
 
     private ArrayList<String> invitees = new ArrayList<>();
 
@@ -49,6 +51,9 @@ public class MeetingInviteFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         ucv = view.findViewById(R.id.uniqueCodeView);
+        shareButton = view.findViewById(R.id.shareButton);
+
+        shareButton.setOnClickListener(buttonView -> mListener.onShareIntent(ucv.getText().toString()));
 
         if (meeting != null) {
             ucv.setText(meeting.getInviteID());
@@ -59,11 +64,11 @@ public class MeetingInviteFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof ShareIntentHandler) {
+            mListener = (ShareIntentHandler) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement ShareIntentHandler");
         }
     }
 
@@ -77,7 +82,7 @@ public class MeetingInviteFragment extends Fragment {
         return invitees;
     }
 
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction();
+    public interface ShareIntentHandler {
+        void onShareIntent(String inviteID);
     }
 }

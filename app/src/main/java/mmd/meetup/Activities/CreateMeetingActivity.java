@@ -20,6 +20,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import java.util.ArrayList;
 
 import mmd.meetup.Constants;
+import mmd.meetup.Firebase.FirebaseClient;
 import mmd.meetup.Fragments.MeetingDetailsFragment;
 import mmd.meetup.Fragments.MeetingInviteFragment;
 import mmd.meetup.Fragments.MeetingPlaceFragment;
@@ -32,7 +33,7 @@ import mmd.meetup.Models.TimeOption;
 import mmd.meetup.R;
 
 public class CreateMeetingActivity extends AppCompatActivity implements MeetingDetailsFragment.OnFragmentInteractionListener,
-    MeetingInviteFragment.OnFragmentInteractionListener, MeetingTimeFragment.OnTimeOptionInteractionListener,
+        MeetingInviteFragment.ShareIntentHandler, MeetingTimeFragment.OnTimeOptionInteractionListener,
         MeetingPlaceFragment.PlacePickerHandler{
 
     private final String LOG_TAG = this.getClass().getSimpleName();
@@ -213,6 +214,19 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
     @Override
     public void onFragmentInteraction() {
 
+    }
+
+    @Override
+    public void onShareIntent(String inviteID) {
+        String promptText = "Send via...";
+        String template = getString(R.string.intent_def_msg);
+
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, template + inviteID);
+        sendIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.intent_def_title));
+        sendIntent.setType("text/plain");
+        startActivity(Intent.createChooser(sendIntent, promptText));
     }
 
     @Override

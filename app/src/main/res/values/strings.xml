@@ -43,6 +43,9 @@
     <string name="toast_empty_selection">Cannot have empty selection!</string>
     <string name="toast_invalid_time">Invalid time selection! Please try again!</string>
 
+    <!--Intent Messages-->
+    <string name="intent_def_msg">Hey! I\'m inviting you to a meet up. Use the MeetUp app and enter this invite code! -> </string>
+    <string name="intent_def_title">MeetUp Invite ID</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
