@@ -5,6 +5,12 @@
       tools:context="mmd.meetup.Activities.CreateMeetingActivity">
 
     <item
+        android:id="@+id/share_button"
+        android:icon="@drawable/ic_share_white"
+        app:showAsAction="ifRoom"
+        android:visible="false"/>
+
+    <item
         android:id="@+id/next_button"
         android:title="@string/nav_button_next"
         app:showAsAction="always"/>

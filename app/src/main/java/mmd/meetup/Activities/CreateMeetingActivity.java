@@ -56,7 +56,6 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
         currentStep = getIntent().getExtras().getString(Constants.MeetingNavigation.STEP_KEY);
         currentStep = currentStep == null ? "error" : currentStep;
 
-        configureMenu();
         if (currentStep.equals(Constants.MeetingNavigation.stepDescription)) {
             goToFragment(MeetingDetailsFragment.newInstance());
             changeToolbarText(getString(R.string.title_description));
@@ -99,6 +98,7 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
         mMenu = menu;
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.create_meeting_menu, menu);
+        configureMenu();
         return true;
     }
 

@@ -74,7 +74,7 @@ public class FirebaseClient {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             mUser = mAuth.getCurrentUser();
-                            createUserInDB(acct.getDisplayName());
+                            createUserInDB();
 
                             callback.onResult(true);
                         } else {
@@ -85,19 +85,27 @@ public class FirebaseClient {
                 });
     }
 
-    private void createUserInDB(final String name) {
+    private void createUserInDB() {
         FirebaseDatabase.getInstance().getReference()
                 .child(FirebaseDB.Users.path)
                 .child(mUser.getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.getValue() == null)
-                        FirebaseDatabase.getInstance().getReference()
-                                .child(FirebaseDB.Users.path)
-                                .child(mUser.getUid())
-                                .child(FirebaseDB.Users.Entries.name)
-                                .setValue(name);
+                        if (dataSnapshot.getValue() == null) {
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference()
+                                    .child(FirebaseDB.Users.path)
+                                    .child(mUser.getUid());
+
+                            ref.child(FirebaseDB.Users.Entries.name)
+                                    .setValue(mUser.getDisplayName());
+
+                            ref.child(FirebaseDB.Users.Entries.email)
+                                    .setValue(mUser.getEmail());
+
+                            ref.child(FirebaseDB.Users.Entries.id)
+                                    .setValue(mUser.getUid());
+                        }
                     }
 
                     @Override
