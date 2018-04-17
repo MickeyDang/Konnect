@@ -33,6 +33,14 @@
     <string name="title_time">Select Some Potential Times</string>
     <string name="title_place">Select Some Potential Places</string>
     <string name="title_invite">Invite People</string>
+    <string name="title_find_people">Find People</string>
+
+    <!--TextViews-->
+    <string name="title_empty">There doesn\'t seem to be anything here.</string>
+
+    <!--Hints & Prompts-->
+    <string name="hint_invite_code">Enter Invite Code Here</string>
+    <string name="hint_find_email">Enter an email address</string>
 
     <!--Toasts-->
     <string name="toast_failed_login">Failed to login!</string>

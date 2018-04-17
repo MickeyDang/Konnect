@@ -41,6 +41,10 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
     private final int PERMISSION_RC = 98;
 
     private String currentStep;
+    private Menu mMenu;
+
+    //this meeting will not be fully initialized at all times.
+    private Meeting protoMeeting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,21 +56,21 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
         currentStep = getIntent().getExtras().getString(Constants.MeetingNavigation.STEP_KEY);
         currentStep = currentStep == null ? "error" : currentStep;
 
-
+        configureMenu();
         if (currentStep.equals(Constants.MeetingNavigation.stepDescription)) {
             goToFragment(MeetingDetailsFragment.newInstance());
             changeToolbarText(getString(R.string.title_description));
         } else if (currentStep.equals(Constants.MeetingNavigation.stepTime)) {
-            Meeting meeting = (Meeting) getIntent().getExtras().getSerializable(Constants.MeetingNavigation.MEETING_OBJ_KEY);
-            goToFragment(MeetingTimeFragment.newInstance(meeting));
+            protoMeeting = (Meeting) getIntent().getExtras().getSerializable(Constants.MeetingNavigation.MEETING_OBJ_KEY);
+            goToFragment(MeetingTimeFragment.newInstance(protoMeeting));
             changeToolbarText(getString(R.string.title_time));
         } else if (currentStep.equals(Constants.MeetingNavigation.stepLocation)) {
-            Meeting meeting = (Meeting) getIntent().getExtras().getSerializable(Constants.MeetingNavigation.MEETING_OBJ_KEY);
-            goToFragment(MeetingPlaceFragment.newInstance(meeting));
+            protoMeeting = (Meeting) getIntent().getExtras().getSerializable(Constants.MeetingNavigation.MEETING_OBJ_KEY);
+            goToFragment(MeetingPlaceFragment.newInstance(protoMeeting));
             changeToolbarText(getString(R.string.title_place));
         } else if (currentStep.equals(Constants.MeetingNavigation.stepInvite)) {
-            Meeting meeting = (Meeting) getIntent().getExtras().getSerializable(Constants.MeetingNavigation.MEETING_OBJ_KEY);
-            goToFragment(MeetingInviteFragment.newInstance(meeting));
+            protoMeeting = (Meeting) getIntent().getExtras().getSerializable(Constants.MeetingNavigation.MEETING_OBJ_KEY);
+            goToFragment(MeetingInviteFragment.newInstance(protoMeeting));
             changeToolbarText(getString(R.string.title_invite));
         }
     }
@@ -75,6 +79,13 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
         getSupportActionBar().setTitle(s);
     }
 
+    private void configureMenu() {
+        if (currentStep.equals(Constants.MeetingNavigation.stepInvite)) {
+            mMenu.findItem(R.id.share_button).setVisible(true);
+        } else {
+            mMenu.findItem(R.id.share_button).setVisible(false);
+        }
+    }
 
     private void goToFragment(Fragment fragment) {
         getSupportFragmentManager()
@@ -85,6 +96,7 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        mMenu = menu;
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.create_meeting_menu, menu);
         return true;
@@ -129,6 +141,10 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
                     setResult(Constants.MeetingNavigation.resultSuccess, intent);
                     this.finish();
                 }
+                return true;
+            case R.id.share_button:
+                if (protoMeeting != null || protoMeeting.getInviteID() != null)
+                    onShareIntent(protoMeeting.getInviteID());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

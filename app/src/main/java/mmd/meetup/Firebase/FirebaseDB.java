@@ -7,53 +7,54 @@ package mmd.meetup.Firebase;
 public class FirebaseDB {
 
     //property of time option and location option
-    public static String VOTE_COUNT = "vote_count";
+    final public static String VOTE_COUNT = "vote_count";
 
     public static class FinalizedMeetings {
 
-        public static String path = "finalized_meetings";
+        final public static String path = "finalized_meetings";
 
         public static class Entries {
-            public static String id = "id";
-            public static String creatorID = "creator_id";
-            public static String title = "title";
-            public static String description = "description";
-            public static String members = "members";
+            final public static String id = "id";
+            final public static String creatorID = "creator_id";
+            final public static String title = "title";
+            final public static String description = "description";
+            final public static String members = "members";
             //only one entry
-            public static String time = "time";
-            public static String location = "location";
-            public static String invitedUsers = "invitedUsers";
+            final public static String time = "time";
+            final public static String location = "location";
+            final public static String invitedUsers = "invitedUsers";
         }
 
     }
 
     public static class PendingMeetings {
-        public static String path = "pending_meetings";
+        final public static String path = "pending_meetings";
 
         public static class Entries {
-            public static String id = "id";
-            public static String inviteID = "inviteID";
-            public static String organizerID = "organizerID";
-            public static String title = "title";
-            public static String description = "description";
-            public static String members = "members";
+            final public static String id = "id";
+            final public static String inviteID = "inviteID";
+            final public static String organizerID = "organizerID";
+            final public static String title = "title";
+            final public static String description = "description";
+            final public static String members = "members";
 
             //multiple entries (options)
-            public static String timeOptions = "timeOptions";
-            public static String locationOptions = "meetingPlaces";
-            public static String invitedUsers = "invitedUsers";
+            final public static String timeOptions = "timeOptions";
+            final public static String locationOptions = "meetingPlaces";
+            final public static String invitedUsers = "invitedUsers";
         }
     }
 
     public static class Users {
 
-        public static String path = "users";
+        final public static String path = "users";
 
         public static class Entries {
-            public static String name = "name";
-            public static String id = "id";
-            public static String pendingMeetings = "pending_meetings";
-            public static String finalizedMeetings = "finalized_meetings";
+            final public static String email = "email";
+            final public static String name = "name";
+            final public static String id = "id";
+            final public static String pendingMeetings = "pending_meetings";
+            final public static String finalizedMeetings = "finalized_meetings";
         }
 
     }

@@ -28,6 +28,7 @@ import mmd.meetup.Models.FinalizedMeeting;
 import mmd.meetup.Models.MeetingPlace;
 import mmd.meetup.Models.PendingMeeting;
 import mmd.meetup.Models.TimeOption;
+import mmd.meetup.Models.User;
 
 /**
  * Created by mickeydang on 2018-03-29.
@@ -356,6 +357,32 @@ public class FirebaseClient {
                 .child(FirebaseDB.Users.Entries.pendingMeetings)
                 .child(meetingID)
                 .setValue("false");
+    }
+
+    public void findUserByEmail(String email, Callback<User> callback) {
+
+        Query query = FirebaseDatabase.getInstance().getReference()
+                .child(FirebaseDB.Users.path);
+        query.orderByChild(FirebaseDB.Users.Entries.name).equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot == null) return;
+
+                for (DataSnapshot matchingUser : dataSnapshot.getChildren()) {
+
+                    User user = matchingUser.getValue(User.class);
+                    callback.onResult(user);
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public interface Callback<T> {

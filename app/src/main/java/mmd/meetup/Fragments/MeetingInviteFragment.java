@@ -1,17 +1,23 @@
 package mmd.meetup.Fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import mmd.meetup.Firebase.FirebaseClient;
 import mmd.meetup.Models.Meeting;
 import mmd.meetup.R;
 
@@ -20,7 +26,8 @@ public class MeetingInviteFragment extends Fragment {
 
     private TextView ucv;
     private Meeting meeting;
-    private FloatingActionButton shareButton;
+    private FloatingActionButton inviteButton;
+    private RecyclerView mRecyclerView;
 
     private ArrayList<String> invitees = new ArrayList<>();
 
@@ -51,9 +58,10 @@ public class MeetingInviteFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         ucv = view.findViewById(R.id.uniqueCodeView);
-        shareButton = view.findViewById(R.id.shareButton);
+        inviteButton = view.findViewById(R.id.inviteButton);
+        mRecyclerView = view.findViewById(R.id.list);
 
-        shareButton.setOnClickListener(buttonView -> mListener.onShareIntent(ucv.getText().toString()));
+        inviteButton.setOnClickListener(buttonView -> promptForEmail());
 
         if (meeting != null) {
             ucv.setText(meeting.getInviteID());
@@ -76,6 +84,32 @@ public class MeetingInviteFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    private void promptForEmail() {
+        final View v = View.inflate(getContext(), R.layout.view_find_meeting_dialog, null);
+        //change the hint
+        ((EditText) v.findViewById(R.id.inviteIdField)).setHint(R.string.hint_find_email);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
+                .setView(v)
+                .setTitle(getString(R.string.title_find_people))
+                .setPositiveButton(getString(R.string.title_search), ((dialogInterface, i) -> {
+
+                    EditText editText = v.findViewById(R.id.inviteIdField);
+                    FirebaseClient.getInstance().findUserByEmail(editText.getText().toString(), user -> {
+
+
+                        //todo make adapter
+                        //todo add logic to update adapter
+                        //todo toast
+
+                    });
+
+                }));
+
+        builder.show();
+
     }
 
     public ArrayList<String> getInvitees() {

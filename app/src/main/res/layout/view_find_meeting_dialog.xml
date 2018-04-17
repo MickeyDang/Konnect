@@ -20,7 +20,7 @@
             android:id="@+id/inviteIdField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter Invite Code Here"/>
+            android:hint="@string/hint_invite_code"/>
 
     </android.support.design.widget.TextInputLayout>
 

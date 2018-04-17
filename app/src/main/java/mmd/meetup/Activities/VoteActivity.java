@@ -1,21 +1,13 @@
 package mmd.meetup.Activities;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
-
-import java.util.HashMap;
-import java.util.List;
 
 import mmd.meetup.Constants;
 import mmd.meetup.Firebase.FirebaseClient;
@@ -51,7 +43,7 @@ public class VoteActivity extends AppCompatActivity implements VoteListFragment.
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.voting_menu, menu);
+        getMenuInflater().inflate(R.menu.menu_voting, menu);
         return true;
     }
 
