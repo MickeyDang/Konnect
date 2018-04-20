@@ -50,6 +50,8 @@
     <string name="toast_resolve_vote_success">Successfully Resolved! Find this in Finalized Meetings!</string>
     <string name="toast_empty_selection">Cannot have empty selection!</string>
     <string name="toast_invalid_time">Invalid time selection! Please try again!</string>
+    <string name="toast_no_user_added">Error. Could not find user.</string>
+    <string name="toast_user_added">Successfully added user.</string>
 
     <!--Intent Messages-->
     <string name="intent_def_msg">Hey! I\'m inviting you to a meet up. Use the MeetUp app and enter this invite code! -> </string>

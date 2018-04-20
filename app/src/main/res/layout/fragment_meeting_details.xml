@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context="mmd.meetup.Fragments.MeetingDetailsFragment">
 
+    <!--todo make view prettier?-->
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"

@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import mmd.meetup.Adapters.InvitedUserAdapter;
 import mmd.meetup.Firebase.FirebaseClient;
 import mmd.meetup.Models.Meeting;
 import mmd.meetup.R;
@@ -28,6 +30,7 @@ public class MeetingInviteFragment extends Fragment {
     private Meeting meeting;
     private FloatingActionButton inviteButton;
     private RecyclerView mRecyclerView;
+    private InvitedUserAdapter mAdapter;
 
     private ArrayList<String> invitees = new ArrayList<>();
 
@@ -62,6 +65,10 @@ public class MeetingInviteFragment extends Fragment {
         mRecyclerView = view.findViewById(R.id.list);
 
         inviteButton.setOnClickListener(buttonView -> promptForEmail());
+
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mAdapter = new InvitedUserAdapter(mListener);
+        mRecyclerView.setAdapter(mAdapter);
 
         if (meeting != null) {
             ucv.setText(meeting.getInviteID());
@@ -99,17 +106,19 @@ public class MeetingInviteFragment extends Fragment {
                     EditText editText = v.findViewById(R.id.inviteIdField);
                     FirebaseClient.getInstance().findUserByEmail(editText.getText().toString(), user -> {
 
-
-                        //todo make adapter
-                        //todo add logic to update adapter
-                        //todo toast
-
+                        if (user == null) {
+                            Toast.makeText(getContext(), getString(R.string.toast_no_user_added), Toast.LENGTH_SHORT)
+                                    .show();
+                        } else {
+                            mAdapter.insertUser(user);
+                            Toast.makeText(getContext(), getString(R.string.toast_user_added), Toast.LENGTH_SHORT)
+                                    .show();
+                        }
                     });
 
                 }));
 
         builder.show();
-
     }
 
     public ArrayList<String> getInvitees() {

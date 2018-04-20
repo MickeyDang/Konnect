@@ -96,9 +96,9 @@ public class FinalizedMeetingAdapter extends RecyclerView.Adapter<FinalizedMeeti
         String[] texts = finalizedMeeting.getTimeOption().getDate().split(" ");
 
         if (texts.length == 3)
-            formattedText = "Start: " + texts[0] + " " + texts[1] + " - " + finalizedMeeting.getTimeOption().getStartTime();
+            formattedText = "Start: " + texts[0] + " " + texts[1] + " " + finalizedMeeting.getTimeOption().getStartTime();
         else
-            formattedText = "Start: " + finalizedMeeting.getTimeOption().getDate() + " - " + finalizedMeeting.getTimeOption().getStartTime();
+            formattedText = "Start: " + finalizedMeeting.getTimeOption().getDate() + " " + finalizedMeeting.getTimeOption().getStartTime();
 
         formattedText = formattedText.length() > 30 ?  formattedText.substring(0, 30) : formattedText;
 
@@ -113,6 +113,9 @@ public class FinalizedMeetingAdapter extends RecyclerView.Adapter<FinalizedMeeti
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        //todo add image icon to top right to indicate how close a meeting is
+        //todo add view on click listener to send user to details about meeting
+
         public TextView description;
         public TextView title;
         public TextView placeText;

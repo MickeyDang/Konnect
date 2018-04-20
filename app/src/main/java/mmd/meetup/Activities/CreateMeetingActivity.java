@@ -208,6 +208,8 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
     }
 
     private void startPlacePickerWidget(@Nullable LatLngBounds bounds) {
+        //todo init latlng default bounds to not be (0,0) africa
+
         try {
             PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
 

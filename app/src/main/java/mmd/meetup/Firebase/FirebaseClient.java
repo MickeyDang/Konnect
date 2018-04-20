@@ -371,11 +371,14 @@ public class FirebaseClient {
 
         Query query = FirebaseDatabase.getInstance().getReference()
                 .child(FirebaseDB.Users.path);
-        query.orderByChild(FirebaseDB.Users.Entries.name).equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
+        query.orderByChild(FirebaseDB.Users.Entries.email).equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                if (dataSnapshot == null) return;
+                if (dataSnapshot.getValue() == null || dataSnapshot.getChildren() == null) {
+                    callback.onResult(null);
+                    return;
+                }
 
                 for (DataSnapshot matchingUser : dataSnapshot.getChildren()) {
 

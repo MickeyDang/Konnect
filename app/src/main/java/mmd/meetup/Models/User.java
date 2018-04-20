@@ -4,8 +4,6 @@ import java.io.Serializable;
 
 public class User implements Serializable{
 
-    //todo add emails in DB
-
     private String name;
     private String email;
     private String id;

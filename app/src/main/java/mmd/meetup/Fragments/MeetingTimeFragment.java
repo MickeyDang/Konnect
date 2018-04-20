@@ -132,6 +132,8 @@ public class MeetingTimeFragment extends Fragment implements NullFieldAsserter{
 
     private void createTimePicker(final Calendar c, final TimeOption to, final Date dateObj, final boolean isEndTime) {
 
+        //todo assert end time is after start time
+
         int hour = c.get(Calendar.HOUR_OF_DAY);
         int minute = c.get(Calendar.MINUTE);
 
