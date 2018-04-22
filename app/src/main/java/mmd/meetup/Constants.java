@@ -34,6 +34,7 @@ public class Constants {
     public static class KEYS {
         public static String SIGN_OUT_KEY = "isSignOut";
         public static String PENDING_MEETING_ID = "p_m_i";
+        public static String FINALIZED_MEETING_KEY = "finalized_meeting_key";
     }
 
 }

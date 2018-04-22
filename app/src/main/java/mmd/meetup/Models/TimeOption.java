@@ -21,6 +21,7 @@ public class TimeOption implements Parcelable, Serializable {
     private String startTime;
     public String endTime;
     private long startTimeMillis;
+    private long endtimeMillis;
 
     @PropertyName("vote_count")
     private int voteCount;
@@ -45,6 +46,14 @@ public class TimeOption implements Parcelable, Serializable {
         this.endTime = endTime;
         this.startTimeMillis = startTimeMillis;
         voteCount = 0;
+    }
+
+    public long getEndtimeMillis() {
+        return endtimeMillis;
+    }
+
+    public void setEndtimeMillis(long endtimeMillis) {
+        this.endtimeMillis = endtimeMillis;
     }
 
     public int getVoteCount() {

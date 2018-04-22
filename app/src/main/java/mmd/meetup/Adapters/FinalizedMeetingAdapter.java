@@ -1,5 +1,6 @@
 package mmd.meetup.Adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +11,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import mmd.meetup.Fragments.FinalizedMeetingListFragment.OnListFragmentInteractionListener;
+import mmd.meetup.Fragments.FinalizedMeetingListFragment.MeetingInteractionListener;
+import mmd.meetup.MeetUpApplication;
 import mmd.meetup.Models.FinalizedMeeting;
 import mmd.meetup.R;
 
@@ -18,10 +20,10 @@ import mmd.meetup.R;
 public class FinalizedMeetingAdapter extends RecyclerView.Adapter<FinalizedMeetingAdapter.ViewHolder> implements
         FirebaseAdapter<FinalizedMeeting>{
 
-    private final OnListFragmentInteractionListener mListener;
+    private final MeetingInteractionListener mListener;
     private List<FinalizedMeeting> finalizedMeetings;
 
-    public FinalizedMeetingAdapter(OnListFragmentInteractionListener listener) {
+    public FinalizedMeetingAdapter(MeetingInteractionListener listener) {
         finalizedMeetings = new ArrayList<>();
         mListener = listener;
     }
@@ -74,14 +76,14 @@ public class FinalizedMeetingAdapter extends RecyclerView.Adapter<FinalizedMeeti
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+        final long MILLIS_IN_DAY = 1000 * 60 * 60 * 24;
+        Context context = MeetUpApplication.getInstance().getApplicationContext();
+
         FinalizedMeeting finalizedMeeting = finalizedMeetings.get(position);
 
-        String formattedText = finalizedMeeting.getDescription().length() > 30 ? finalizedMeeting.getDescription().substring(0, 30).concat("...") : finalizedMeeting.getDescription();
-
-        holder.description.setText(formattedText);
         holder.title.setText(finalizedMeeting.getTitle());
 
-        formattedText = finalizedMeeting.getMeetingPlace().getName();
+        String formattedText = finalizedMeeting.getMeetingPlace().getName();
 
         if (formattedText.length() < 15) {
             formattedText += ": " +
@@ -104,7 +106,15 @@ public class FinalizedMeetingAdapter extends RecyclerView.Adapter<FinalizedMeeti
 
         holder.timeText.setText(formattedText);
 
+        if (finalizedMeeting.getTimeOption().getStartTimeMillis() > System.currentTimeMillis() + 3 * MILLIS_IN_DAY) {
+            holder.notifLogo.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_notification_green));
+        } else if (finalizedMeeting.getTimeOption().getStartTimeMillis() > System.currentTimeMillis() + MILLIS_IN_DAY) {
+            holder.notifLogo.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_notification_yellow));
+        } else {
+            holder.notifLogo.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_notification_red));
+        }
 
+        holder.itemView.setOnClickListener(v -> mListener.onFinalizedMeetingSelected(finalizedMeeting));
     }
 
     @Override
@@ -113,25 +123,25 @@ public class FinalizedMeetingAdapter extends RecyclerView.Adapter<FinalizedMeeti
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        //todo add image icon to top right to indicate how close a meeting is
-        //todo add view on click listener to send user to details about meeting
 
-        public TextView description;
         public TextView title;
         public TextView placeText;
         public TextView timeText;
         public ImageView placeLogo;
         public ImageView clockLogo;
+        public ImageView notifLogo;
+        public View itemView;
 
         public ViewHolder(View view) {
             super(view);
 
-            description = view.findViewById(R.id.description);
+            itemView = view;
             title = view.findViewById(R.id.title);
             placeText = view.findViewById(R.id.placeText);
             placeLogo = view.findViewById(R.id.placeLogo);
             timeText = view.findViewById(R.id.timeText);
             clockLogo = view.findViewById(R.id.clockLogo);
+            notifLogo = view.findViewById(R.id.notif);
 
         }
 

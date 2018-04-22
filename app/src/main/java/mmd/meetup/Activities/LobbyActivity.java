@@ -2,7 +2,6 @@ package mmd.meetup.Activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -22,8 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.ivbaranov.mli.MaterialLetterIcon;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +30,7 @@ import mmd.meetup.Constants;
 import mmd.meetup.Firebase.FirebaseClient;
 import mmd.meetup.Fragments.FinalizedMeetingListFragment;
 import mmd.meetup.Fragments.PendingMeetingListFragment;
+import mmd.meetup.Models.FinalizedMeeting;
 import mmd.meetup.Models.Meeting;
 import mmd.meetup.Models.MeetingPlace;
 import mmd.meetup.Models.PendingMeeting;
@@ -42,8 +40,8 @@ import mmd.meetup.Utils;
 
 public class LobbyActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        FinalizedMeetingListFragment.OnListFragmentInteractionListener,
-        PendingMeetingListFragment.OnListFragmentInteractionListener {
+        FinalizedMeetingListFragment.MeetingInteractionListener,
+        PendingMeetingListFragment.PendingMeetingInteractionListener {
 
     MeetingMaker mMaker = new MeetingMaker();
 
@@ -256,8 +254,12 @@ public class LobbyActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction() {
-
+    public void onFinalizedMeetingSelected(FinalizedMeeting fm) {
+        Intent intent = new Intent(this, MeetingProfileActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Constants.KEYS.FINALIZED_MEETING_KEY, fm);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     @Override

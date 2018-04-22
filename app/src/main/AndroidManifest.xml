@@ -5,6 +5,7 @@
     <permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <application
         android:name=".MeetUpApplication"
         android:allowBackup="true"
@@ -37,7 +38,11 @@
         </activity>
         <activity android:name=".Activities.MapActivity">
         </activity>
-        <activity android:name=".Activities.VoteActivity"
+        <activity
+            android:name=".Activities.VoteActivity"
+            android:parentActivityName=".Activities.LobbyActivity">
+        </activity>
+        <activity android:name=".Activities.MeetingProfileActivity"
             android:parentActivityName=".Activities.LobbyActivity">
         </activity>
     </application>

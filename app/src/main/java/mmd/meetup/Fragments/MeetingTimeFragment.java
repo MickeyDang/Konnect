@@ -1,5 +1,6 @@
 package mmd.meetup.Fragments;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -9,11 +10,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -106,15 +110,17 @@ public class MeetingTimeFragment extends Fragment implements NullFieldAsserter{
         DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                final long MILLIS_IN_DAY = 1000 * 60 * 60 * 24;
 
                 try {
                     TimeOption to = new TimeOption();
+
                     SimpleDateFormat sdf = new SimpleDateFormat("MM dd, yyyy");
                     Date dateObject = sdf.parse((++i1) + " " + i2 + ", " + i);
                     to.setDate(new SimpleDateFormat("MMMM dd, yyyy").format(dateObject));
                     to.setStartTimeMillis(dateObject.getTime());
 
-                    if (assertTimeInFuture(to.getStartTimeMillis())) {
+                    if (assertTimeInFuture(to.getStartTimeMillis(), System.currentTimeMillis() - MILLIS_IN_DAY)) {
                         createTimePicker(c, to, dateObject, false);
                     } else {
                         createCalendarPicker(c);
@@ -127,15 +133,14 @@ public class MeetingTimeFragment extends Fragment implements NullFieldAsserter{
         };
 
         DatePickerDialog dialog = new DatePickerDialog(getContext(), listener, year, month, day);
+        dialog.setTitle(R.string.title_date);
         dialog.show();
     }
 
     private void createTimePicker(final Calendar c, final TimeOption to, final Date dateObj, final boolean isEndTime) {
 
-        //todo assert end time is after start time
-
         int hour = c.get(Calendar.HOUR_OF_DAY);
-        int minute = c.get(Calendar.MINUTE);
+        final StringBuilder titleBuilder = new StringBuilder();
 
         TimePickerDialog.OnTimeSetListener listener = new TimePickerDialog.OnTimeSetListener() {
             @Override
@@ -143,23 +148,24 @@ public class MeetingTimeFragment extends Fragment implements NullFieldAsserter{
 
                 try {
                     SimpleDateFormat sdf = new SimpleDateFormat("H:mm");
-                    to.setStartTimeMillis(dateObj.getTime());
-
+                    dateObj.setHours(i);
+                    dateObj.setMinutes(i1);
                     if (!isEndTime) {
-                        dateObj.setHours(i);
-                        dateObj.setMinutes(i1);
+                        titleBuilder.append(getString(R.string.title_start));
+                        to.setStartTimeMillis(dateObj.getTime());
 
-                        to.setStartTime(new SimpleDateFormat("h:mm aa").format(sdf.parse(i + ":" + i1)));
-
-                        if (assertTimeInFuture(to.getStartTimeMillis())) {
+                        if (assertTimeInFuture(to.getStartTimeMillis(), System.currentTimeMillis())) {
+                            to.setStartTime(new SimpleDateFormat("h:mm aa").format(sdf.parse(i + ":" + i1)));
                             createTimePicker(c, to, dateObj, true);
                         } else {
                             createTimePicker(c, to, dateObj, false);
                         }
 
                     } else {
+                        titleBuilder.append(getString(R.string.title_end));
+                        to.setEndtimeMillis(dateObj.getTime());
 
-                        if (assertTimeInFuture(to.getStartTimeMillis())) {
+                        if (assertTimeInFuture(to.getEndtimeMillis(), to.getStartTimeMillis())) {
                             to.setEndTime(new SimpleDateFormat("h:mm aa").format(sdf.parse(i + ":" + i1)));
                             mAdapter.updateAdapter(to);
                         } else {
@@ -174,12 +180,13 @@ public class MeetingTimeFragment extends Fragment implements NullFieldAsserter{
             }
         };
 
-        TimePickerDialog dialog = new TimePickerDialog(getContext(), listener, hour, minute, false);
+        TimePickerDialog dialog = new TimePickerDialog(getContext(), listener, hour, 0, false);
+        dialog.setTitle(titleBuilder.toString());
         dialog.show();
     }
 
-    private boolean assertTimeInFuture(long selectedTime) {
-        if (selectedTime > System.currentTimeMillis()) {
+    private boolean assertTimeInFuture(long futureTime, long pastTime) {
+        if (futureTime > pastTime) {
             return true;
         } else {
             Toast.makeText(getContext(), getString(R.string.toast_invalid_time), Toast.LENGTH_SHORT)

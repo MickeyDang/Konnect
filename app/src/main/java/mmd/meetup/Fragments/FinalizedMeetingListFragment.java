@@ -26,7 +26,7 @@ import mmd.meetup.R;
 public class FinalizedMeetingListFragment extends Fragment implements FirebaseListFragment{
 
     private int mColumnCount = 1;
-    private OnListFragmentInteractionListener mListener;
+    private MeetingInteractionListener mListener;
 
     private RecyclerView mRecyclerView;
     private FinalizedMeetingAdapter mAdapter;
@@ -127,11 +127,11 @@ public class FinalizedMeetingListFragment extends Fragment implements FirebaseLi
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
+        if (context instanceof MeetingInteractionListener) {
+            mListener = (MeetingInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
+                    + " must implement MeetingInteractionListener");
         }
     }
 
@@ -159,8 +159,7 @@ public class FinalizedMeetingListFragment extends Fragment implements FirebaseLi
                 .removeEventListener(mChildEventListener);
     }
 
-    public interface OnListFragmentInteractionListener {
-
-        void onListFragmentInteraction();
+    public interface MeetingInteractionListener {
+        void onFinalizedMeetingSelected(FinalizedMeeting fm);
     }
 }

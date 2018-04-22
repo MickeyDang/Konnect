@@ -26,7 +26,7 @@ import mmd.meetup.R;
 
 public class PendingMeetingListFragment extends Fragment implements FirebaseListFragment{
 
-    OnListFragmentInteractionListener mListener;
+    PendingMeetingInteractionListener mListener;
 
     private RecyclerView mRecyclerView;
     private PendingMeetingAdapter mAdapter;
@@ -111,11 +111,11 @@ public class PendingMeetingListFragment extends Fragment implements FirebaseList
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
+        if (context instanceof PendingMeetingInteractionListener) {
+            mListener = (PendingMeetingInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
+                    + " must implement PendingMeetingInteractionListener");
         }
     }
 
@@ -178,7 +178,7 @@ public class PendingMeetingListFragment extends Fragment implements FirebaseList
                 .removeEventListener(mChildEventListener);
     }
 
-    public interface OnListFragmentInteractionListener {
+    public interface PendingMeetingInteractionListener {
         void onCastVote(PendingMeeting pm);
         void onResolveVote(PendingMeeting pm);
     }

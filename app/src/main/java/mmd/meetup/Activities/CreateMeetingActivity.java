@@ -1,8 +1,15 @@
 package mmd.meetup.Activities;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,14 +20,16 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
 import java.util.ArrayList;
 
 import mmd.meetup.Constants;
-import mmd.meetup.Firebase.FirebaseClient;
 import mmd.meetup.Fragments.MeetingDetailsFragment;
 import mmd.meetup.Fragments.MeetingInviteFragment;
 import mmd.meetup.Fragments.MeetingPlaceFragment;
@@ -38,8 +47,9 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
 
     private final String LOG_TAG = this.getClass().getSimpleName();
     private final int PICKER_RC = 99;
-    private final int PERMISSION_RC = 98;
+    private final int RC_COARSE_LOC = 98;
 
+    private FusedLocationProviderClient mFusedLocationClient;
     private String currentStep;
     private Menu mMenu;
 
@@ -72,6 +82,8 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
             goToFragment(MeetingInviteFragment.newInstance(protoMeeting));
             changeToolbarText(getString(R.string.title_invite));
         }
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
     }
 
     private void changeToolbarText(String s) {
@@ -203,12 +215,51 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        if (requestCode == RC_COARSE_LOC) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getUserLocation();
+            } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                startPlacePickerWidget(null);
+            }
+        }
+
+    }
+
+    @Override
     public void makePlacePicker() {
-        startPlacePickerWidget(null);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    RC_COARSE_LOC);
+        } else {
+            getUserLocation();
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private void getUserLocation() {
+        mFusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
+            if (location != null) {
+                double lat = location.getLatitude();
+                double lng = location.getLongitude();
+
+                LatLng northEastBound = new LatLng(lat + 0.1, lng + 0.1);
+                LatLng southWestBound = new LatLng(lat - 0.1, lng - 0.1);
+
+                startPlacePickerWidget(new LatLngBounds(southWestBound, northEastBound));
+            } else {
+                Toast.makeText(getApplicationContext(), getString(R.string.toast_no_location_enabled), Toast.LENGTH_SHORT)
+                        .show();
+                startPlacePickerWidget(null);
+            }
+        });
     }
 
     private void startPlacePickerWidget(@Nullable LatLngBounds bounds) {
-        //todo init latlng default bounds to not be (0,0) africa
 
         try {
             PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();

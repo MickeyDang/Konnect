@@ -10,9 +10,8 @@ import android.widget.TextView;
 import com.github.ivbaranov.mli.MaterialLetterIcon;
 
 import mmd.meetup.Firebase.FirebaseClient;
-import mmd.meetup.Fragments.PendingMeetingListFragment.OnListFragmentInteractionListener;
+import mmd.meetup.Fragments.PendingMeetingListFragment;
 import mmd.meetup.MeetUpApplication;
-import mmd.meetup.Models.Meeting;
 import mmd.meetup.Models.PendingMeeting;
 import mmd.meetup.R;
 import mmd.meetup.Utils;
@@ -23,10 +22,10 @@ import java.util.List;
 public class PendingMeetingAdapter extends RecyclerView.Adapter<PendingMeetingAdapter.ViewHolder> implements
         FirebaseAdapter<PendingMeeting> {
 
-    private final OnListFragmentInteractionListener mListener;
+    private final PendingMeetingListFragment.PendingMeetingInteractionListener mListener;
     private List<PendingMeeting> meetings;
 
-    public PendingMeetingAdapter(OnListFragmentInteractionListener listener) {
+    public PendingMeetingAdapter(PendingMeetingListFragment.PendingMeetingInteractionListener listener) {
         mListener = listener;
         meetings = new ArrayList<>();
     }

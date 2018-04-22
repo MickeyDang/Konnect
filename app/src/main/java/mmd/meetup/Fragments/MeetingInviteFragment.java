@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import mmd.meetup.Adapters.InvitedUserAdapter;
 import mmd.meetup.Firebase.FirebaseClient;
 import mmd.meetup.Models.Meeting;
+import mmd.meetup.Models.User;
 import mmd.meetup.R;
 
 public class MeetingInviteFragment extends Fragment {
@@ -31,8 +32,6 @@ public class MeetingInviteFragment extends Fragment {
     private FloatingActionButton inviteButton;
     private RecyclerView mRecyclerView;
     private InvitedUserAdapter mAdapter;
-
-    private ArrayList<String> invitees = new ArrayList<>();
 
     public MeetingInviteFragment() {
         // Required empty public constructor
@@ -122,7 +121,11 @@ public class MeetingInviteFragment extends Fragment {
     }
 
     public ArrayList<String> getInvitees() {
-        return invitees;
+        ArrayList<String> list = new ArrayList<>();
+        for (User user : mAdapter.getUserList()) {
+            list.add(user.getId());
+        }
+        return list;
     }
 
     public interface ShareIntentHandler {

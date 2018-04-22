@@ -34,6 +34,9 @@
     <string name="title_place">Select Some Potential Places</string>
     <string name="title_invite">Invite People</string>
     <string name="title_find_people">Find People</string>
+    <string name="title_date">Select a Date</string>
+    <string name="title_start">Select Start Time</string>
+    <string name="title_end">Select End Time</string>
 
     <!--TextViews-->
     <string name="title_empty">There doesn\'t seem to be anything here.</string>
@@ -52,6 +55,7 @@
     <string name="toast_invalid_time">Invalid time selection! Please try again!</string>
     <string name="toast_no_user_added">Error. Could not find user.</string>
     <string name="toast_user_added">Successfully added user.</string>
+    <string name="toast_no_location_enabled">Please enable location to optimize the use of this location picker</string>
 
     <!--Intent Messages-->
     <string name="intent_def_msg">Hey! I\'m inviting you to a meet up. Use the MeetUp app and enter this invite code! -> </string>

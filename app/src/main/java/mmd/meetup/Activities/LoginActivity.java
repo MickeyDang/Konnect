@@ -67,6 +67,7 @@ public class LoginActivity extends AppCompatActivity {
     private void goToLobby() {
         Intent intent = new Intent(this, LobbyActivity.class);
         startActivity(intent);
+        this.finish();
     }
 
     private void attemptSignIn() {
