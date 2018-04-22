@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 
 import mmd.meetup.Firebase.FirebaseClient;
@@ -47,6 +48,16 @@ public class MeetingDetailsFragment extends Fragment implements NullFieldAsserte
 
         title = view.findViewById(R.id.title);
         descrption = view.findViewById(R.id.description);
+
+        descrption.setOnEditorActionListener((v, id, keyEvent) -> {
+            if (id == EditorInfo.IME_ACTION_DONE) {
+                if (!hasNullFields()) {
+                    mListener.onFieldSubmitted();
+                    return true;
+                }
+            }
+            return false;
+        });
     }
 
     @Override
@@ -68,7 +79,17 @@ public class MeetingDetailsFragment extends Fragment implements NullFieldAsserte
 
     @Override
     public boolean hasNullFields() {
-        return (title.getText().toString().isEmpty() || descrption.getText().toString().isEmpty());
+        if (title.getText().toString().isEmpty()) {
+            title.requestFocus();
+            title.setError(getString(R.string.toast_empty_field));
+            return true;
+        } else if (descrption.getText().toString().isEmpty()) {
+            descrption.requestFocus();
+            descrption.setError(getString(R.string.toast_empty_field));
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public PendingMeeting getProtoMeeting() {
@@ -89,6 +110,6 @@ public class MeetingDetailsFragment extends Fragment implements NullFieldAsserte
     }
 
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction();
+        void onFieldSubmitted();
     }
 }

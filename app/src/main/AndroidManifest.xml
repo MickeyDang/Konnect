@@ -42,7 +42,9 @@
             android:name=".Activities.VoteActivity"
             android:parentActivityName=".Activities.LobbyActivity">
         </activity>
-        <activity android:name=".Activities.MeetingProfileActivity"
+        <activity
+            android:name=".Activities.MeetingProfileActivity"
+            android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".Activities.LobbyActivity">
         </activity>
     </application>

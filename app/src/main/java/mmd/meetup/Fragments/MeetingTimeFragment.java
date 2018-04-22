@@ -204,7 +204,13 @@ public class MeetingTimeFragment extends Fragment implements NullFieldAsserter{
 
     @Override
     public boolean hasNullFields() {
-        return mAdapter.getItemCount() == 0;
+        if (mAdapter.getItemCount() == 0) {
+            Toast.makeText(getContext(), getString(R.string.toast_empty_field), Toast.LENGTH_SHORT)
+                    .show();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override

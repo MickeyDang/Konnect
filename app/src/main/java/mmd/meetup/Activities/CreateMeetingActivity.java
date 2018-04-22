@@ -194,12 +194,7 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
     }
 
     private boolean evaluateIfNull(NullFieldAsserter nfa) {
-        boolean hasNullFields = nfa.hasNullFields();
-        if (hasNullFields) {
-            Toast.makeText(getApplicationContext(), getString(R.string.toast_empty_field), Toast.LENGTH_SHORT)
-                    .show();
-        }
-        return hasNullFields;
+        return nfa.hasNullFields();
     }
 
     @Override
@@ -282,11 +277,6 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
     }
 
     @Override
-    public void onFragmentInteraction() {
-
-    }
-
-    @Override
     public void onShareIntent(String inviteID) {
         String promptText = "Send via...";
         String template = getString(R.string.intent_def_msg);
@@ -306,5 +296,10 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
             MeetingPlaceFragment fragment = (MeetingPlaceFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
             fragment.addPickedPlace(place);
         }
+    }
+
+    @Override
+    public void onFieldSubmitted() {
+        this.onOptionsItemSelected(mMenu.findItem(R.id.next_button));
     }
 }

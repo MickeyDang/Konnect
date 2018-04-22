@@ -46,12 +46,6 @@ public class MeetingProfileFragment extends Fragment implements
     private ItemInteractionListener mListener;
 
     FloatingActionButton mDirectionsButton;
-    TextView mTitleView;
-    TextView mDescriptionView;
-    TextView mTimeView;
-    TextView mPlaceView;
-    ImageView mTimeLogo;
-    ImageView mPlaceLogo;
     MapView mMapView;
     GoogleMap mGoogleMap;
 
@@ -80,17 +74,8 @@ public class MeetingProfileFragment extends Fragment implements
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         mMapView = view.findViewById(R.id.mapView);
-        mTimeView = view.findViewById(R.id.time);
-        mTitleView = view.findViewById(R.id.title);
-        mDescriptionView = view.findViewById(R.id.description);
-        mPlaceView = view.findViewById(R.id.place);
-        mPlaceLogo = view.findViewById(R.id.placeLogo);
-        mTimeLogo = view.findViewById(R.id.clockLogo);
         mDirectionsButton = view.findViewById(R.id.directionsButton);
-
-        configureView();
 
         mDirectionsButton.setOnClickListener(v -> getGoogleMapDirections());
 
@@ -194,22 +179,6 @@ public class MeetingProfileFragment extends Fragment implements
         if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivity(intent);
         }
-    }
-
-    private void configureView() {
-        mTitleView.setText(mFinalizedMeeting.getTitle());
-        mDescriptionView.setText(mFinalizedMeeting.getDescription());
-
-        String timeText = mFinalizedMeeting.getTimeOption().getDate() + " from " + mFinalizedMeeting.getTimeOption().getStartTime() + " to " +
-                mFinalizedMeeting.getTimeOption().getEndTime();
-        mTimeView.setText(timeText);
-
-        String fullAddress = mFinalizedMeeting.getMeetingPlace().getAddress();
-//        String editAddress = fullAddress.length() > 30 ? fullAddress.substring(0, 30) + "..." : fullAddress;
-
-        String locText = mFinalizedMeeting.getMeetingPlace().getName() + "\n"
-                + fullAddress;
-        mPlaceView.setText(locText);
     }
 
     @Override

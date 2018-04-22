@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -31,7 +32,6 @@ import mmd.meetup.Firebase.FirebaseClient;
 import mmd.meetup.R;
 
 public class LoginActivity extends AppCompatActivity {
-    //todo make an app logo in Sketch (use the puzzle material icon)
 
     final int RC_SIGN_IN = 1;
     final String LOG_TAG = this.getClass().getSimpleName();
@@ -44,6 +44,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimary));
 
         loadingIcon = findViewById(R.id.loadingIcon);
 

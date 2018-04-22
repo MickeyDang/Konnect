@@ -7,6 +7,8 @@
     <color name="grey_background">#D1D1D1</color>
     <color name="light_background">#DFDFDF</color>
 
+    <color name="profile_background">#EFEFEF</color>
+
     <color name="primary_text">#000000</color>
     <color name="secondary_text">#868686</color>
 
@@ -23,6 +25,7 @@
     <color name="material_cyan">#00BCD4</color>
 
     <color name="transparent_filter">#603f51b5</color>
+    <color name="button_color_blue">#CC3f51b5</color>
 
     <color name="transparent">#00ffffff</color>
 

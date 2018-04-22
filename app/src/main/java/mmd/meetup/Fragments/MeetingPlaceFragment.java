@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -110,7 +111,14 @@ public class MeetingPlaceFragment extends Fragment implements NullFieldAsserter{
 
     @Override
     public boolean hasNullFields() {
-        return mAdapter.getItemCount() == 0;
+        if (mAdapter.getItemCount() == 0) {
+            Toast.makeText(getContext(), getString(R.string.toast_empty_field), Toast.LENGTH_SHORT)
+                    .show();
+            return true;
+
+        } else {
+            return false;
+        }
     }
 
     public interface PlacePickerHandler {

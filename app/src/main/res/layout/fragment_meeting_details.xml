@@ -6,8 +6,6 @@
     android:layout_height="match_parent"
     tools:context="mmd.meetup.Fragments.MeetingDetailsFragment">
 
-    <!--todo make view prettier?-->
-
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,6 +13,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,7 +24,8 @@
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Title"
+            android:hint="@string/hint_title"
+            android:imeOptions="actionNext"
             android:inputType="text"/>
     </android.support.design.widget.TextInputLayout>
 
@@ -47,7 +47,8 @@
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Description"
+            android:imeOptions="actionDone"
+            android:hint="@string/hint_description"
             android:inputType="textMultiLine"/>
     </android.support.design.widget.TextInputLayout>
 
