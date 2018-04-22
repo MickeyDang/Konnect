@@ -8,6 +8,13 @@
     tools:context="mmd.meetup.Activities.LoginActivity">
 
     <ImageView
+        android:id="@+id/background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/background"/>
+
+    <ImageView
         android:id="@+id/filter"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

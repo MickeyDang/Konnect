@@ -387,7 +387,7 @@ public class FirebaseClient {
                     if (user.getId() == null) {
                         user.setId(matchingUser.getKey());
                     }
-                    
+
                     callback.onResult(user);
 
                 }

@@ -31,7 +31,6 @@ import mmd.meetup.Firebase.FirebaseClient;
 import mmd.meetup.R;
 
 public class LoginActivity extends AppCompatActivity {
-    //todo find a background and modify in Sketch (use the paint background maybe?)
     //todo make an app logo in Sketch (use the puzzle material icon)
 
     final int RC_SIGN_IN = 1;
