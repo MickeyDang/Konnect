@@ -247,6 +247,7 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
                 double lat = location.getLatitude();
                 double lng = location.getLongitude();
 
+                //assume lat and lng are positive values when making north east and south west for correct location
                 LatLng northEastBound = new LatLng(lat + 0.1, lng + 0.1);
                 LatLng southWestBound = new LatLng(lat - 0.1, lng - 0.1);
 

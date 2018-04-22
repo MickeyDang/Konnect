@@ -383,6 +383,11 @@ public class FirebaseClient {
                 for (DataSnapshot matchingUser : dataSnapshot.getChildren()) {
 
                     User user = matchingUser.getValue(User.class);
+
+                    if (user.getId() == null) {
+                        user.setId(matchingUser.getKey());
+                    }
+                    
                     callback.onResult(user);
 
                 }
