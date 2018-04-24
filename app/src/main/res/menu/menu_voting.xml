@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
-      tools:context="mmd.meetup.Activities.VoteActivity">
+      tools:context="mmd.konnect.Activities.VoteActivity">
 
     <item
         android:id="@+id/save_button"

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="mmd.meetup.Activities.LoginActivity">
+    tools:context="mmd.konnect.Activities.LoginActivity">
 
     <ImageView
         android:id="@+id/background"

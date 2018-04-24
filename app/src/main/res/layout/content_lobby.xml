@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="mmd.meetup.Activities.LobbyActivity"
+    tools:context="mmd.konnect.Activities.LobbyActivity"
     tools:showIn="@layout/app_bar_lobby">
 
     <FrameLayout

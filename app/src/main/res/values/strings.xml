@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MeetUp</string>
+    <string name="app_name">Konnect</string>
 
     <!--Credential Keys-->
     <string name="web_client_key">425565786475-vsguqn06s9np5o1avsiqgoe81asn5qh2.apps.googleusercontent.com</string>
@@ -26,7 +26,7 @@
 
     <!--Titles-->
     <string name="title_search">Search</string>
-    <string name="title_main">Meet Up</string>
+    <string name="title_main">Konnect</string>
     <string name="title_default_user">Default User</string>
     <string name="title_placepicker_activity">Select a Place</string>
     <string name="title_description">Event Details</string>

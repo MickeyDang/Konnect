@@ -8,5 +8,5 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layoutManager="LinearLayoutManager"
-    tools:context="mmd.meetup.Fragments.FinalizedMeetingListFragment"
+    tools:context="mmd.konnect.Fragments.FinalizedMeetingListFragment"
     tools:listitem="@layout/item_finalziedmeeting"/>
