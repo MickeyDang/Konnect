@@ -1,6 +1,7 @@
 package mmd.konnect.Models;
 
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.Exclude;
 import com.google.firebase.database.PropertyName;
 
 import java.io.Serializable;
@@ -9,13 +10,13 @@ public class User implements Serializable{
 
     private final String DEF_NAME = "User";
 
-    @PropertyName("DisplayName")
+    @PropertyName("name")
     private String name;
 
-    @PropertyName("Email")
+    @PropertyName("email")
     private String email;
 
-    @PropertyName("Uid")
+    @PropertyName("id")
     private String id;
 
     public User() {
@@ -41,14 +42,20 @@ public class User implements Serializable{
         }
     }
 
-
-
-    public String getDisplayName() {
+    public String getName() {
         return name;
     }
 
-    public void setDisplayName(String name) {
+    public void setName(String name) {
         this.name = name;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getEmail() {
@@ -59,11 +66,4 @@ public class User implements Serializable{
         this.email = email;
     }
 
-    public String getUid() {
-        return id;
-    }
-
-    public void setUid(String id) {
-        this.id = id;
-    }
 }

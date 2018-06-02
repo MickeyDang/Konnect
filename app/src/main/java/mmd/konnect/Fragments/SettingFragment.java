@@ -51,7 +51,7 @@ public class SettingFragment extends Fragment implements BackPressFragment{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        originalName = FirebaseClient.getInstance().getUser().getDisplayName();
+        originalName = FirebaseClient.getInstance().getUser().getName();
         nameField = view.findViewById(R.id.nameField);
         nameField.setHint(originalName);
     }
@@ -81,6 +81,7 @@ public class SettingFragment extends Fragment implements BackPressFragment{
                     .setMessage(getString(R.string.prompt_save))
                     .setPositiveButton(getString(R.string.nav_button_save), ((dialogInterface, i) -> {
                         FirebaseClient.getInstance().changeUserName(currName);
+                        originalName = currName;
                     }));
 
             builder.show();

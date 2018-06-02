@@ -1,5 +1,6 @@
 package mmd.konnect.Firebase;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -51,7 +52,7 @@ public class FirebaseClient {
     }
 
     public String getUserID () {
-        return mUser.getUid();
+        return mUser.getId();
     }
 
     public void signOutUser() {
@@ -63,8 +64,10 @@ public class FirebaseClient {
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(loginTask -> {
 
             if (loginTask.isSuccessful() && mAuth.getCurrentUser() != null) {
-                mUser = new User(mAuth.getCurrentUser());
-                callback.onResult(Callback.success);
+                fetchUserFromDB(mAuth.getUid(), user -> {
+                    mUser = user;
+                    callback.onResult(Callback.success);
+                });
             } else {
                 mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(createTask -> {
                     if (createTask.isSuccessful()) {
@@ -91,9 +94,19 @@ public class FirebaseClient {
                 .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             if (mAuth.getCurrentUser() != null) {
-                                mUser = new User(mAuth.getCurrentUser());
-                                createUserInDB();
-                                callback.onResult(true);
+                                findUserInDB(mAuth.getUid(), noUserInDB -> {
+
+                                    if (noUserInDB) {
+                                        mUser = new User(mAuth.getCurrentUser());
+                                        createUserInDB();
+                                        callback.onResult(true);
+                                    } else {
+                                        fetchUserFromDB(mAuth.getUid(), user -> {
+                                            mUser = user;
+                                            callback.onResult(true);
+                                        });
+                                    }
+                                });
                             } else {
                                 callback.onResult(false);
                             }
@@ -104,39 +117,63 @@ public class FirebaseClient {
                 });
     }
 
-    private void createUserInDB() {
+    private void fetchUserFromDB(String Uid, Callback<User> callback) {
         FirebaseDatabase.getInstance().getReference()
                 .child(FirebaseDB.Users.path)
-                .child(mUser.getUid())
+                .child(Uid)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.getValue() == null) {
-                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference()
-                                    .child(FirebaseDB.Users.path)
-                                    .child(mUser.getUid());
-
-
-                            ref.child(FirebaseDB.Users.Entries.name)
-                                    .setValue(mUser.getDisplayName());
-
-                            ref.child(FirebaseDB.Users.Entries.email)
-                                    .setValue(mUser.getEmail());
-
-                            ref.child(FirebaseDB.Users.Entries.id)
-                                    .setValue(mUser.getUid());
-                        }
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        User user = dataSnapshot.getValue(User.class);
+                        callback.onResult(user);
                     }
 
                     @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Log.e("test", databaseError.getMessage());
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        //todo handle
                     }
                 });
     }
 
+    private void findUserInDB(String Uid, Callback<Boolean> noUserCallback) {
+        FirebaseDatabase.getInstance().getReference()
+                .child(FirebaseDB.Users.path)
+                .child(Uid)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getValue() == null) {
+                            noUserCallback.onResult(true);
+                        } else {
+                            noUserCallback.onResult(false);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+    }
+
+    private void createUserInDB() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference()
+                .child(FirebaseDB.Users.path)
+                .child(mUser.getId());
+
+        ref.child(FirebaseDB.Users.Entries.name)
+                .setValue(mUser.getName());
+
+        ref.child(FirebaseDB.Users.Entries.email)
+                .setValue(mUser.getEmail());
+
+        ref.child(FirebaseDB.Users.Entries.id)
+                .setValue(mUser.getId());
+    }
+
     public void changeUserName(String name) {
-        getUser().setDisplayName(name);
+        getUser().setName(name);
+
         FirebaseDatabase.getInstance().getReference()
                 .child(FirebaseDB.Users.path)
                 .child(getUserID())
@@ -413,8 +450,8 @@ public class FirebaseClient {
 
                     User user = matchingUser.getValue(User.class);
 
-                    if (user.getUid() == null) {
-                        user.setUid(matchingUser.getKey());
+                    if (user.getId() == null) {
+                        user.setId(matchingUser.getKey());
                     }
 
                     callback.onResult(user);

@@ -85,14 +85,14 @@ public class LobbyActivity extends AppCompatActivity
         //gets root header view (linear layout)
         final View navHeader = navigationView.getHeaderView(0);
 
-        String name = FirebaseClient.getInstance().getUser().getDisplayName();
+        String name = FirebaseClient.getInstance().getUser().getName();
 
         ((TextView) navHeader.findViewById(R.id.name)).setText(name != null ? name : getString(R.string.title_temp_user));
         ((TextView) navHeader.findViewById(R.id.email)).setText(FirebaseClient.getInstance().getUser().getEmail());
         //get material icon view
         MaterialLetterIcon materialLetterIcon = navHeader.findViewById(R.id.materialLetterIcon);
         //init material icon view
-        materialLetterIcon.setLetter(FirebaseClient.getInstance().getUser().getDisplayName().substring(0, 1));
+        materialLetterIcon.setLetter(FirebaseClient.getInstance().getUser().getName().substring(0, 1));
         materialLetterIcon.setBorder(false);
         materialLetterIcon.setShapeColor(Utils.getRandomMaterialColors(FirebaseClient.getInstance().getUserID()));
 

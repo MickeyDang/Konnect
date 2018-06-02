@@ -122,7 +122,7 @@ public class MeetingInviteFragment extends Fragment {
     public ArrayList<String> getInvitees() {
         ArrayList<String> list = new ArrayList<>();
         for (User user : mAdapter.getUserList()) {
-            list.add(user.getUid());
+            list.add(user.getId());
         }
         return list;
     }
