@@ -7,7 +7,8 @@
     <!--Button Text-->
     <string name="register_button">Register</string>
     <string name="sign_in_button">Already A User</string>
-    <string name="sign_in_button_google">Get Started</string>
+    <string name="sign_in_button_google">Start With Google</string>
+    <string name="sign_in_button_email">Start With Email</string>
     <string name="title_activity_lobby">LobbyActivity</string>
     <string name="vote_button">Vote</string>
     <string name="resolve_button">Resolve</string>
@@ -23,6 +24,7 @@
     <string name="find_meeting">Find a Meeting</string>
     <string name="sign_out">Sign Out</string>
     <string name="nav_button_save">Save</string>
+    <string name="nav_settings">Settings</string>
 
     <!--Titles-->
     <string name="title_search">Search</string>
@@ -37,19 +39,22 @@
     <string name="title_date">Select a Date</string>
     <string name="title_start">Select Start Time</string>
     <string name="title_end">Select End Time</string>
-
-    <!--TextViews-->
-    <string name="title_empty">There doesn\'t seem to be anything here.</string>
-    <string name="hint_title">Title</string>
-    <string name="hint_description">Description</string>
+    <string name="title_temp_user">User</string>
 
     <!--Hints & Prompts-->
     <string name="hint_invite_code">Enter Invite Code Here</string>
     <string name="hint_find_email">Enter an email address</string>
+    <string name="hint_title">Title</string>
+    <string name="hint_description">Description</string>
+    <string name="title_empty">There doesn\'t seem to be anything here.</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="prompt_email_sign_in">Enter Email and Password</string>
+    <string name="prompt_save">You have made changes. Do you wish to save them?</string>
 
     <!--Toasts-->
     <string name="toast_failed_login">Failed to login!</string>
-    <string name="toast_empty_field">Cannot continue! Fields are empty!</string>
+    <string name="toast_empty_field">Cannot continue! Invalid fields!</string>
     <string name="toast_add_success">Added Successfully</string>
     <string name="toast_add_fail">Failed To Find Meeting</string>
     <string name="toast_resolve_vote_success">Successfully Resolved! Find this in Finalized Meetings!</string>
@@ -64,4 +69,8 @@
     <string name="intent_def_title">MeetUp Invite ID</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--Misc-->
+    <string name="def_user_name">Trial User</string>
+
 </resources>

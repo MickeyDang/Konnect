@@ -66,7 +66,7 @@ public class InvitedUserAdapter extends RecyclerView.Adapter<InvitedUserAdapter.
         }
 
         public void onBind(User user) {
-            name.setText(user.getName());
+            name.setText(user.getDisplayName());
             email.setText(user.getEmail());
         }
     }

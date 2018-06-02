@@ -1,15 +1,10 @@
 package mmd.konnect.Firebase;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -18,10 +13,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
 import mmd.konnect.Models.FinalizedMeeting;
@@ -38,7 +31,7 @@ public class FirebaseClient {
     private final String LOG_TAG = this.getClass().getSimpleName();
 
     private FirebaseAuth mAuth;
-    private FirebaseUser mUser;
+    private User mUser;
     private static FirebaseClient fcInstance;
 
     public static FirebaseClient getInstance() {
@@ -53,7 +46,7 @@ public class FirebaseClient {
         mAuth = FirebaseAuth.getInstance();
     }
 
-    public FirebaseUser getUser() {
+    public User getUser() {
         return mUser;
     }
 
@@ -65,23 +58,49 @@ public class FirebaseClient {
         mAuth.signOut();
     }
 
+    public void initUser(String email, String password, Callback<Integer> callback) {
+
+        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(loginTask -> {
+
+            if (loginTask.isSuccessful() && mAuth.getCurrentUser() != null) {
+                mUser = new User(mAuth.getCurrentUser());
+                callback.onResult(Callback.success);
+            } else {
+                mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(createTask -> {
+                    if (createTask.isSuccessful()) {
+                        if (mAuth.getCurrentUser() != null) {
+                            mUser = new User(mAuth.getCurrentUser());
+                            createUserInDB();
+                            callback.onResult(Callback.success);
+                        } else {
+                            callback.onResult(Callback.authFailed);
+                        }
+                    } else {
+                        callback.onResult(Callback.authFailed);
+                    }
+                });
+            }
+
+        });
+    }
+
     public void initUser(final GoogleSignInAccount acct, final Callback<Boolean> callback) {
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
 
         mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+                .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
-                            mUser = mAuth.getCurrentUser();
-                            createUserInDB();
-
-                            callback.onResult(true);
+                            if (mAuth.getCurrentUser() != null) {
+                                mUser = new User(mAuth.getCurrentUser());
+                                createUserInDB();
+                                callback.onResult(true);
+                            } else {
+                                callback.onResult(false);
+                            }
                         } else {
                             Log.w(LOG_TAG, "signInWithCredential:failure", task.getException());
                             callback.onResult(false);
                         }
-                    }
                 });
     }
 
@@ -96,6 +115,7 @@ public class FirebaseClient {
                             DatabaseReference ref = FirebaseDatabase.getInstance().getReference()
                                     .child(FirebaseDB.Users.path)
                                     .child(mUser.getUid());
+
 
                             ref.child(FirebaseDB.Users.Entries.name)
                                     .setValue(mUser.getDisplayName());
@@ -113,6 +133,15 @@ public class FirebaseClient {
                         Log.e("test", databaseError.getMessage());
                     }
                 });
+    }
+
+    public void changeUserName(String name) {
+        getUser().setDisplayName(name);
+        FirebaseDatabase.getInstance().getReference()
+                .child(FirebaseDB.Users.path)
+                .child(getUserID())
+                .child(FirebaseDB.Users.Entries.name)
+                .setValue(name);
     }
 
     public void addUserToMeeting(String meetingCode, final Callback<String> callback) {
@@ -384,8 +413,8 @@ public class FirebaseClient {
 
                     User user = matchingUser.getValue(User.class);
 
-                    if (user.getId() == null) {
-                        user.setId(matchingUser.getKey());
+                    if (user.getUid() == null) {
+                        user.setUid(matchingUser.getKey());
                     }
 
                     callback.onResult(user);
@@ -403,6 +432,9 @@ public class FirebaseClient {
 
     public interface Callback<T> {
         String NULL = "request_nothing";
+        int success = 101;
+        int connectionFailed = 102;
+        int authFailed = 103;
 
         void onResult(T t);
     }

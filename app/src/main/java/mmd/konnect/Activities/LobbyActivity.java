@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -28,8 +30,10 @@ import java.util.List;
 
 import mmd.konnect.Constants;
 import mmd.konnect.Firebase.FirebaseClient;
+import mmd.konnect.Fragments.BackPressFragment;
 import mmd.konnect.Fragments.FinalizedMeetingListFragment;
 import mmd.konnect.Fragments.PendingMeetingListFragment;
+import mmd.konnect.Fragments.SettingFragment;
 import mmd.konnect.Models.FinalizedMeeting;
 import mmd.konnect.Models.Meeting;
 import mmd.konnect.Models.MeetingPlace;
@@ -41,7 +45,8 @@ import mmd.konnect.Utils;
 public class LobbyActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         FinalizedMeetingListFragment.MeetingInteractionListener,
-        PendingMeetingListFragment.PendingMeetingInteractionListener {
+        PendingMeetingListFragment.PendingMeetingInteractionListener,
+        SettingFragment.SettingInteractionListener {
 
     MeetingMaker mMaker = new MeetingMaker();
 
@@ -61,8 +66,14 @@ public class LobbyActivity extends AppCompatActivity
         });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                assertBackPressFragment();
+                super.onDrawerOpened(drawerView);
+            }
+        };
+
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -73,7 +84,10 @@ public class LobbyActivity extends AppCompatActivity
 
         //gets root header view (linear layout)
         final View navHeader = navigationView.getHeaderView(0);
-        ((TextView) navHeader.findViewById(R.id.name)).setText(FirebaseClient.getInstance().getUser().getDisplayName());
+
+        String name = FirebaseClient.getInstance().getUser().getDisplayName();
+
+        ((TextView) navHeader.findViewById(R.id.name)).setText(name != null ? name : getString(R.string.title_temp_user));
         ((TextView) navHeader.findViewById(R.id.email)).setText(FirebaseClient.getInstance().getUser().getEmail());
         //get material icon view
         MaterialLetterIcon materialLetterIcon = navHeader.findViewById(R.id.materialLetterIcon);
@@ -82,7 +96,7 @@ public class LobbyActivity extends AppCompatActivity
         materialLetterIcon.setBorder(false);
         materialLetterIcon.setShapeColor(Utils.getRandomMaterialColors(FirebaseClient.getInstance().getUserID()));
 
-        goToFragment(FinalizedMeetingListFragment.newInstance(1));
+        goToFragment(FinalizedMeetingListFragment.newInstance());
     }
 
     @Override
@@ -90,9 +104,18 @@ public class LobbyActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+        } else if (!assertBackPressFragment()) {
             super.onBackPressed();
         }
+    }
+
+    private boolean assertBackPressFragment() {
+        boolean isBPF = getSupportFragmentManager().findFragmentById(R.id.fragment_container) instanceof BackPressFragment;
+        if (isBPF) {
+            BackPressFragment backPressFragment = (BackPressFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+            backPressFragment.onBackPress();
+        }
+        return isBPF;
     }
 
     @Override
@@ -113,15 +136,18 @@ public class LobbyActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_meetings_confirmed) {
-            goToFragment(FinalizedMeetingListFragment.newInstance(1));
+            goToFragment(FinalizedMeetingListFragment.newInstance());
             changeToolbarText(getString(R.string.meeting_conf));
         } else if (id == R.id.nav_meetings_unconfirmed) {
-            goToFragment(PendingMeetingListFragment.newInstance(1));
+            goToFragment(PendingMeetingListFragment.newInstance());
             changeToolbarText(getString(R.string.meeting_unconf));
         } else if (id == R.id.nav_find_meeting) {
             makeSearchMeetingDialog();
         } else if (id == R.id.nav_sign_out) {
             signOut();
+        } else if (id == R.id.nav_settings) {
+            goToFragment(SettingFragment.newInstance());
+            changeToolbarText(getString(R.string.nav_settings));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -140,14 +166,9 @@ public class LobbyActivity extends AppCompatActivity
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setView(v)
                 .setTitle(getString(R.string.title_search))
-                .setPositiveButton(getString(R.string.title_search), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
+                .setPositiveButton(getString(R.string.title_search), (DialogInterface dialogInterface, int i) -> {
                         EditText editText = v.findViewById(R.id.inviteIdField);
-                        FirebaseClient.getInstance().addUserToMeeting(editText.getText().toString(), new FirebaseClient.Callback<String>() {
-                            @Override
-                            public void onResult(String s) {
+                        FirebaseClient.getInstance().addUserToMeeting(editText.getText().toString(), s -> {
 
                                 if (!s.equals(FirebaseClient.Callback.NULL)) {
                                     Toast.makeText(getApplicationContext(), getString(R.string.toast_add_success), Toast.LENGTH_SHORT)
@@ -156,11 +177,8 @@ public class LobbyActivity extends AppCompatActivity
                                     Toast.makeText(getApplicationContext(), getString(R.string.toast_add_fail), Toast.LENGTH_SHORT)
                                             .show();
                                 }
-                            }
                         });
-                    }
                 });
-
         builder.show();
     }
 

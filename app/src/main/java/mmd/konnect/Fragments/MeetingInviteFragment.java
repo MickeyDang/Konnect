@@ -1,7 +1,6 @@
 package mmd.konnect.Fragments;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -123,7 +122,7 @@ public class MeetingInviteFragment extends Fragment {
     public ArrayList<String> getInvitees() {
         ArrayList<String> list = new ArrayList<>();
         for (User user : mAdapter.getUserList()) {
-            list.add(user.getId());
+            list.add(user.getUid());
         }
         return list;
     }

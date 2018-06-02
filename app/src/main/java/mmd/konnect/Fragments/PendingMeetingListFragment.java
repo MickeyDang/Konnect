@@ -80,7 +80,7 @@ public class PendingMeetingListFragment extends Fragment implements FirebaseList
 
     }
 
-    public static PendingMeetingListFragment newInstance(int columnCount) {
+    public static PendingMeetingListFragment newInstance() {
         PendingMeetingListFragment fragment = new PendingMeetingListFragment();
         return fragment;
     }

@@ -80,7 +80,7 @@ public class FinalizedMeetingListFragment extends Fragment implements FirebaseLi
     public FinalizedMeetingListFragment() {
     }
 
-    public static FinalizedMeetingListFragment newInstance(int columnCount) {
+    public static FinalizedMeetingListFragment newInstance() {
         FinalizedMeetingListFragment fragment = new FinalizedMeetingListFragment();
         return fragment;
     }
