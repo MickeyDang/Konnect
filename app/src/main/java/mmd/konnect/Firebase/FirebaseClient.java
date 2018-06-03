@@ -427,7 +427,7 @@ public class FirebaseClient {
                         }
 
                         FinalizedMeeting fm = FinalizedMeeting
-                                .makeFinalizedMeeting(pendingMeeting, bestTime, bestPlace);
+                                .createFromPendingMeeting(pendingMeeting, bestTime, bestPlace);
 
                         callback.onResult(fm);
 

@@ -57,25 +57,25 @@ public class VoteListFragment extends Fragment {
             List<DataWrapper> wrapperList = new ArrayList<>();
 
             //compile list of data wrappers
+
             //index of first divider always 0
-            wrapperList.add(new DataWrapper<String>("List of Possible Places"));
+            wrapperList.add(new DataWrapper<String>(getString(R.string.divider_places)));
 
             if (mPendingMeeting.getMeetingPlaces() != null)
                 wrapperList.addAll(DataWrapper.wrapObjects(mPendingMeeting.getMeetingPlaces()));
 
             //assigns index of middle divider (indexing starts at 0)
-            int index = wrapperList.size();
-            wrapperList.add(new DataWrapper<String>("List of Possible Times"));
+            int middleDividerIndex = wrapperList.size();
+            wrapperList.add(new DataWrapper<String>(getString(R.string.divider_times)));
 
             if (mPendingMeeting.getTimeOptions() != null)
                 wrapperList.addAll(DataWrapper.wrapObjects(mPendingMeeting.getTimeOptions()));
 
-            mAdapter = new VoteAdapter(wrapperList, mListener, index);
+            mAdapter = new VoteAdapter(wrapperList, mListener, middleDividerIndex);
             mRecyclerView.setAdapter(mAdapter);
         }
         return view;
     }
-
 
     @Override
     public void onAttach(Context context) {

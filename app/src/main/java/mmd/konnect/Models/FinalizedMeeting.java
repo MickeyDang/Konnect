@@ -30,7 +30,7 @@ public class FinalizedMeeting extends Meeting{
         this.meetingPlace = meetingPlace;
     }
 
-    public static FinalizedMeeting makeFinalizedMeeting(PendingMeeting pm, TimeOption to, MeetingPlace mp) {
+    public static FinalizedMeeting createFromPendingMeeting(PendingMeeting pm, TimeOption to, MeetingPlace mp) {
 
         FinalizedMeeting fm = new FinalizedMeeting();
         fm.timeOption = to;

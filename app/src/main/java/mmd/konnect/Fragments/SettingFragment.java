@@ -15,7 +15,7 @@ import mmd.konnect.Firebase.FirebaseClient;
 import mmd.konnect.R;
 
 
-public class SettingFragment extends Fragment implements BackPressFragment{
+public class SettingFragment extends Fragment implements SaveStateFragment {
 
     SettingInteractionListener mListener;
 

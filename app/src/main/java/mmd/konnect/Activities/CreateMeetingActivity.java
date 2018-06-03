@@ -2,7 +2,6 @@ package mmd.konnect.Activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -109,7 +108,7 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
     public boolean onCreateOptionsMenu(Menu menu) {
         mMenu = menu;
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.create_meeting_menu, menu);
+        inflater.inflate(R.menu.menu_create_meeting, menu);
         configureMenu();
         return true;
     }

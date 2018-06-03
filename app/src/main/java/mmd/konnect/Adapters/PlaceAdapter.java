@@ -82,7 +82,7 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder> 
 
             if (place.getName() != null) {
                 this.icon.setLetter(String.valueOf(place.getName().charAt(0)));
-                this.icon.setShapeColor(Utils.getRandomMaterialColors(place.getName()));
+                this.icon.setShapeColor(Utils.getHashedMaterialColor(place.getName()));
             }
 
             deleteButton.setOnClickListener(view -> {

@@ -16,7 +16,7 @@ import mmd.konnect.R;
 
 public class InvitedUserAdapter extends RecyclerView.Adapter<InvitedUserAdapter.ViewHolder> {
 
-    MeetingInviteFragment.ShareIntentHandler handler;
+    private MeetingInviteFragment.ShareIntentHandler handler;
     private List<User> mUsers;
 
     public InvitedUserAdapter(MeetingInviteFragment.ShareIntentHandler handler) {

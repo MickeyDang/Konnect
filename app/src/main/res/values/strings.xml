@@ -64,12 +64,15 @@
     <string name="toast_no_user_added">Error. Could not find user.</string>
     <string name="toast_user_added">Successfully added user.</string>
     <string name="toast_no_location_enabled">Please enable location to optimize the use of this location picker</string>
+    <string name="toast_def_error">Sorry! Something went wrong&#8230;</string>
 
     <!--Intent Messages-->
     <string name="intent_def_msg">Hey! I\'m inviting you to a meet up. Use the MeetUp app and enter this invite code! -> </string>
     <string name="intent_def_title">MeetUp Invite ID</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!--Divider Texts-->
+    <string name="divider_places">List of Possible Places</string>
+    <string name="divider_times">List of Possible Times</string>
 
     <!--Misc-->
     <string name="def_user_name">Trial User</string>

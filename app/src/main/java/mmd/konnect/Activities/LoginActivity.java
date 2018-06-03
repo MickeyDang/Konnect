@@ -76,6 +76,7 @@ public class LoginActivity extends AppCompatActivity {
 
         final View loginView = View.inflate(this, R.layout.view_email_login, null);
 
+        //prompt for fields
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setView(loginView)
                 .setTitle(R.string.prompt_email_sign_in)
@@ -84,7 +85,8 @@ public class LoginActivity extends AppCompatActivity {
                     String email = ((EditText) loginView.findViewById(R.id.emailField)).getText().toString();
                     String password = ((EditText) loginView.findViewById(R.id.passwordField)).getText().toString();
 
-                    if (!email.equals("") && !password.equals("") && password.length() > MIN_PASS_LENGTH) {
+                    //assert fields nonNull
+                    if (!email.isEmpty() && !password.isEmpty() && password.length() > MIN_PASS_LENGTH) {
                         initProgressView();
 
                         FirebaseClient.getInstance().initUser(email, password, resultCode -> {
@@ -143,7 +145,7 @@ public class LoginActivity extends AppCompatActivity {
 
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
+            // Refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w(LOG_TAG, "signInResult:failed code=" + e.getStatusCode());
             Toast.makeText(LoginActivity.this, getString(R.string.toast_failed_login), Toast.LENGTH_SHORT)
                     .show();

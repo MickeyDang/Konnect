@@ -17,8 +17,7 @@ import mmd.konnect.Models.FinalizedMeeting;
 import mmd.konnect.R;
 
 
-public class FinalizedMeetingAdapter extends RecyclerView.Adapter<FinalizedMeetingAdapter.ViewHolder> implements
-        FirebaseAdapter<FinalizedMeeting>{
+public class FinalizedMeetingAdapter extends RecyclerView.Adapter<FinalizedMeetingAdapter.ViewHolder> {
 
     private final MeetingInteractionListener mListener;
     private List<FinalizedMeeting> finalizedMeetings;
@@ -29,42 +28,18 @@ public class FinalizedMeetingAdapter extends RecyclerView.Adapter<FinalizedMeeti
     }
 
 
-    @Override
     public void onInsert(FinalizedMeeting meeting) {
         finalizedMeetings.add(meeting);
         notifyItemInserted(finalizedMeetings.size() - 1);
     }
 
-    @Override
-    public void onUpdate(FinalizedMeeting meeting) {
-
-    }
-
-    @Override
-    public void onFilter(FinalizedMeeting meeting) {
-
-    }
-
-    @Override
-    public void onDelete(int index) {
-
-    }
-
-    @Override
-    public List<FinalizedMeeting> getFullList() {
-        return finalizedMeetings;
-    }
-
-    @Override
     public int containsItem(String s) {
-
         for (int i = 0; i < finalizedMeetings.size(); i++) {
             if (finalizedMeetings.get(i).getId().equals(s))
                 return i;
         }
 
         return -1;
-
     }
 
     @Override

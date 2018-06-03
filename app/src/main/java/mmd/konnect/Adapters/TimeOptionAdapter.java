@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -84,7 +83,7 @@ public class TimeOptionAdapter extends RecyclerView.Adapter<TimeOptionAdapter.Vi
             time.setText(to.getStartTime());
 
             icon.setLetter(String.valueOf(position));
-            icon.setShapeColor(Utils.getRandomMaterialColors(String.valueOf(to.getDate())));
+            icon.setShapeColor(Utils.getHashedMaterialColor(String.valueOf(to.getDate())));
 
             deleteButton.setOnClickListener(view -> {
                 timeOptions.remove(position);

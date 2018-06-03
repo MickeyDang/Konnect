@@ -34,11 +34,13 @@ public class VoteActivity extends AppCompatActivity implements VoteListFragment.
 
         /* pending meeting is provided by Lobby Activity
         sent through callback from vote adapter due to button click */
-        pm = (PendingMeeting) getIntent().getExtras().getSerializable(Constants.MeetingNavigation.MEETING_OBJ_KEY);
 
-        this.getSupportActionBar().setTitle(pm.getTitle());
+        if (getIntent().getExtras() != null) {
+            pm = (PendingMeeting) getIntent().getExtras().getSerializable(Constants.MeetingNavigation.MEETING_OBJ_KEY);
+            this.getSupportActionBar().setTitle(pm.getTitle());
+            goToFragment(VoteListFragment.newInstance(pm));
+        }
 
-        goToFragment(VoteListFragment.newInstance(pm));
     }
 
     @Override
@@ -66,7 +68,7 @@ public class VoteActivity extends AppCompatActivity implements VoteListFragment.
     }
 
     private void reviewResults() {
-        //show dialog of list of the chosen results
+        //todo show dialog of list of the chosen results
     }
 
     private boolean assertNonNullSelection() {
@@ -115,6 +117,7 @@ public class VoteActivity extends AppCompatActivity implements VoteListFragment.
                 .commit();
     }
 
+    //callbacks
     @Override
     public void onPlaceRemoved(MeetingPlace mp, int position) {
        selectedPlaces.remove(position);

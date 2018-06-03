@@ -7,8 +7,6 @@ import com.google.firebase.database.ChildEventListener;
  */
 
 interface FirebaseListFragment {
-
     void startListening();
     void stopListening();
-
 }

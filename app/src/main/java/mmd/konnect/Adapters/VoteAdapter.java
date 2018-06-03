@@ -109,7 +109,6 @@ public class VoteAdapter extends RecyclerView.Adapter<VoteAdapter.ViewHolder> {
         ViewHolder(View view) {
             super(view);
         }
-
         abstract public void onBind(DataWrapper wrap, int pos);
     }
 
@@ -140,22 +139,7 @@ public class VoteAdapter extends RecyclerView.Adapter<VoteAdapter.ViewHolder> {
 
         }
 
-        protected void toggleMode() {
-            if (this instanceof TimeViewHolder) {
-                //do necessary adjustment to convert list position to position in to or mp sub list
-                if (isSelected) {
-                    mListener.onTimeAdded((TimeOption) wrap.getValue(), position - indexMiddleDivider - 1);
-                } else {
-                    mListener.onTimeRemoved((TimeOption) wrap.getValue(), position - indexMiddleDivider - 1);
-                }
-            } else if (this instanceof PlaceViewHolder) {
-                if (isSelected) {
-                    mListener.onPlaceAdded((MeetingPlace) wrap.getValue(), position - 1);
-                } else {
-                    mListener.onPlaceRemoved((MeetingPlace) wrap.getValue(), position - 1);
-                }
-            }
-        }
+        abstract void toggleMode();
     }
 
     class TimeViewHolder extends SelectableViewHolder {
@@ -179,6 +163,15 @@ public class VoteAdapter extends RecyclerView.Adapter<VoteAdapter.ViewHolder> {
             StringBuilder builder = new StringBuilder();
             builder.append(to.getStartTime()).append(" to ").append(to.getEndTime());
             time.setText(builder);
+        }
+
+        @Override
+        protected void toggleMode() {
+            if (isSelected) {
+                mListener.onTimeAdded((TimeOption) wrap.getValue(), position - indexMiddleDivider - 1);
+            } else {
+                mListener.onTimeRemoved((TimeOption) wrap.getValue(), position - indexMiddleDivider - 1);
+            }
         }
     }
 
@@ -208,6 +201,15 @@ public class VoteAdapter extends RecyclerView.Adapter<VoteAdapter.ViewHolder> {
 
             formattedText = mp.getAddress().length() > 40 ? mp.getAddress().substring(0,40).concat("...") : mp.getAddress();
             address.setText(formattedText);
+        }
+
+        @Override
+        protected void toggleMode() {
+            if (isSelected) {
+                mListener.onPlaceAdded((MeetingPlace) wrap.getValue(), position - 1);
+            } else {
+                mListener.onPlaceRemoved((MeetingPlace) wrap.getValue(), position - 1);
+            }
         }
     }
 

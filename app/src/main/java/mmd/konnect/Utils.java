@@ -2,7 +2,6 @@ package mmd.konnect;
 
 public class Utils {
 
-    private final int NUM_COLOUR = 6;
     public static int[] materialColors;
 
     public static int[] getMaterialColors() {
@@ -19,11 +18,9 @@ public class Utils {
         return materialColors;
     }
 
-    public static int getRandomMaterialColors(String s) {
-
+    public static int getHashedMaterialColor(String s) {
         int i = (Math.abs(s.hashCode() % getMaterialColors().length));
         return getMaterialColors()[i];
-
     }
 
 }

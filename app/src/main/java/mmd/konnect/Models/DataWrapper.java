@@ -18,9 +18,8 @@ public class DataWrapper<T> {
         if (list == null) return null;
         List<DataWrapper> wrappers = new ArrayList<>();
 
-        //cannot be for each in case of null list
         for (int i = 0; i < list.size(); i++) {
-            wrappers.add(new DataWrapper<T>(list.get(i)));
+            wrappers.add(new DataWrapper<>(list.get(i)));
         }
 
         return wrappers;

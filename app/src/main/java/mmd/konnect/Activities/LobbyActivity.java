@@ -6,8 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -24,22 +22,17 @@ import android.widget.Toast;
 
 import com.github.ivbaranov.mli.MaterialLetterIcon;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import mmd.konnect.Constants;
 import mmd.konnect.Firebase.FirebaseClient;
-import mmd.konnect.Fragments.BackPressFragment;
+import mmd.konnect.Fragments.SaveStateFragment;
 import mmd.konnect.Fragments.FinalizedMeetingListFragment;
 import mmd.konnect.Fragments.PendingMeetingListFragment;
 import mmd.konnect.Fragments.SettingFragment;
 import mmd.konnect.Fragments.ShortListFragment;
 import mmd.konnect.Models.FinalizedMeeting;
 import mmd.konnect.Models.Meeting;
-import mmd.konnect.Models.MeetingPlace;
+import mmd.konnect.Models.MeetingBuilder;
 import mmd.konnect.Models.PendingMeeting;
-import mmd.konnect.Models.TimeOption;
 import mmd.konnect.R;
 import mmd.konnect.Utils;
 
@@ -49,7 +42,7 @@ public class LobbyActivity extends AppCompatActivity
         PendingMeetingListFragment.PendingMeetingInteractionListener,
         SettingFragment.SettingInteractionListener, ShortListFragment.OnListFragmentInteractionListener {
 
-    MeetingMaker mMaker = new MeetingMaker();
+    MeetingBuilder mMeetingBuilder = new MeetingBuilder();
     FloatingActionButton fab;
 
     @Override
@@ -60,18 +53,14 @@ public class LobbyActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goToMakeMeeting();
-            }
-        });
+        fab.setOnClickListener(view -> goToMakeMeeting());
 
+        //set up drawer listeners
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             @Override
             public void onDrawerOpened(View drawerView) {
-                assertBackPressFragment();
+                requiresSaveFragmentState();
                 super.onDrawerOpened(drawerView);
             }
         };
@@ -79,6 +68,7 @@ public class LobbyActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        //set up navigation view
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         //default state
@@ -89,6 +79,7 @@ public class LobbyActivity extends AppCompatActivity
 
         String name = FirebaseClient.getInstance().getUser().getName();
 
+        //init name and email textviews
         ((TextView) navHeader.findViewById(R.id.name)).setText(name != null ? name : getString(R.string.title_temp_user));
         ((TextView) navHeader.findViewById(R.id.email)).setText(FirebaseClient.getInstance().getUser().getEmail());
         //get material icon view
@@ -96,7 +87,7 @@ public class LobbyActivity extends AppCompatActivity
         //init material icon view
         materialLetterIcon.setLetter(FirebaseClient.getInstance().getUser().getName().substring(0, 1));
         materialLetterIcon.setBorder(false);
-        materialLetterIcon.setShapeColor(Utils.getRandomMaterialColors(FirebaseClient.getInstance().getUserID()));
+        materialLetterIcon.setShapeColor(Utils.getHashedMaterialColor(FirebaseClient.getInstance().getUserID()));
 
         goToFragment(FinalizedMeetingListFragment.newInstance());
     }
@@ -106,29 +97,25 @@ public class LobbyActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else if (!assertBackPressFragment()) {
+        } else if (!requiresSaveFragmentState()) {
             super.onBackPressed();
         }
     }
 
-    private boolean assertBackPressFragment() {
-        boolean isBPF = getSupportFragmentManager().findFragmentById(R.id.fragment_container) instanceof BackPressFragment;
-        if (isBPF) {
-            BackPressFragment backPressFragment = (BackPressFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-            backPressFragment.onBackPress();
+    //runs to check if a fragment in foreground needs to save state before exiting
+    private boolean requiresSaveFragmentState() {
+        boolean isSSF = getSupportFragmentManager().findFragmentById(R.id.fragment_container) instanceof SaveStateFragment;
+        if (isSSF) {
+            SaveStateFragment saveStateFragment = (SaveStateFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+            saveStateFragment.onBackPress();
         }
-        return isBPF;
+        return isSSF;
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        // Inflate the menu. This adds items to the action bar if it is present.
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -164,8 +151,8 @@ public class LobbyActivity extends AppCompatActivity
         getSupportActionBar().setTitle(s);
     }
 
+    //makes dialog to find meeting
     private void makeSearchMeetingDialog() {
-
         final View v = View.inflate(this, R.layout.view_find_meeting_dialog, null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
@@ -196,12 +183,10 @@ public class LobbyActivity extends AppCompatActivity
     }
 
     private void goToFragment(Fragment fragment) {
-
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .commit();
-
     }
 
     private void goToMakeMeeting() {
@@ -210,17 +195,17 @@ public class LobbyActivity extends AppCompatActivity
         startActivityForResult(intent, Constants.MeetingNavigation.RC_DESCRIPTION);
     }
 
-    private Intent navigate(String nextStep, @Nullable Meeting meeting) {
 
+    //returns intent to move to next step of meeting creation
+    private Intent navigate(String nextStep, @Nullable Meeting meeting) {
         Intent intent = new Intent(getApplicationContext(), CreateMeetingActivity.class);
         intent.putExtra(Constants.MeetingNavigation.STEP_KEY, nextStep);
         if (meeting != null) {
             Bundle bundle = new Bundle();
-            bundle.putSerializable(Constants.MeetingNavigation.MEETING_OBJ_KEY, mMaker.meeting);
+            bundle.putSerializable(Constants.MeetingNavigation.MEETING_OBJ_KEY, mMeetingBuilder.getMeeting());
             intent.putExtras(bundle);
         }
         return intent;
-
     }
 
     @Override
@@ -228,38 +213,32 @@ public class LobbyActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
-
+            //meeting creation results
             case Constants.MeetingNavigation.RC_DESCRIPTION :
                 if (resultCode == Constants.MeetingNavigation.resultSuccess) {
-
-                    mMaker.meeting = (PendingMeeting) data.getExtras().getSerializable(Constants.MeetingNavigation.MEETING_OBJ_KEY);
-                    startActivityForResult(navigate(Constants.MeetingNavigation.stepTime, mMaker.meeting), Constants.MeetingNavigation.RC_TIME);
+                    startActivityForResult(
+                            navigate(Constants.MeetingNavigation.stepTime, mMeetingBuilder.initProtoMeeting(data)), Constants.MeetingNavigation.RC_TIME);
                 }
                 break;
             case Constants.MeetingNavigation.RC_TIME :
                 if (resultCode == Constants.MeetingNavigation.resultSuccess) {
-
-                    ArrayList<TimeOption> options = data.getExtras().getParcelableArrayList(Constants.MeetingNavigation.TIME_OPTION_KEY);
-                    mMaker.meeting.setTimeOptions(options);
-
-                    startActivityForResult(navigate(Constants.MeetingNavigation.stepLocation, mMaker.meeting), Constants.MeetingNavigation.RC_LOCATION);
+                    startActivityForResult(
+                            navigate(Constants.MeetingNavigation.stepLocation, mMeetingBuilder.initTimeOptions(data)), Constants.MeetingNavigation.RC_LOCATION);
                 }
                 break;
             case Constants.MeetingNavigation.RC_LOCATION:
                 if (resultCode == Constants.MeetingNavigation.resultSuccess) {
-
-                    ArrayList<MeetingPlace> places = data.getExtras().getParcelableArrayList(Constants.MeetingNavigation.PLACE_OPTION_KEY);
-                    mMaker.meeting.setMeetingPlaces(places);
-
-                    startActivityForResult(navigate(Constants.MeetingNavigation.stepInvite, mMaker.meeting), Constants.MeetingNavigation.RC_INVITE);
+                    startActivityForResult(
+                            navigate(Constants.MeetingNavigation.stepInvite, mMeetingBuilder.initPlaceOptions(data)), Constants.MeetingNavigation.RC_INVITE);
                 }
                 break;
             case Constants.MeetingNavigation.RC_INVITE :
                 if (resultCode == Constants.MeetingNavigation.resultSuccess) {
-                    mMaker.addInvites(data.getStringArrayListExtra(Constants.MeetingNavigation.INVITEE_KEY));
-                    mMaker.createInDB();
+                    mMeetingBuilder.addInvites(data.getStringArrayListExtra(Constants.MeetingNavigation.INVITEE_KEY));
+                    mMeetingBuilder.createInDB();
                 }
                 break;
+            //user vote result
             case Constants.RC_VOTE :
                 if (resultCode == Constants.resultSuccess) {
                     String id = data.getStringExtra(Constants.KEYS.PENDING_MEETING_ID);
@@ -268,7 +247,9 @@ public class LobbyActivity extends AppCompatActivity
         }
     }
 
+    //runs when vote has been cast by logged in user
     private void onVoteCast(String id) {
+        //notifies fragment of change
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if (fragment instanceof PendingMeetingListFragment) {
             PendingMeetingListFragment pmlFragment = (PendingMeetingListFragment) fragment;
@@ -276,6 +257,8 @@ public class LobbyActivity extends AppCompatActivity
         }
     }
 
+
+    //Callbacks
     @Override
     public void onFinalizedMeetingSelected(FinalizedMeeting fm) {
         Intent intent = new Intent(this, MeetingProfileActivity.class);
@@ -285,6 +268,7 @@ public class LobbyActivity extends AppCompatActivity
         startActivity(intent);
     }
 
+    //runs when user chooses to cast vote
     @Override
     public void onCastVote(PendingMeeting pm) {
         Intent intent = new Intent(this, VoteActivity.class);
@@ -306,24 +290,5 @@ public class LobbyActivity extends AppCompatActivity
 
             });
         });
-    }
-
-    class MeetingMaker {
-
-        PendingMeeting meeting;
-        HashMap<String, String> invites = new HashMap<>();
-
-        public void addInvites(List<String> list) {
-            invites.put(FirebaseClient.getInstance().getUserID(), "true");
-
-            for (String s : list) {
-                invites.put(s, "true");
-            }
-        }
-
-        public void createInDB() {
-            FirebaseClient.getInstance().makePendingMeeting(meeting, invites);
-        }
-
     }
 }

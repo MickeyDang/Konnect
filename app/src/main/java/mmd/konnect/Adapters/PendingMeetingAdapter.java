@@ -19,8 +19,7 @@ import mmd.konnect.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PendingMeetingAdapter extends RecyclerView.Adapter<PendingMeetingAdapter.ViewHolder> implements
-        FirebaseAdapter<PendingMeeting> {
+public class PendingMeetingAdapter extends RecyclerView.Adapter<PendingMeetingAdapter.ViewHolder> {
 
     private final PendingMeetingListFragment.PendingMeetingInteractionListener mListener;
     private List<PendingMeeting> meetings;
@@ -30,35 +29,21 @@ public class PendingMeetingAdapter extends RecyclerView.Adapter<PendingMeetingAd
         meetings = new ArrayList<>();
     }
 
-    @Override
     public void onInsert(PendingMeeting meeting) {
         meetings.add(meeting);
         notifyItemInserted(meetings.size() - 1);
     }
 
-    @Override
-    public void onUpdate(PendingMeeting meeting) {
-
-    }
-
-    @Override
-    public void onFilter(PendingMeeting meeting) {
-
-    }
-
-    @Override
     public void onDelete(int index) {
         //we assume that the meeting must exist in the list because it was checked in fragment before calling onDelete()
         meetings.remove(index);
         notifyItemRemoved(index);
     }
 
-    @Override
     public List<PendingMeeting> getFullList() {
         return meetings;
     }
 
-    @Override
     public int containsItem(String s) {
 
         for (int i = 0; i < meetings.size(); i++) {
@@ -109,7 +94,7 @@ public class PendingMeetingAdapter extends RecyclerView.Adapter<PendingMeetingAd
 
         String numVoter = String.valueOf(pendingMeeting.getInvitedUsers().size());
         holder.materialIcon.setLetter(numVoter);
-        holder.materialIcon.setShapeColor(Utils.getRandomMaterialColors(pendingMeeting.getTitle()));
+        holder.materialIcon.setShapeColor(Utils.getHashedMaterialColor(pendingMeeting.getTitle()));
 
     }
 

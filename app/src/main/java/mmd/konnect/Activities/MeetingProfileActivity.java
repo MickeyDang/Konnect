@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import mmd.konnect.Constants;
 import mmd.konnect.Fragments.MeetingProfileFragment;
@@ -37,6 +38,7 @@ public class MeetingProfileActivity extends AppCompatActivity implements Meeting
         mTimeLogo = findViewById(R.id.clockLogo);
 
         FinalizedMeeting fm = null;
+
         if (getIntent().getExtras() != null)
             fm = (FinalizedMeeting) getIntent().getExtras()
                     .getSerializable(Constants.KEYS.FINALIZED_MEETING_KEY);
@@ -46,6 +48,8 @@ public class MeetingProfileActivity extends AppCompatActivity implements Meeting
             setSupportActionBar(toolbar);
             getSupportActionBar().setTitle("");
             configureView(fm);
+        } else {
+            Toast.makeText(this, getString(R.string.toast_def_error), Toast.LENGTH_SHORT).show();
         }
 
         FragmentManager fragmentManager = getSupportFragmentManager();

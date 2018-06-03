@@ -1,5 +1,5 @@
 package mmd.konnect.Fragments;
 
-public interface BackPressFragment {
+public interface SaveStateFragment {
     void onBackPress();
 }

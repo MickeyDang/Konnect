@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ShortListAdapter extends RecyclerView.Adapter<ShortListAdapter.ViewHolder> implements FirebaseAdapter<User>{
+public class ShortListAdapter extends RecyclerView.Adapter<ShortListAdapter.ViewHolder>{
 
     private List<User> shortListedUsers;
     private final OnListFragmentInteractionListener mListener;
@@ -25,36 +25,15 @@ public class ShortListAdapter extends RecyclerView.Adapter<ShortListAdapter.View
         shortListedUsers = new ArrayList<>();
     }
 
-    @Override
     public void onInsert(User user) {
         shortListedUsers.add(user);
         notifyItemInserted(shortListedUsers.size() - 1);
     }
 
-    @Override
-    public void onUpdate(User user) {
 
-    }
-
-    @Override
-    public void onFilter(User user) {
-        //not handled
-    }
-
-    @Override
     public void onDelete(int index) {
         shortListedUsers.remove(index);
         notifyItemRemoved(index);
-    }
-
-    @Override
-    public List<User> getFullList() {
-        return null;
-    }
-
-    @Override
-    public int containsItem(String s) {
-        return 0;
     }
 
     @Override
@@ -83,7 +62,6 @@ public class ShortListAdapter extends RecyclerView.Adapter<ShortListAdapter.View
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        int pos;
         TextView name;
         TextView email;
         ImageButton deleteButton;
