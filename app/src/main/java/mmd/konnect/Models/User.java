@@ -5,6 +5,8 @@ import com.google.firebase.database.Exclude;
 import com.google.firebase.database.PropertyName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class User implements Serializable{
 
@@ -18,6 +20,9 @@ public class User implements Serializable{
 
     @PropertyName("id")
     private String id;
+
+    @PropertyName("shortlist")
+    private List<String> shortlist = new ArrayList<>();
 
     public User() {
 
@@ -42,6 +47,16 @@ public class User implements Serializable{
         }
     }
 
+    public List<String> getShortlist() {
+
+
+        return shortlist;
+    }
+
+    public void setShortlist(List<String> shortlist) {
+        this.shortlist = shortlist;
+    }
+
     public String getName() {
         return name;
     }
@@ -64,6 +79,16 @@ public class User implements Serializable{
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Exclude
+    public boolean addToShortList(String s) {
+        if (shortlist.contains(s) || shortlist.size() > 5) {
+            return false;
+        } else {
+            shortlist.add(s);
+            return true;
+        }
     }
 
 }

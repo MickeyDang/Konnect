@@ -33,13 +33,14 @@ public class FirebaseClient {
 
     private FirebaseAuth mAuth;
     private User mUser;
+
+    //singleton implementation
     private static FirebaseClient fcInstance;
 
     public static FirebaseClient getInstance() {
         if (fcInstance == null) {
             fcInstance = new FirebaseClient();
         }
-
         return fcInstance;
     }
 
@@ -47,6 +48,7 @@ public class FirebaseClient {
         mAuth = FirebaseAuth.getInstance();
     }
 
+    //user logic
     public User getUser() {
         return mUser;
     }
@@ -64,22 +66,25 @@ public class FirebaseClient {
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(loginTask -> {
 
             if (loginTask.isSuccessful() && mAuth.getCurrentUser() != null) {
+                //fetch user if it already exists in database
                 fetchUserFromDB(mAuth.getUid(), user -> {
                     mUser = user;
-                    callback.onResult(Callback.success);
+                    callback.onResult(Callback.SUCCESS);
                 });
             } else {
+                //create user if it does not already exist
                 mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(createTask -> {
                     if (createTask.isSuccessful()) {
+                        //check to see if user is now created before proceeding to DB creation
                         if (mAuth.getCurrentUser() != null) {
                             mUser = new User(mAuth.getCurrentUser());
                             createUserInDB();
-                            callback.onResult(Callback.success);
+                            callback.onResult(Callback.SUCCESS);
                         } else {
-                            callback.onResult(Callback.authFailed);
+                            callback.onResult(Callback.AUTH_FAILED);
                         }
                     } else {
-                        callback.onResult(Callback.authFailed);
+                        callback.onResult(Callback.CONNECTION_FAILED);
                     }
                 });
             }
@@ -94,13 +99,17 @@ public class FirebaseClient {
                 .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             if (mAuth.getCurrentUser() != null) {
-                                findUserInDB(mAuth.getUid(), noUserInDB -> {
+
+                                //determines if user already created or not. callback is boolean
+                                userExistsInDB(mAuth.getUid(), noUserInDB -> {
 
                                     if (noUserInDB) {
+                                        //create new user with Auth properties if first time login
                                         mUser = new User(mAuth.getCurrentUser());
                                         createUserInDB();
                                         callback.onResult(true);
                                     } else {
+                                        //continue with auth if found by fetching data
                                         fetchUserFromDB(mAuth.getUid(), user -> {
                                             mUser = user;
                                             callback.onResult(true);
@@ -135,7 +144,7 @@ public class FirebaseClient {
                 });
     }
 
-    private void findUserInDB(String Uid, Callback<Boolean> noUserCallback) {
+    private void userExistsInDB(String Uid, Callback<Boolean> noUserCallback) {
         FirebaseDatabase.getInstance().getReference()
                 .child(FirebaseDB.Users.path)
                 .child(Uid)
@@ -181,6 +190,7 @@ public class FirebaseClient {
                 .setValue(name);
     }
 
+    //adds logged in user to meeting
     public void addUserToMeeting(String meetingCode, final Callback<String> callback) {
 
         //query for meeting with inviteCode equal to meetingCode
@@ -194,12 +204,14 @@ public class FirebaseClient {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //condition returns true if search unsuccessful
                 if (dataSnapshot == null) {
-                    //handle appropriately in view
+                    //returns flag indicating no meeting found
                     callback.onResult(Callback.NULL);
                 } else {
                     for (DataSnapshot snap : dataSnapshot.getChildren()) {
-                        //handle appropriately in view
+
+                        //returns the key of meeting upon success
                         callback.onResult(dataSnapshot.getKey());
+
                         //add the meeting under user field
                         FirebaseDatabase.getInstance().getReference()
                                 .child(FirebaseDB.Users.path)
@@ -228,6 +240,51 @@ public class FirebaseClient {
 
     }
 
+    //todo add findUserByName and handling for collisions
+
+    //querying for email (a unique field)
+    public void findUserByEmail(String email, Callback<User> callback) {
+
+        Query query = FirebaseDatabase.getInstance().getReference()
+                .child(FirebaseDB.Users.path);
+        query.orderByChild(FirebaseDB.Users.Entries.email).equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot.getValue() == null || dataSnapshot.getChildren() == null) {
+                    callback.onResult(null);
+                    return;
+                }
+
+                for (DataSnapshot matchingUser : dataSnapshot.getChildren()) {
+
+                    User user = matchingUser.getValue(User.class);
+
+                    if (user.getId() == null) {
+                        user.setId(matchingUser.getKey());
+                    }
+
+                    callback.onResult(user);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    //todo implement
+    public void updateShortlist(User user) {
+        FirebaseDatabase.getInstance().getReference()
+                .child(FirebaseDB.Users.path)
+                .child(user.getId())
+                .child(FirebaseDB.Users.Entries.shortlist)
+                .setValue(user.getShortlist());
+    }
+
+    //meeting logic
     public void makePendingMeeting(PendingMeeting meeting, HashMap<String, String> invitees) {
         meeting.setInvitedUsers(invitees);
 
@@ -249,6 +306,7 @@ public class FirebaseClient {
         }
     }
 
+    //determines if logged in user owns the event
     public void isOwnerOfVote(String voteID, final Callback<Boolean> callback) {
         FirebaseDatabase.getInstance().getReference()
                 .child(FirebaseDB.PendingMeetings.path)
@@ -269,6 +327,7 @@ public class FirebaseClient {
                 });
     }
 
+    //determines if event is active or not
     public void getVoteStatus(String voteID, final Callback<Boolean> callback) {
         FirebaseDatabase.getInstance().getReference()
                 .child(FirebaseDB.Users.path)
@@ -292,6 +351,7 @@ public class FirebaseClient {
                 });
     }
 
+    //user submits vote to database
     public void incrimentVoteCount(String meetingID, String optionTypePath, String indexPath) {
 
         final DatabaseReference ref = FirebaseDatabase.getInstance().getReference()
@@ -320,7 +380,18 @@ public class FirebaseClient {
 
     }
 
+    //called after incrementing vote
+    public void disableVotingStatus(String meetingID) {
+        FirebaseDatabase.getInstance().getReference()
+                .child(FirebaseDB.Users.path)
+                .child(getUserID())
+                .child(FirebaseDB.Users.Entries.pendingMeetings)
+                .child(meetingID)
+                .setValue("false");
+    }
+
     //called on button click to resolve a pending meeting
+    //todo make this server side logic
     public void resolveVote(final PendingMeeting pendingMeeting, Callback<FinalizedMeeting> callback) {
 
         //fetches for most recent vote counts
@@ -406,7 +477,7 @@ public class FirebaseClient {
     }
 
 
-    //called after finalized meeting created and added
+    //called immediately after finalized meeting created and added
     public void deletePendingMeetingTrace(PendingMeeting meeting) {
 
         FirebaseDatabase.getInstance().getReference()
@@ -423,55 +494,11 @@ public class FirebaseClient {
         }
     }
 
-    //called after incrementing vote
-    public void disableVotingStatus(String meetingID) {
-        FirebaseDatabase.getInstance().getReference()
-                .child(FirebaseDB.Users.path)
-                .child(getUserID())
-                .child(FirebaseDB.Users.Entries.pendingMeetings)
-                .child(meetingID)
-                .setValue("false");
-    }
-
-    public void findUserByEmail(String email, Callback<User> callback) {
-
-        Query query = FirebaseDatabase.getInstance().getReference()
-                .child(FirebaseDB.Users.path);
-        query.orderByChild(FirebaseDB.Users.Entries.email).equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                if (dataSnapshot.getValue() == null || dataSnapshot.getChildren() == null) {
-                    callback.onResult(null);
-                    return;
-                }
-
-                for (DataSnapshot matchingUser : dataSnapshot.getChildren()) {
-
-                    User user = matchingUser.getValue(User.class);
-
-                    if (user.getId() == null) {
-                        user.setId(matchingUser.getKey());
-                    }
-
-                    callback.onResult(user);
-
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
     public interface Callback<T> {
         String NULL = "request_nothing";
-        int success = 101;
-        int connectionFailed = 102;
-        int authFailed = 103;
+        int SUCCESS = 101;
+        int CONNECTION_FAILED = 102;
+        int AUTH_FAILED = 103;
 
         void onResult(T t);
     }

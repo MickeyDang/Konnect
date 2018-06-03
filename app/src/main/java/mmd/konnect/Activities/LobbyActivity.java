@@ -34,6 +34,7 @@ import mmd.konnect.Fragments.BackPressFragment;
 import mmd.konnect.Fragments.FinalizedMeetingListFragment;
 import mmd.konnect.Fragments.PendingMeetingListFragment;
 import mmd.konnect.Fragments.SettingFragment;
+import mmd.konnect.Fragments.ShortListFragment;
 import mmd.konnect.Models.FinalizedMeeting;
 import mmd.konnect.Models.Meeting;
 import mmd.konnect.Models.MeetingPlace;
@@ -46,9 +47,10 @@ public class LobbyActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         FinalizedMeetingListFragment.MeetingInteractionListener,
         PendingMeetingListFragment.PendingMeetingInteractionListener,
-        SettingFragment.SettingInteractionListener {
+        SettingFragment.SettingInteractionListener, ShortListFragment.OnListFragmentInteractionListener {
 
     MeetingMaker mMaker = new MeetingMaker();
+    FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +59,7 @@ public class LobbyActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -138,8 +140,10 @@ public class LobbyActivity extends AppCompatActivity
         if (id == R.id.nav_meetings_confirmed) {
             goToFragment(FinalizedMeetingListFragment.newInstance());
             changeToolbarText(getString(R.string.meeting_conf));
+            fab.setVisibility(View.VISIBLE);
         } else if (id == R.id.nav_meetings_unconfirmed) {
             goToFragment(PendingMeetingListFragment.newInstance());
+            fab.setVisibility(View.VISIBLE);
             changeToolbarText(getString(R.string.meeting_unconf));
         } else if (id == R.id.nav_find_meeting) {
             makeSearchMeetingDialog();
@@ -148,6 +152,7 @@ public class LobbyActivity extends AppCompatActivity
         } else if (id == R.id.nav_settings) {
             goToFragment(SettingFragment.newInstance());
             changeToolbarText(getString(R.string.nav_settings));
+            fab.setVisibility(View.GONE);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

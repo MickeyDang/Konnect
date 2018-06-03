@@ -33,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
     ProgressBar loadingIcon;
     GoogleSignInClient gsc;
 
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,15 +91,15 @@ public class LoginActivity extends AppCompatActivity {
                             removeProgressView();
 
                             switch(resultCode) {
-                                case FirebaseClient.Callback.success:
+                                case FirebaseClient.Callback.SUCCESS:
                                     goToLobby();
                                     break;
-                                case FirebaseClient.Callback.authFailed:
+                                case FirebaseClient.Callback.AUTH_FAILED:
                                     Toast.makeText(LoginActivity.this, getString(R.string.toast_failed_login), Toast.LENGTH_SHORT)
                                             .show();
                                     Log.e(LOG_TAG, "Could not create user");
                                     break;
-                                case FirebaseClient.Callback.connectionFailed:
+                                case FirebaseClient.Callback.CONNECTION_FAILED:
                                     Toast.makeText(LoginActivity.this, getString(R.string.toast_failed_login), Toast.LENGTH_SHORT)
                                             .show();
                                     Log.e(LOG_TAG, "Connection failed");

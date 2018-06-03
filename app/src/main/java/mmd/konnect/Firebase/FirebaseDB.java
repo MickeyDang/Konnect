@@ -55,6 +55,7 @@ public class FirebaseDB {
             final public static String id = "id";
             final public static String pendingMeetings = "pending_meetings";
             final public static String finalizedMeetings = "finalized_meetings";
+            final public static String shortlist = "shortlist";
         }
 
     }
