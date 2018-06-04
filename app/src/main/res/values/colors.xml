@@ -11,6 +11,7 @@
 
     <color name="primary_text">#000000</color>
     <color name="secondary_text">#868686</color>
+    <color name="white">#ffffff</color>
 
     <!--translucent grey-->
     <color name="divider_line">#40ACACAC</color>
