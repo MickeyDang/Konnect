@@ -58,7 +58,7 @@
             android:text="@string/vote_button"/>
 
         <Button
-            android:id="@+id/resolveVoteButton"
+            android:id="@+id/deleteButton"
             android:layout_width="90dp"
             android:layout_height="30dp"
             android:layout_alignParentStart="true"
@@ -69,7 +69,22 @@
             android:textColor="@color/colorAccent"
             android:outlineProvider="none"
             android:textSize="16sp"
-            android:visibility="invisible"
+            android:visibility="gone"
+            android:text="@string/delete_button"/>
+
+        <Button
+            android:id="@+id/resolveVoteButton"
+            android:layout_width="90dp"
+            android:layout_height="30dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="206dp"
+            android:layout_marginBottom="8dp"
+            android:background="@android:drawable/list_selector_background"
+            android:textColor="@color/colorAccent"
+            android:outlineProvider="none"
+            android:textSize="16sp"
+            android:visibility="gone"
             android:text="@string/resolve_button"/>
 
         <com.github.ivbaranov.mli.MaterialLetterIcon

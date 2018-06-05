@@ -181,5 +181,6 @@ public class PendingMeetingListFragment extends Fragment implements FirebaseList
     public interface PendingMeetingInteractionListener {
         void onCastVote(PendingMeeting pm);
         void onResolveVote(PendingMeeting pm);
+        void onDeleteMeeting(PendingMeeting pm);
     }
 }

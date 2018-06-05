@@ -1,6 +1,7 @@
 package mmd.konnect.Adapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,7 +64,7 @@ public class PendingMeetingAdapter extends RecyclerView.Adapter<PendingMeetingAd
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        PendingMeeting pendingMeeting = meetings.get(position);
+        final PendingMeeting pendingMeeting = meetings.get(position);
 
         holder.title.setText(pendingMeeting.getTitle());
         holder.description.setText(pendingMeeting.getDescription());
@@ -78,18 +79,17 @@ public class PendingMeetingAdapter extends RecyclerView.Adapter<PendingMeetingAd
                     }
                 });
 
-        //resolve button visibility is invisible by default
-        FirebaseClient.getInstance().isOwnerOfVote(pendingMeeting.getId(),
-                aBoolean -> {
-            int i = aBoolean ? View.VISIBLE : View.INVISIBLE;
-            holder.resolveButton.setVisibility(i);
+        //resolve and delete button visibility is invisible by default unless current user owns the meeting
+        boolean ownerOfVote = (pendingMeeting.getOrganizerID().contentEquals(FirebaseClient.getInstance().getUserID()));
 
-            if (i == View.VISIBLE) {
-                holder.resolveButton.setOnClickListener(v -> mListener.onResolveVote(pendingMeeting));
-            }
+        if (ownerOfVote) {
+            holder.resolveButton.setVisibility(View.VISIBLE);
+            holder.deleteButton.setVisibility(View.VISIBLE);
+            holder.resolveButton.setOnClickListener(v -> mListener.onResolveVote(pendingMeeting));
+            holder.deleteButton.setOnClickListener(v -> mListener.onDeleteMeeting(pendingMeeting));
+        }
 
-        });
-
+        //set listener for vote button
         holder.voteButton.setOnClickListener(v -> mListener.onCastVote(pendingMeeting));
 
         String numVoter = String.valueOf(pendingMeeting.getInvitedUsers().size());
@@ -108,6 +108,7 @@ public class PendingMeetingAdapter extends RecyclerView.Adapter<PendingMeetingAd
         TextView description;
         Button voteButton;
         Button resolveButton;
+        Button deleteButton;
         MaterialLetterIcon materialIcon;
 
         ViewHolder(View view) {
@@ -118,6 +119,7 @@ public class PendingMeetingAdapter extends RecyclerView.Adapter<PendingMeetingAd
             description = view.findViewById(R.id.description);
             voteButton = view.findViewById(R.id.voteButton);
             resolveButton = view.findViewById(R.id.resolveVoteButton);
+            deleteButton = view.findViewById(R.id.deleteButton);
 
         }
 

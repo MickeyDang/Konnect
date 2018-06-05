@@ -291,4 +291,16 @@ public class LobbyActivity extends AppCompatActivity
             });
         });
     }
+
+    @Override
+    public void onDeleteMeeting(PendingMeeting pm) {
+        FirebaseClient.getInstance().deletePendingMeetingTrace(pm);
+    }
+
+    @Override
+    public void onNameChanged(String name) {
+        final View navHeader = ((NavigationView) findViewById(R.id.nav_view)).getHeaderView(0);
+        ((TextView) navHeader.findViewById(R.id.name))
+                .setText(name != null ? name : getString(R.string.title_temp_user));
+    }
 }

@@ -12,6 +12,7 @@
     <string name="title_activity_lobby">LobbyActivity</string>
     <string name="vote_button">Vote</string>
     <string name="resolve_button">Resolve</string>
+    <string name="delete_button">Delete</string>
 
     <!--NavBar-->
     <string name="meeting_conf">Finalized Meetings</string>

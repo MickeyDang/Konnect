@@ -82,6 +82,7 @@ public class SettingFragment extends Fragment implements SaveStateFragment {
                     .setPositiveButton(getString(R.string.nav_button_save), ((dialogInterface, i) -> {
                         FirebaseClient.getInstance().changeUserName(currName);
                         originalName = currName;
+                        mListener.onNameChanged(currName);
                     }));
 
             builder.show();
@@ -89,5 +90,6 @@ public class SettingFragment extends Fragment implements SaveStateFragment {
     }
 
     public interface SettingInteractionListener{
+        void onNameChanged(String name);
     }
 }

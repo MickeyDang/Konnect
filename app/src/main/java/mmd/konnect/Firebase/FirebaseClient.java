@@ -476,7 +476,6 @@ public class FirebaseClient {
         });
     }
 
-
     //called immediately after finalized meeting created and added
     public void deletePendingMeetingTrace(PendingMeeting meeting) {
 
