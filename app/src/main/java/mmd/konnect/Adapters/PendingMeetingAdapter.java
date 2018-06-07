@@ -1,7 +1,6 @@
 package mmd.konnect.Adapters;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,15 +9,15 @@ import android.widget.TextView;
 
 import com.github.ivbaranov.mli.MaterialLetterIcon;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import mmd.konnect.Firebase.FirebaseClient;
 import mmd.konnect.Fragments.PendingMeetingListFragment;
 import mmd.konnect.KonnectApplication;
 import mmd.konnect.Models.PendingMeeting;
 import mmd.konnect.R;
 import mmd.konnect.Utils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class PendingMeetingAdapter extends RecyclerView.Adapter<PendingMeetingAdapter.ViewHolder> {
 

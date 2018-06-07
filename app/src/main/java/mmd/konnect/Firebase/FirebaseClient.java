@@ -53,7 +53,7 @@ public class FirebaseClient {
         return mUser;
     }
 
-    public String getUserID () {
+    public String getUserID() {
         return mUser.getId();
     }
 
@@ -97,32 +97,32 @@ public class FirebaseClient {
 
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            if (mAuth.getCurrentUser() != null) {
+                    if (task.isSuccessful()) {
+                        if (mAuth.getCurrentUser() != null) {
 
-                                //determines if user already created or not. callback is boolean
-                                userExistsInDB(mAuth.getUid(), noUserInDB -> {
+                            //determines if user already created or not. callback is boolean
+                            userExistsInDB(mAuth.getUid(), noUserInDB -> {
 
-                                    if (noUserInDB) {
-                                        //create new user with Auth properties if first time login
-                                        mUser = new User(mAuth.getCurrentUser());
-                                        createUserInDB();
+                                if (noUserInDB) {
+                                    //create new user with Auth properties if first time login
+                                    mUser = new User(mAuth.getCurrentUser());
+                                    createUserInDB();
+                                    callback.onResult(true);
+                                } else {
+                                    //continue with auth if found by fetching data
+                                    fetchUserFromDB(mAuth.getUid(), user -> {
+                                        mUser = user;
                                         callback.onResult(true);
-                                    } else {
-                                        //continue with auth if found by fetching data
-                                        fetchUserFromDB(mAuth.getUid(), user -> {
-                                            mUser = user;
-                                            callback.onResult(true);
-                                        });
-                                    }
-                                });
-                            } else {
-                                callback.onResult(false);
-                            }
+                                    });
+                                }
+                            });
                         } else {
-                            Log.w(LOG_TAG, "signInWithCredential:failure", task.getException());
                             callback.onResult(false);
                         }
+                    } else {
+                        Log.w(LOG_TAG, "signInWithCredential:failure", task.getException());
+                        callback.onResult(false);
+                    }
                 });
     }
 
@@ -306,27 +306,6 @@ public class FirebaseClient {
         }
     }
 
-    //determines if logged in user owns the event
-    public void isOwnerOfVote(String voteID, final Callback<Boolean> callback) {
-        FirebaseDatabase.getInstance().getReference()
-                .child(FirebaseDB.PendingMeetings.path)
-                .child(voteID)
-                .child(FirebaseDB.PendingMeetings.Entries.organizerID)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        String s = (String) dataSnapshot.getValue();
-                        s = (s == null ? "false" : s);
-                        callback.onResult(s.equals(getUserID()));
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-    }
-
     //determines if event is active or not
     public void getVoteStatus(String voteID, final Callback<Boolean> callback) {
         FirebaseDatabase.getInstance().getReference()
@@ -362,21 +341,21 @@ public class FirebaseClient {
                 .child(FirebaseDB.VOTE_COUNT);
 
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                        int count =
-                                (dataSnapshot == null || dataSnapshot.getValue() == null ?
-                                        0 : Integer.valueOf(String.valueOf(dataSnapshot.getValue())));
+                int count =
+                        (dataSnapshot == null || dataSnapshot.getValue() == null ?
+                                0 : Integer.valueOf(String.valueOf(dataSnapshot.getValue())));
 
-                        ref.setValue(++count);
-                    }
+                ref.setValue(++count);
+            }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-                    }
-                });
+            }
+        });
 
     }
 
@@ -461,11 +440,11 @@ public class FirebaseClient {
                     .child(s)
                     .child(FirebaseDB.Users.Entries.finalizedMeetings)
                     .child(finalizedMeeting.getId()).setValue("true").addOnCompleteListener(task -> {
-                        requestQueue.poll();
-                        if (requestQueue.isEmpty())
-                            callback.onResult(true);
+                requestQueue.poll();
+                if (requestQueue.isEmpty())
+                    callback.onResult(true);
 
-                    });
+            });
         }
 
         requestQueue.add(true);

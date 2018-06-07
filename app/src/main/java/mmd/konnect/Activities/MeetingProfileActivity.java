@@ -1,9 +1,9 @@
 package mmd.konnect.Activities;
 
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,7 +14,7 @@ import mmd.konnect.Fragments.MeetingProfileFragment;
 import mmd.konnect.Models.FinalizedMeeting;
 import mmd.konnect.R;
 
-public class MeetingProfileActivity extends AppCompatActivity implements MeetingProfileFragment.ItemInteractionListener{
+public class MeetingProfileActivity extends AppCompatActivity implements MeetingProfileFragment.ItemInteractionListener {
 
     TextView mTitleView;
     TextView mDescriptionView;

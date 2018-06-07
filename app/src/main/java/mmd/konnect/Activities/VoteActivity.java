@@ -1,9 +1,9 @@
 package mmd.konnect.Activities;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,7 +18,7 @@ import mmd.konnect.Models.PendingMeeting;
 import mmd.konnect.Models.TimeOption;
 import mmd.konnect.R;
 
-public class VoteActivity extends AppCompatActivity implements VoteListFragment.OnVoteSelectedListener{
+public class VoteActivity extends AppCompatActivity implements VoteListFragment.OnVoteSelectedListener {
 
     final String LOG_TAG = this.getClass().getSimpleName();
 
@@ -86,7 +86,7 @@ public class VoteActivity extends AppCompatActivity implements VoteListFragment.
         FirebaseClient fbClient = FirebaseClient.getInstance();
 
         //size is the number of key value pairs existing not the actual size of the array
-        for (int i = 0; i < size ; i++) {
+        for (int i = 0; i < size; i++) {
             //i is the actual index of the array NOT the key (ie there could be key of 4 at index 0)
             int key = selectedPlaces.keyAt(i);
 
@@ -120,7 +120,7 @@ public class VoteActivity extends AppCompatActivity implements VoteListFragment.
     //callbacks
     @Override
     public void onPlaceRemoved(MeetingPlace mp, int position) {
-       selectedPlaces.remove(position);
+        selectedPlaces.remove(position);
     }
 
     @Override

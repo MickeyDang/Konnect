@@ -9,7 +9,7 @@ public class Constants {
     final public static int RC_VOTE = 22;
     final public static int resultSuccess = 11;
 
-    public static class MeetingNavigation{
+    public static class MeetingNavigation {
         public static String INVITEE_KEY = "invitees_key";
         public static String MEETING_OBJ_KEY = "meeting_key";
         public static String TIME_OPTION_KEY = "timeoption_key";

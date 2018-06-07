@@ -23,7 +23,7 @@ import mmd.konnect.Models.FinalizedMeeting;
 import mmd.konnect.R;
 
 
-public class FinalizedMeetingListFragment extends Fragment implements FirebaseListFragment{
+public class FinalizedMeetingListFragment extends Fragment implements FirebaseListFragment {
 
     private int mColumnCount = 1;
     private MeetingInteractionListener mListener;
@@ -36,24 +36,24 @@ public class FinalizedMeetingListFragment extends Fragment implements FirebaseLi
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
             if (mAdapter.containsItem(dataSnapshot.getKey()) == -1)
-            FirebaseDatabase.getInstance().getReference()
-                    .child(FirebaseDB.FinalizedMeetings.path)
-                    .child(dataSnapshot.getKey())
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
+                FirebaseDatabase.getInstance().getReference()
+                        .child(FirebaseDB.FinalizedMeetings.path)
+                        .child(dataSnapshot.getKey())
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                            FinalizedMeeting meeting = dataSnapshot.getValue(FinalizedMeeting.class);
-                            meeting.setId(dataSnapshot.getKey());
-                            mAdapter.onInsert(meeting);
+                                FinalizedMeeting meeting = dataSnapshot.getValue(FinalizedMeeting.class);
+                                meeting.setId(dataSnapshot.getKey());
+                                mAdapter.onInsert(meeting);
 
-                        }
+                            }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
 
-                        }
-                    });
+                            }
+                        });
         }
 
         @Override

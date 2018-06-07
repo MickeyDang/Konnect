@@ -77,7 +77,7 @@ public class FinalizedMeetingAdapter extends RecyclerView.Adapter<FinalizedMeeti
         else
             formattedText = "Start: " + finalizedMeeting.getTimeOption().getDate() + " " + finalizedMeeting.getTimeOption().getStartTime();
 
-        formattedText = formattedText.length() > 30 ?  formattedText.substring(0, 30) : formattedText;
+        formattedText = formattedText.length() > 30 ? formattedText.substring(0, 30) : formattedText;
 
         holder.timeText.setText(formattedText);
 

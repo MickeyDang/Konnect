@@ -35,7 +35,7 @@ public class TimeOptionAdapter extends RecyclerView.Adapter<TimeOptionAdapter.Vi
         notifyItemInserted(timeOptions.size() - 1);
     }
 
-    public ArrayList<TimeOption> getTimeOptions () {
+    public ArrayList<TimeOption> getTimeOptions() {
         //lazy loading
         if (timeOptions == null) {
             timeOptions = new ArrayList<>();

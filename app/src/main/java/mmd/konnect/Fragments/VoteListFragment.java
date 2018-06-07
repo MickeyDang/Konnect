@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import mmd.konnect.Adapters.VoteAdapter;
@@ -96,8 +95,11 @@ public class VoteListFragment extends Fragment {
 
     public interface OnVoteSelectedListener {
         void onPlaceRemoved(MeetingPlace mp, int position);
+
         void onPlaceAdded(MeetingPlace mp, int position);
+
         void onTimeRemoved(TimeOption to, int position);
+
         void onTimeAdded(TimeOption to, int position);
     }
 }

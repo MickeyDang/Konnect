@@ -24,7 +24,7 @@ import mmd.konnect.Models.PendingMeeting;
 import mmd.konnect.R;
 
 
-public class PendingMeetingListFragment extends Fragment implements FirebaseListFragment{
+public class PendingMeetingListFragment extends Fragment implements FirebaseListFragment {
 
     PendingMeetingInteractionListener mListener;
 
@@ -35,21 +35,21 @@ public class PendingMeetingListFragment extends Fragment implements FirebaseList
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
             if (mAdapter.containsItem(dataSnapshot.getKey()) == -1)
-            FirebaseDatabase.getInstance().getReference()
-                    .child(FirebaseDB.PendingMeetings.path)
-                    .child(dataSnapshot.getKey())
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            PendingMeeting meeting = dataSnapshot.getValue(PendingMeeting.class);
-                            mAdapter.onInsert(meeting);
-                        }
+                FirebaseDatabase.getInstance().getReference()
+                        .child(FirebaseDB.PendingMeetings.path)
+                        .child(dataSnapshot.getKey())
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                PendingMeeting meeting = dataSnapshot.getValue(PendingMeeting.class);
+                                mAdapter.onInsert(meeting);
+                            }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
 
-                        }
-                    });
+                            }
+                        });
         }
 
         @Override
@@ -180,7 +180,9 @@ public class PendingMeetingListFragment extends Fragment implements FirebaseList
 
     public interface PendingMeetingInteractionListener {
         void onCastVote(PendingMeeting pm);
+
         void onResolveVote(PendingMeeting pm);
+
         void onDeleteMeeting(PendingMeeting pm);
     }
 }

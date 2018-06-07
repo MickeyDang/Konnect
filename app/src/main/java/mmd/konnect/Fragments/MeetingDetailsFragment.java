@@ -11,11 +11,10 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 
 import mmd.konnect.Firebase.FirebaseClient;
-import mmd.konnect.Models.Meeting;
 import mmd.konnect.Models.PendingMeeting;
 import mmd.konnect.R;
 
-public class MeetingDetailsFragment extends Fragment implements NullFieldAsserter{
+public class MeetingDetailsFragment extends Fragment implements NullFieldAsserter {
 
     private OnFragmentInteractionListener mListener;
 
@@ -25,6 +24,7 @@ public class MeetingDetailsFragment extends Fragment implements NullFieldAsserte
     public MeetingDetailsFragment() {
         // Required empty public constructor
     }
+
     public static MeetingDetailsFragment newInstance() {
         MeetingDetailsFragment fragment = new MeetingDetailsFragment();
         return fragment;

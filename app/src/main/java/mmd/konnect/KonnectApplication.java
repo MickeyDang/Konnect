@@ -16,7 +16,7 @@ public class KonnectApplication extends Application {
         mInstance = new WeakReference<KonnectApplication>(this);
     }
 
-    public static KonnectApplication getInstance() throws IllegalStateException{
+    public static KonnectApplication getInstance() throws IllegalStateException {
         if (mInstance == null || mInstance.get() == null) {
             throw new IllegalStateException("getInstance called without application being created");
         }

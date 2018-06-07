@@ -1,35 +1,28 @@
 package mmd.konnect.Fragments;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlacePicker;
 
 import java.util.ArrayList;
 
-import mmd.konnect.Activities.MapActivity;
 import mmd.konnect.Adapters.PlaceAdapter;
 import mmd.konnect.Models.Meeting;
 import mmd.konnect.Models.MeetingPlace;
 import mmd.konnect.R;
 
 
-public class MeetingPlaceFragment extends Fragment implements NullFieldAsserter{
+public class MeetingPlaceFragment extends Fragment implements NullFieldAsserter {
     private final String LOG_TAG = this.getClass().getSimpleName();
 
     private PlacePickerHandler mListener;
@@ -94,7 +87,7 @@ public class MeetingPlaceFragment extends Fragment implements NullFieldAsserter{
         mListener = null;
     }
 
-    public ArrayList<MeetingPlace> getMeetingPlaceList(){
+    public ArrayList<MeetingPlace> getMeetingPlaceList() {
         return (ArrayList<MeetingPlace>) mAdapter.getDataSet();
     }
 
@@ -123,6 +116,7 @@ public class MeetingPlaceFragment extends Fragment implements NullFieldAsserter{
 
     public interface PlacePickerHandler {
         void makePlacePicker();
+
         void handlePlaceOption(Place place);
     }
 }

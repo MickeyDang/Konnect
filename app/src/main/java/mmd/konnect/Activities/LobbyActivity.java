@@ -2,20 +2,20 @@ package mmd.konnect.Activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AlertDialog;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,9 +24,9 @@ import com.github.ivbaranov.mli.MaterialLetterIcon;
 
 import mmd.konnect.Constants;
 import mmd.konnect.Firebase.FirebaseClient;
-import mmd.konnect.Fragments.SaveStateFragment;
 import mmd.konnect.Fragments.FinalizedMeetingListFragment;
 import mmd.konnect.Fragments.PendingMeetingListFragment;
+import mmd.konnect.Fragments.SaveStateFragment;
 import mmd.konnect.Fragments.SettingFragment;
 import mmd.konnect.Fragments.ShortListFragment;
 import mmd.konnect.Models.FinalizedMeeting;
@@ -159,17 +159,17 @@ public class LobbyActivity extends AppCompatActivity
                 .setView(v)
                 .setTitle(getString(R.string.title_search))
                 .setPositiveButton(getString(R.string.title_search), (DialogInterface dialogInterface, int i) -> {
-                        EditText editText = v.findViewById(R.id.inviteIdField);
-                        FirebaseClient.getInstance().addUserToMeeting(editText.getText().toString(), s -> {
+                    EditText editText = v.findViewById(R.id.inviteIdField);
+                    FirebaseClient.getInstance().addUserToMeeting(editText.getText().toString(), s -> {
 
-                                if (!s.equals(FirebaseClient.Callback.NULL)) {
-                                    Toast.makeText(getApplicationContext(), getString(R.string.toast_add_success), Toast.LENGTH_SHORT)
-                                            .show();
-                                } else {
-                                    Toast.makeText(getApplicationContext(), getString(R.string.toast_add_fail), Toast.LENGTH_SHORT)
-                                            .show();
-                                }
-                        });
+                        if (!s.equals(FirebaseClient.Callback.NULL)) {
+                            Toast.makeText(getApplicationContext(), getString(R.string.toast_add_success), Toast.LENGTH_SHORT)
+                                    .show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), getString(R.string.toast_add_fail), Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                    });
                 });
         builder.show();
     }
@@ -214,13 +214,13 @@ public class LobbyActivity extends AppCompatActivity
 
         switch (requestCode) {
             //meeting creation results
-            case Constants.MeetingNavigation.RC_DESCRIPTION :
+            case Constants.MeetingNavigation.RC_DESCRIPTION:
                 if (resultCode == Constants.MeetingNavigation.resultSuccess) {
                     startActivityForResult(
                             navigate(Constants.MeetingNavigation.stepTime, mMeetingBuilder.initProtoMeeting(data)), Constants.MeetingNavigation.RC_TIME);
                 }
                 break;
-            case Constants.MeetingNavigation.RC_TIME :
+            case Constants.MeetingNavigation.RC_TIME:
                 if (resultCode == Constants.MeetingNavigation.resultSuccess) {
                     startActivityForResult(
                             navigate(Constants.MeetingNavigation.stepLocation, mMeetingBuilder.initTimeOptions(data)), Constants.MeetingNavigation.RC_LOCATION);
@@ -232,14 +232,14 @@ public class LobbyActivity extends AppCompatActivity
                             navigate(Constants.MeetingNavigation.stepInvite, mMeetingBuilder.initPlaceOptions(data)), Constants.MeetingNavigation.RC_INVITE);
                 }
                 break;
-            case Constants.MeetingNavigation.RC_INVITE :
+            case Constants.MeetingNavigation.RC_INVITE:
                 if (resultCode == Constants.MeetingNavigation.resultSuccess) {
                     mMeetingBuilder.addInvites(data.getStringArrayListExtra(Constants.MeetingNavigation.INVITEE_KEY));
                     mMeetingBuilder.createInDB();
                 }
                 break;
             //user vote result
-            case Constants.RC_VOTE :
+            case Constants.RC_VOTE:
                 if (resultCode == Constants.resultSuccess) {
                     String id = data.getStringExtra(Constants.KEYS.PENDING_MEETING_ID);
                     onVoteCast(id);
@@ -281,7 +281,7 @@ public class LobbyActivity extends AppCompatActivity
     @Override
     public void onResolveVote(final PendingMeeting pm) {
 
-        FirebaseClient.getInstance().resolveVote(pm, finalizedMeeting ->  {
+        FirebaseClient.getInstance().resolveVote(pm, finalizedMeeting -> {
             FirebaseClient.getInstance().makeFinalizedMeeting(finalizedMeeting, aBoolean -> {
 
                 FirebaseClient.getInstance().deletePendingMeetingTrace(pm);

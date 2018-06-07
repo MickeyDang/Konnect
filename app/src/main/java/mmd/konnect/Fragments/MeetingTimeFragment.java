@@ -1,6 +1,5 @@
 package mmd.konnect.Fragments;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -10,14 +9,11 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -33,7 +29,7 @@ import mmd.konnect.Models.Meeting;
 import mmd.konnect.Models.TimeOption;
 import mmd.konnect.R;
 
-public class MeetingTimeFragment extends Fragment implements NullFieldAsserter{
+public class MeetingTimeFragment extends Fragment implements NullFieldAsserter {
 
     private final String LOG_TAG = this.getClass().getSimpleName();
     private OnTimeOptionInteractionListener mListener;
@@ -230,5 +226,6 @@ public class MeetingTimeFragment extends Fragment implements NullFieldAsserter{
         mListener = null;
     }
 
-    public interface OnTimeOptionInteractionListener {}
+    public interface OnTimeOptionInteractionListener {
+    }
 }

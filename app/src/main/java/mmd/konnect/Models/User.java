@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class User implements Serializable{
+public class User implements Serializable {
 
     private final String DEF_NAME = "User";
 

@@ -5,7 +5,7 @@ package mmd.konnect.Models;
  * Created by mickeydang on 2018-03-31.
  */
 
-public class FinalizedMeeting extends Meeting{
+public class FinalizedMeeting extends Meeting {
 
     private TimeOption timeOption;
     private MeetingPlace meetingPlace;

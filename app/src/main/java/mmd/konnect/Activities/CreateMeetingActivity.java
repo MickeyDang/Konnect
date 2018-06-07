@@ -4,13 +4,13 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,7 +42,7 @@ import mmd.konnect.R;
 
 public class CreateMeetingActivity extends AppCompatActivity implements MeetingDetailsFragment.OnFragmentInteractionListener,
         MeetingInviteFragment.ShareIntentHandler, MeetingTimeFragment.OnTimeOptionInteractionListener,
-        MeetingPlaceFragment.PlacePickerHandler{
+        MeetingPlaceFragment.PlacePickerHandler {
 
     private final String LOG_TAG = this.getClass().getSimpleName();
     private final int PICKER_RC = 99;
@@ -116,7 +116,7 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.next_button:
                 if (currentStep.equals(Constants.MeetingNavigation.stepDescription)) {
                     if (assertFieldsNotNull()) {
@@ -162,6 +162,7 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
         }
     }
 
+    //only called on step where activity holds fragment of such type
     private ArrayList<TimeOption> getTimeOptions() {
         MeetingTimeFragment fragment = (MeetingTimeFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         return fragment.getTimeOptions();
@@ -179,17 +180,7 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
 
     private boolean assertFieldsNotNull() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-
-        if (fragment instanceof MeetingDetailsFragment) {
-            return !evaluateIfNull((MeetingDetailsFragment) fragment);
-        } else if (fragment instanceof MeetingTimeFragment) {
-            return !evaluateIfNull((MeetingTimeFragment) fragment);
-        } else if (fragment instanceof MeetingPlaceFragment) {
-            return !evaluateIfNull((MeetingPlaceFragment) fragment);
-        } else {
-            //this case should be impossible. unhandled
-            return false;
-        }
+        return fragment instanceof NullFieldAsserter && !evaluateIfNull((NullFieldAsserter) fragment);
     }
 
     private boolean evaluateIfNull(NullFieldAsserter nfa) {
@@ -200,7 +191,7 @@ public class CreateMeetingActivity extends AppCompatActivity implements MeetingD
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case PICKER_RC :
+            case PICKER_RC:
                 //default ok result constant
                 if (resultCode == RESULT_OK) {
                     handlePlaceOption(PlacePicker.getPlace(this, data));

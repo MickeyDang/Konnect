@@ -7,15 +7,15 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import mmd.konnect.Fragments.ShortListFragment.OnListFragmentInteractionListener;
 import mmd.konnect.Models.User;
 import mmd.konnect.R;
 
-import java.util.ArrayList;
-import java.util.List;
 
-
-public class ShortListAdapter extends RecyclerView.Adapter<ShortListAdapter.ViewHolder>{
+public class ShortListAdapter extends RecyclerView.Adapter<ShortListAdapter.ViewHolder> {
 
     private List<User> shortListedUsers;
     private final OnListFragmentInteractionListener mListener;

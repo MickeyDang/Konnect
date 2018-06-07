@@ -1,21 +1,16 @@
 package mmd.konnect.Models;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by mickeydang on 2018-03-29.
  */
 
 @IgnoreExtraProperties
-public class Meeting implements Serializable{
+public class Meeting implements Serializable {
 
     private String title;
     private String description;

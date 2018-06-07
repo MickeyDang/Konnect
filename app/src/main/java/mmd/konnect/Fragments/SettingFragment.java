@@ -89,7 +89,7 @@ public class SettingFragment extends Fragment implements SaveStateFragment {
         }
     }
 
-    public interface SettingInteractionListener{
+    public interface SettingInteractionListener {
         void onNameChanged(String name);
     }
 }

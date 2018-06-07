@@ -1,28 +1,20 @@
 package mmd.konnect.Adapters;
 
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.github.ivbaranov.mli.MaterialLetterIcon;
+import java.util.List;
 
 import mmd.konnect.Fragments.VoteListFragment;
 import mmd.konnect.Models.DataWrapper;
 import mmd.konnect.Models.MeetingPlace;
 import mmd.konnect.Models.TimeOption;
 import mmd.konnect.R;
-import mmd.konnect.Utils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class VoteAdapter extends RecyclerView.Adapter<VoteAdapter.ViewHolder> {
 
@@ -45,18 +37,11 @@ public class VoteAdapter extends RecyclerView.Adapter<VoteAdapter.ViewHolder> {
         indexMiddleDivider = index;
     }
 
-    public List<DataWrapper> getFullList() {
-        if (mOptions == null) {
-            mOptions = new ArrayList<>();
-        }
-        return mOptions;
-    }
-
     @Override
     public int getItemViewType(int position) {
         if (position == 0 || position == indexMiddleDivider) {
             return TYPE_DIVIDER;
-        } else if (position < indexMiddleDivider){
+        } else if (position < indexMiddleDivider) {
             return TYPE_PLACE;
         } else if (position > indexMiddleDivider) {
             return TYPE_TIME;
@@ -109,6 +94,7 @@ public class VoteAdapter extends RecyclerView.Adapter<VoteAdapter.ViewHolder> {
         ViewHolder(View view) {
             super(view);
         }
+
         abstract public void onBind(DataWrapper wrap, int pos);
     }
 
@@ -199,7 +185,7 @@ public class VoteAdapter extends RecyclerView.Adapter<VoteAdapter.ViewHolder> {
             formattedText = mp.getName().length() > 30 ? mp.getName().substring(0, 30).concat("...") : mp.getName();
             title.setText(formattedText);
 
-            formattedText = mp.getAddress().length() > 40 ? mp.getAddress().substring(0,40).concat("...") : mp.getAddress();
+            formattedText = mp.getAddress().length() > 40 ? mp.getAddress().substring(0, 40).concat("...") : mp.getAddress();
             address.setText(formattedText);
         }
 

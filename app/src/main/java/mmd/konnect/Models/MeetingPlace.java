@@ -12,7 +12,7 @@ import java.io.Serializable;
  */
 
 
-public class MeetingPlace implements Parcelable, Serializable{
+public class MeetingPlace implements Parcelable, Serializable {
 
     private String name;
     private String address;
@@ -68,7 +68,7 @@ public class MeetingPlace implements Parcelable, Serializable{
         this.longitude = longitude;
     }
 
-    static final Parcelable.Creator<MeetingPlace> CREATOR =  new Parcelable.Creator<MeetingPlace>() {
+    static final Parcelable.Creator<MeetingPlace> CREATOR = new Parcelable.Creator<MeetingPlace>() {
         @Override
         public MeetingPlace createFromParcel(Parcel parcel) {
             return new MeetingPlace(parcel);
